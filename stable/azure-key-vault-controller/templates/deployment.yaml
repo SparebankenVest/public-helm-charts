@@ -48,16 +48,31 @@ spec:
         - name: {{ $key }}
           value: {{ $value }}
         {{- end }}
+        {{- if and .Values.keyVault.customAuth.enabled .Values.keyVault.customAuth.useAzureFile  -}}
         volumeMounts:
-          - name: azure-config
-            mountPath: "{{ .Values.cloudConfig }}"
-            readOnly: true
+        - name: azure-config
+          mountPath: "{{ .Values.cloudConfig }}"
+          readOnly: true
+        {{- else if not .Values.keyVault.customAuth.enabled -}}
+        volumeMounts:
+        - name: azure-config
+          mountPath: "{{ .Values.cloudConfig }}"
+          readOnly: true 
+        {{- end -}}
       {{- if .Values.image.pullSecret }}
       imagePullSecrets:
       - name: "{{ .Values.image.pullSecret }}"
       {{- end }}
+      {{- if and .Values.keyVault.customAuth.enabled .Values.keyVault.customAuth.useAzureFile  -}}
       volumes:
       - name: azure-config
         hostPath:
           path: "{{ .Values.cloudConfig }}"
           type: File
+      {{- else if not .Values.keyVault.customAuth.enabled -}}
+      volumes:
+      - name: azure-config
+        hostPath:
+          path: "{{ .Values.cloudConfig }}"
+          type: File
+      {{- end }}
