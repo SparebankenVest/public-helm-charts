@@ -48,32 +48,28 @@ spec:
         - name: {{ $key }}
           value: {{ $value }}
         {{- end }}
-        # If you want to use an azure file and custom auth we will mount the azure file
-        {{- if and .Values.keyVault.customAuth.enabled .Values.keyVault.customAuth.useAzureFile  -}}
+        {{- if and .Values.keyVault.customAuth.enabled .Values.keyVault.customAuth.useAzureFile  }}
         volumeMounts:
         - name: azure-config
           mountPath: "{{ .Values.cloudConfig }}"
           readOnly: true
-        # Else if you are not using custom auth we will mount the azure file otherwise we don't include it
-        {{- else if not .Values.keyVault.customAuth.enabled -}}
+        {{- else if not .Values.keyVault.customAuth.enabled }}
         volumeMounts:
         - name: azure-config
           mountPath: "{{ .Values.cloudConfig }}"
           readOnly: true 
-        {{- end -}}
+        {{- end }}
       {{- if .Values.image.pullSecret }}
       imagePullSecrets:
       - name: "{{ .Values.image.pullSecret }}"
       {{- end }}
-      # If you want to use an azure file and custom auth we will mount the azure file
-      {{- if and .Values.keyVault.customAuth.enabled .Values.keyVault.customAuth.useAzureFile  -}}
+      {{- if and .Values.keyVault.customAuth.enabled .Values.keyVault.customAuth.useAzureFile  }}
       volumes:
       - name: azure-config
         hostPath:
           path: "{{ .Values.cloudConfig }}"
           type: File
-      # Else if you are not using custom auth we will mount the azure file otherwise we don't include it
-      {{- else if not .Values.keyVault.customAuth.enabled -}}
+      {{- else if not .Values.keyVault.customAuth.enabled }}
       volumes:
       - name: azure-config
         hostPath:

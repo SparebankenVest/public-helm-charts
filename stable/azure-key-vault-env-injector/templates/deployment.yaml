@@ -37,19 +37,17 @@ spec:
         hostPath:
           path: /var/run/docker.sock
           type: File
-      # If you want to use an azure file and custom auth we will mount the azure file
-      {{- if and .Values.customAuth.enabled .Values.customAuth.useAzureFile  -}}
+      {{- if and .Values.customAuth.enabled .Values.customAuth.useAzureFile  }}
       - name: azureconf
         hostPath:
           path: /etc/kubernetes/azure.json
           type: File
-      # Else if you are not using custom auth we will mount the azure file otherwise we don't include it
-      {{- else if not .Values.customAuth.enabled -}}
+      {{- else if not .Values.customAuth.enabled }}
       - name: azureconf
         hostPath:
           path: /etc/kubernetes/azure.json
           type: File
-      {{- end -}}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -91,17 +89,15 @@ spec:
           - mountPath: /var/run/docker.sock
             name: dockersock
             readOnly: true
-          # If you want to use an azure file and custom auth we will mount the azure file
-          {{- if and .Values.customAuth.enabled .Values.customAuth.useAzureFile  -}}
+          {{- if and .Values.customAuth.enabled .Values.customAuth.useAzureFile  }}
           - mountPath: /etc/kubernetes/azure.json
             name: azureconf
             readOnly: true
-          # Else if you are not using custom auth we will mount the azure file otherwise we don't include it
-          {{- else if not .Values.customAuth.enabled -}}
+          {{- else if not .Values.customAuth.enabled }}
           - mountPath: /etc/kubernetes/azure.json
             name: azureconf
             readOnly: true
-          {{- end -}}
+          {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- if .Values.nodeSelector }}
