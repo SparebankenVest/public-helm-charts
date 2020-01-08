@@ -49,6 +49,7 @@ The following table lists configurable parameters of the azure-key-vault-control
 |installCrd                              |install custom resource definition           |true                                      |
 |keyVault.customAuth.enabled             |if custom auth is enabled | false |
 |keyVault.customAuth.podIdentitySelector |if using aad-pod-identity, which selector to reference | "" |
+|keyVault.customAuth.useAzureFile        |mount an azure.json despite using custom auth |false |
 |keyVault.polling.normalInterval         |interval to wait before polling azure key vault for secret updates | 1m |
 |keyVault.polling.failureInterval        |interval to wait when polling has failed `failureAttempts` before polling azure key vault for secret updates | 5m |
 |keyVault.polling.failureAttempts        |number of times to allow secret updates to fail before applying `failureInterval` | 5 |
