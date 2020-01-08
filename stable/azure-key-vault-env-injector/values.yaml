@@ -22,8 +22,10 @@ service:
 # Set to true to use custom auth - see https://github.com/SparebankenVest/azure-key-vault-to-kubernetes/blob/master/README.md#authentication 
 customAuth:
   enabled: false
+  # Set to true to mount azure.json despite custom auth enabled
+  useAzureFile: false
 
-  # set to true to enable auto injection of credentials
+  # Set to true to enable auto injection of credentials
   autoInject: 
     enabled: false
 

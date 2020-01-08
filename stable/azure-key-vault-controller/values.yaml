@@ -9,6 +9,7 @@ keyVault:
   # Set to true to use custom auth - see https://github.com/SparebankenVest/azure-key-vault-to-kubernetes/blob/master/README.md#authentication 
   customAuth:
     enabled: false
+    # Set to true to mount azure.json despite custom auth enabled
     useAzureFile: false
 
     # Uncomment to use aad-pod-identity (MSI) and point to a selector
