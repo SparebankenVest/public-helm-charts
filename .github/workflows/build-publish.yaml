@@ -22,7 +22,7 @@ jobs:
     - name: checkout gh-pages
       uses: actions/checkout@v2
       with:
-        repository: sparebankenvest/helm-charts
+        repository: yix/helm-charts
         ref: gh-pages
         path: publish
 
@@ -42,11 +42,11 @@ jobs:
         helm version -c
 
     - name: Build Helm Repo
-      env:
-        CUSTOM_DOMAIN: charts.spvapi.no
+#      env:
+#        CUSTOM_DOMAIN: charts.spvapi.no
       run: |
         cd publish
-        helm repo add spv-pub-charts https://$CUSTOM_DOMAIN
+#        helm repo add spv-pub-charts https://$CUSTOM_DOMAIN
         
         echo '>> Building charts...'
         find "$GITHUB_WORKSPACE/master/stable" -mindepth 1 -maxdepth 1 -type d | while read chart; do
@@ -91,7 +91,7 @@ jobs:
 
     - name: Push Helm charts
       env:
-        PUBLISH_REPOSITORY: sparebankenvest/helm-charts
+        PUBLISH_REPOSITORY: yix/helm-charts
         PUBLISH_BRANCH: gh-pages
       run: |
         cd publish
@@ -102,7 +102,7 @@ jobs:
 
     - name: Verify
       run: |
-        helm repo add spv-charts https://charts.spvapi.no
+        helm repo add yix-charts https://yix.github.io/helm-charts/
         helm repo update
         helm repo list
-        helm show chart spv-charts/azure-key-vault-controller --version 0.1.0-alpha.2
+        helm show chart yix-charts/azure-key-vault-controller --version 0.1.0-alpha.2
