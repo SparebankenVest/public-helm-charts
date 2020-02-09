@@ -1,6 +1,6 @@
 dependencies:
 - name: azure-key-vault-crd
   repository: https://charts.spvapi.no
-  version: 0.1.0
-digest: sha256:5118f23dcf5d8b142c6267b397263988b1243ee4b680611d8ff0e4761f545015
-generated: 2019-03-06T10:15:15.061846+01:00
+  version: 0.1.1
+digest: sha256:f3871df6aecd32c7fcafa535cdb76b9eb1f1a1b2e4e22e6346b518d7c0e0c8a9
+generated: "2020-02-07T22:12:17.267148-05:00"
