@@ -26,3 +26,17 @@ keyVault:
 
 logLevel: info
 cloudConfig: /etc/kubernetes/azure.json
+
+resources: 
+  limits:
+    cpu: "500m"
+    ram: "200Mi"
+  requests:
+    cpu: "500m"
+    ram: "200Mi"
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
