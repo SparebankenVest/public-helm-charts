@@ -1,0 +1,16 @@
+{{ if .Values.gateway.podDisruptionBudget.enabled  }}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ printf "%s-gateway" (tpl .Values.global.zeebe .) | quote }}
+  labels:
+    app.kubernetes.io/name: {{ include "zeebe-cluster.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app: {{ printf "%s-gateway" (tpl .Values.global.zeebe .) | quote }}
+spec:
+  minAvailable: {{ .Values.gateway.podDisruptionBudget.minAvailable }}
+  maxUnavailable: {{ .Values.gateway.podDisruptionBudget.maxUnavailable }}
+  selector:
+    matchLabels:
+      app: {{ printf "%s-gateway" (tpl .Values.global.zeebe .) | quote }}
+{{ end }}

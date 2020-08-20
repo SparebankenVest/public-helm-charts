@@ -1,0 +1,14 @@
+dependencies:
+- name: elasticsearch
+  repository: http://helm.elastic.co 
+  version: 7.5.1
+  condition: "elasticsearch.enabled"
+- name: kibana
+  repository: http://helm.elastic.co 
+  version: 7.5.1
+  condition: "kibana.enabled"
+- name: prometheus-operator
+  repository: https://kubernetes-charts.storage.googleapis.com/ 
+  version: 8.5.11
+  condition: "prometheus.enabled"
+  

@@ -1,0 +1,18 @@
+{{ if .Values.podDisruptionBudget.enabled }}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ tpl .Values.global.zeebe . | quote }}
+  labels:
+    app.kubernetes.io/name: {{ include "zeebe-cluster.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app: {{ tpl .Values.global.zeebe . | quote }}
+spec:
+  minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
+  maxUnavailable: {{ .Values.podDisruptionBudget.maxUnavailable }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "zeebe-cluster.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app: {{ tpl .Values.global.zeebe . | quote }}
+{{ end }}
