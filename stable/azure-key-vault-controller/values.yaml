@@ -4,6 +4,7 @@ installCrd: true # if installing both controller and env injector, only one can 
 image:
   repository: spvest/azure-keyvault-controller
   tag: 1.1.0-beta.4
+  pullPolicy: IfNotPresent
 
 keyVault:
   # Set to true to use custom auth - see https://akv2k8s.io/security/authentication/#custom-authentication-for-the-controller

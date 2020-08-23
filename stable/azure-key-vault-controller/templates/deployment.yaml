@@ -27,7 +27,7 @@ spec:
       containers:
       - name: azure-keyvault-controller
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: Always
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
         - name: AZURE_VAULT_NORMAL_POLL_INTERVALS
           value: "{{ .Values.keyVault.polling.normalInterval }}"
