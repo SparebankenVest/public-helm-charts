@@ -68,6 +68,8 @@ spec:
             value: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
           - name: WEBHOOK_AUTH_SERVICE_PORT
             value: {{ .Values.service.externalTlsPort | quote }}
+          - name: CA_CONFIG_MAP_NAME
+            value: {{ .Values.caBundleController.configMapName }}
           {{- end }}
           - name: CUSTOM_AUTH
             value: {{ .Values.keyVault.customAuth.enabled | quote }}
