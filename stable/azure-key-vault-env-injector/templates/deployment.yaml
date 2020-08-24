@@ -31,6 +31,25 @@ spec:
     spec:
       serviceAccountName: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
       containers:
+        {{- if .Values.authService.enabled }}
+        - name: ca-bundle-controller
+          image: "{{ .Values.caBundleController.image.repository }}:{{ .Values.caBundleController.image.tag }}"
+          env:
+          - name: AKV_LABEL_NAME
+            value: {{ .Values.caBundleController.akvLabelName }}
+          - name: AKV_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: AKV_SECRET_NAME
+            value: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
+          - name: CA_CONFIG_MAP_NAME
+            value: {{ .Values.caBundleController.configMapName }}
+          - name: LOG_LEVEL
+            value: {{ .Values.caBundleController.logLevel | quote }}
+          imagePullPolicy: {{ .Values.caBundleController.image.pullPolicy }}
+        {{- end }}
+
         - name: webhook
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           env:

@@ -57,6 +57,15 @@ webhook:
       values:
       - kube-system
 
+caBundleController:
+  image:
+    repository: spvest/ca-bundle-controller
+    tag: 1.1.0-beta.24
+    pullPolicy: IfNotPresent
+  logLevel: Info
+  akvLabelName: azure-key-vault-env-injection
+  configMapName: akv2k8s-ca
+
 ## See `kubectl explain poddisruptionbudget.spec` for more
 ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
 podDisruptionBudget:
