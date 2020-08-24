@@ -87,6 +87,25 @@ rules:
 
 # # Give akv2k8s service account cluster-amdin rights 
 # # Todo: Change to only rights needed
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
+  labels:
+    app: {{ template "azure-key-vault-to-kubernetes.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+subjects:
+- kind: ServiceAccount
+  namespace: {{ .Release.Namespace }}
+  name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
+roleRef:
+  kind: ClusterRole
+  apiGroup: rbac.authorization.k8s.io
+  name: cluster-admin
+---
+
 # apiVersion: rbac.authorization.k8s.io/v1
 # kind: ClusterRoleBinding
 # metadata:
