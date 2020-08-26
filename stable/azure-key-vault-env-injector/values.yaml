@@ -5,12 +5,12 @@ replicaCount: 2
 
 image:
   repository: spvest/azure-keyvault-webhook
-  tag: 1.1.0-beta.24
+  tag: 1.1.0-beta.41
   pullPolicy: IfNotPresent
 
 envImage:
   repository: spvest/azure-keyvault-env
-  tag: 1.1.0-beta.24
+  tag: 1.1.0-beta.41
 
 cloudConfigHostPath: /etc/kubernetes/azure.json
 
@@ -25,6 +25,14 @@ keyVault:
 
 authService:
   enabled: true
+  caBundleController:
+    image:
+      repository: spvest/ca-bundle-controller
+      tag: 1.1.0-beta.41
+      pullPolicy: IfNotPresent
+    logLevel: Info
+    akvLabelName: azure-key-vault-env-injection
+    configMapName: akv2k8s-ca
 
 service:
   name: azure-keyvault-secrets-webhook
@@ -36,11 +44,10 @@ service:
 
 metrics:
   enabled: false
-  port: "80"
 
 webhook:
   logLevel: Info
-  dockerPullTimeout: 120 # will timeout after 120 seconds 
+  dockerImageInspectionTimeout: 20 # will timeout after 20 seconds 
 
   # What will happen if the webhook fails? Ignore (continue) or Fail (prevent Pod from starting)?
   failurePolicy: Ignore
@@ -56,15 +63,6 @@ webhook:
       operator: NotIn
       values:
       - kube-system
-
-caBundleController:
-  image:
-    repository: spvest/ca-bundle-controller
-    tag: 1.1.0-beta.24
-    pullPolicy: IfNotPresent
-  logLevel: Info
-  akvLabelName: azure-key-vault-env-injection
-  configMapName: akv2k8s-ca
 
 ## See `kubectl explain poddisruptionbudget.spec` for more
 ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/

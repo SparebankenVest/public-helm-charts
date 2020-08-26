@@ -33,10 +33,10 @@ spec:
       containers:
         {{- if .Values.authService.enabled }}
         - name: ca-bundle-controller
-          image: "{{ .Values.caBundleController.image.repository }}:{{ .Values.caBundleController.image.tag }}"
+          image: "{{ .Values.authService.caBundleController.image.repository }}:{{ .Values.authService.caBundleController.image.tag }}"
           env:
           - name: AKV_LABEL_NAME
-            value: {{ .Values.caBundleController.akvLabelName }}
+            value: {{ .Values.authService.caBundleController.akvLabelName }}
           - name: AKV_NAMESPACE
             valueFrom:
               fieldRef:
@@ -44,10 +44,10 @@ spec:
           - name: AKV_SECRET_NAME
             value: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
           - name: CA_CONFIG_MAP_NAME
-            value: {{ .Values.caBundleController.configMapName }}
+            value: {{ .Values.authService.caBundleController.configMapName }}
           - name: LOG_LEVEL
-            value: {{ .Values.caBundleController.logLevel | quote }}
-          imagePullPolicy: {{ .Values.caBundleController.image.pullPolicy }}
+            value: {{ .Values.authService.caBundleController.logLevel | quote }}
+          imagePullPolicy: {{ .Values.authService.caBundleController.image.pullPolicy }}
         {{- end }}
 
         - name: webhook
@@ -77,24 +77,12 @@ spec:
             value: {{ .Values.envImage.repository }}:{{ .Values.envImage.tag }}
           - name: CLOUD_CONFIG_HOST_PATH
             value: {{ .Values.cloudConfigHostPath }}
-          - name: CUSTOM_DOCKER_PULL_TIMEOUT
-            value: {{ .Values.webhook.dockerPullTimeout | quote }}
-          {{- if .Values.keyVault.customAuth.enabled }}
-            {{- if .Values.keyVault.customAuth.podIdentitySelector }}
-          - name: AAD_POD_BINDING_LABEL
-            valueFrom:
-              fieldRef:
-                fieldPath:  metadata.labels['aadpodidbinding']
-            {{- end }}
-          {{- end }}
+          - name: DOCKER_IMAGE_INSPECTION_TIMEOUT
+            value: {{ .Values.webhook.dockerImageInspectionTimeout | quote }}
           - name: LOG_LEVEL
             value: {{ .Values.webhook.logLevel | quote }}
           - name: METRICS_ENABLED
             value: {{ .Values.metrics.enabled | quote }}
-          {{- if .Values.metrics.enabled }}
-          - name: METRICS_PORT
-            value: {{ .Values.metrics.port | quote }}
-          {{- end }}
           {{- range $key, $value := .Values.env }}
           - name: {{ $key }}
             valueFrom:

@@ -9,6 +9,27 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
+  name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
+  labels:
+    app: {{ template "azure-key-vault-to-kubernetes.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+---
+
+# Create a akv2k8s reader cluster role
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
   name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}-reader
   labels:
     app: {{ template "azure-key-vault-to-kubernetes.name" . }}
@@ -26,6 +47,7 @@ rules:
   - watch
 ---
 
+{{- if .Values.authService.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -64,6 +86,7 @@ rules:
   - update
   - patch
 ---
+
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -85,65 +108,6 @@ rules:
   - list
 ---
 
-# # Give akv2k8s service account cluster-amdin rights 
-# # Todo: Change to only rights needed
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
-  labels:
-    app: {{ template "azure-key-vault-to-kubernetes.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
-subjects:
-- kind: ServiceAccount
-  namespace: {{ .Release.Namespace }}
-  name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
-roleRef:
-  kind: ClusterRole
-  apiGroup: rbac.authorization.k8s.io
-  name: cluster-admin
----
-
-# apiVersion: rbac.authorization.k8s.io/v1
-# kind: ClusterRoleBinding
-# metadata:
-#   name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
-#   labels:
-#     app: {{ template "azure-key-vault-to-kubernetes.name" . }}
-#     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-#     heritage: {{ .Release.Service }}
-#     release: {{ .Release.Name }}
-# subjects:
-# - kind: ServiceAccount
-#   namespace: {{ .Release.Namespace }}
-#   name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
-# roleRef:
-#   kind: ClusterRole
-#   apiGroup: rbac.authorization.k8s.io
-#   name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
-# ---
-
-# Give all service accounts read access to akvs
-kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}-reader
-  labels:
-    app: {{ template "azure-key-vault-to-kubernetes.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
-subjects:
-- kind: Group
-  name: system:serviceaccounts
-  apiGroup: rbac.authorization.k8s.io
-roleRef:
-  kind: ClusterRole
-  name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}-reader
-  apiGroup: rbac.authorization.k8s.io
----
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -175,4 +139,44 @@ subjects:
 roleRef:
   kind: Role
   name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}-ca-bundle
+  apiGroup: rbac.authorization.k8s.io
+---
+{{- end }}
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
+  labels:
+    app: {{ template "azure-key-vault-to-kubernetes.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+subjects:
+- kind: ServiceAccount
+  namespace: {{ .Release.Namespace }}
+  name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
+roleRef:
+  kind: ClusterRole
+  apiGroup: rbac.authorization.k8s.io
+  name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
+---
+
+# Give all service accounts read access to akvs
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}-reader
+  labels:
+    app: {{ template "azure-key-vault-to-kubernetes.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+subjects:
+- kind: Group
+  name: system:serviceaccounts
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}-reader
   apiGroup: rbac.authorization.k8s.io
