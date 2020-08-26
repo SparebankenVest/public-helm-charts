@@ -6,7 +6,7 @@ metadata:
 ---
 
 # Create a akv2k8s reader cluster role
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
   name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
@@ -27,7 +27,7 @@ rules:
 ---
 
 # Create a akv2k8s reader cluster role
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
   name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}-reader
@@ -48,7 +48,7 @@ rules:
 ---
 
 {{- if .Values.authService.enabled }}
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
   name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}-ca-bundle
@@ -87,7 +87,7 @@ rules:
   - patch
 ---
 
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: Role
 metadata:
   name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}-ca-bundle
@@ -109,7 +109,7 @@ rules:
 ---
 
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}-ca-bundle
   labels:
@@ -127,7 +127,7 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 ---
 
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: RoleBinding
 metadata:
   name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}-ca-bundle
@@ -143,7 +143,7 @@ roleRef:
 ---
 {{- end }}
 
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
   name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
@@ -164,7 +164,7 @@ roleRef:
 
 # Give all service accounts read access to akvs
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}-reader
   labels:
