@@ -10,9 +10,9 @@ metadata:
     heritage: {{ .Release.Service }}  
     component: webhook
 spec:
-  minAvailable: {{ .Values.webhook.podDisruptionBudget.minAvailable }}
-{{- if .Values.webhook.podDisruptionBudget.maxUnavailable }}
-  maxUnavailable: {{ .Values.webhook.podDisruptionBudget.maxUnavailable }}
+  minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
+{{- if .Values.podDisruptionBudget.maxUnavailable }}
+  maxUnavailable: {{ .Values.podDisruptionBudget.maxUnavailable }}
 {{- end }}
   selector:
     matchLabels:
