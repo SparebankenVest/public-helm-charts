@@ -3,7 +3,7 @@
 installCrd: true # if installing both controller and env injector, only one can install CRD
 image:
   repository: spvest/azure-keyvault-controller
-  tag: 1.1.0-beta.41
+  tag: 1.1.0-beta.43
   pullPolicy: IfNotPresent
 
 keyVault:
