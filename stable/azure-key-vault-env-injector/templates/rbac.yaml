@@ -20,6 +20,7 @@ rules:
   - ""
   resources:
   - pods
+  - secrets # in order to mutate pods with ImagePullSecrets
   verbs:
   - get
   - list
