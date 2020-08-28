@@ -5,12 +5,12 @@ replicaCount: 2
 
 image:
   repository: spvest/azure-keyvault-webhook
-  tag: 1.1.0-beta.43
+  tag: 1.1.0-beta.44
   pullPolicy: IfNotPresent
 
 envImage:
   repository: spvest/azure-keyvault-env
-  tag: 1.1.0-beta.43
+  tag: 1.1.0-beta.44
 
 cloudConfigHostPath: /etc/kubernetes/azure.json
 
@@ -28,7 +28,7 @@ authService:
   caBundleController:
     image:
       repository: spvest/ca-bundle-controller
-      tag: 1.1.0-beta.43
+      tag: 1.1.0-beta.44
       pullPolicy: IfNotPresent
     logLevel: Info
     akvLabelName: azure-key-vault-env-injection
