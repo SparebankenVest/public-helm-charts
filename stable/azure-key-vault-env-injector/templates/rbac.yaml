@@ -20,11 +20,16 @@ rules:
   - ""
   resources:
   - pods
-  - secrets # in order to mutate pods with ImagePullSecrets
   verbs:
   - get
   - list
   - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets # in order to inspect docker image with ImagePullSecrets
+  verbs:
+  - get
 ---
 
 # Create a akv2k8s reader cluster role
@@ -133,6 +138,11 @@ kind: RoleBinding
 metadata:
   name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}-ca-bundle
   namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "azure-key-vault-to-kubernetes.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
 subjects:
 - kind: ServiceAccount
   namespace: {{ .Release.Namespace }}
