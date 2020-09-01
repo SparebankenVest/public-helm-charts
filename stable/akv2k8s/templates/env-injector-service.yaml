@@ -12,11 +12,17 @@ metadata:
 spec:
   type: {{ .Values.env_injector.service.type }}
   ports:
-    - port: {{ .Values.env_injector.service.externalPort }}
-      targetPort: {{ .Values.env_injector.service.internalPort }}
+    - name: {{ .Values.env_injector.service.name }}
+      port: {{ .Values.env_injector.service.externalTlsPort }}
+      targetPort: {{ .Values.env_injector.service.internallTlsPort }}
       protocol: TCP
-      name: {{ .Values.env_injector.service.name }}
+    - name: {{ .Values.env_injector.service.name }}-http
+      port: {{ .Values.env_injector.service.externalHttpPort }}
+      targetPort: {{ .Values.env_injector.service.internallHttpPort }}
+      protocol: TCP
   selector:
     app: {{ template "akv2k8s.envinjector.name" . }}
     release: {{ .Release.Name }}
+
+
 {{- end}}

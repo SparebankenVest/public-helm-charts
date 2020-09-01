@@ -7,51 +7,44 @@ metadata:
   labels:
     app: {{ template "akv2k8s.controller.name" . }}
     chart: {{ template "akv2k8s.chart" . }}
-    heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 rules:
-  - apiGroups:
-    - spv.no
-    resources:
-    - azurekeyvaultsecrets
-    verbs:
-    - get
-    - list
-    - watch
-    - update
-  - apiGroups:
-    - spv.no
-    resources:
-    - azurekeyvaultsecrets/status
-    verbs:
-    - patch
-    - update
-  - apiGroups:
-    - ""
-    resources:
-    - secrets
-    verbs:
-    - create
-    - update
-    - delete
-    - get
-    - watch
-    - list
-  - apiGroups:
-    - ""
-    resources:
-    - events
-    verbs:
-    - create
-    - update
-    - patch
-  {{- if .Values.rbac.podSecurityPolicies }}
-  - apiGroups: ['policy']
-    resources: ['podsecuritypolicies']
-    verbs: ['use']
-    resourceNames:
-      {{- toYaml .Values.rbac.podSecurityPolicies | nindent 6 }}
-  {{- end }}
+- apiGroups:
+  - spv.no
+  resources:
+  - azurekeyvaultsecrets
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+- apiGroups:
+  - spv.no
+  resources:
+  - azurekeyvaultsecrets/status
+  verbs:
+  - patch
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - create
+  - update
+  - delete
+  - get
+  - watch
+  - list
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - update
+  - patch
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
@@ -60,24 +53,17 @@ metadata:
   labels:
     app: {{ template "akv2k8s.controller.name" . }}
     chart: {{ template "akv2k8s.chart" . }}
-    heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 rules:
-  - apiGroups:
-    - spv.no
-    resources:
-    - azurekeyvaultsecrets
-    verbs:
-    - get
-    - list
-    - watch
-  {{- if .Values.rbac.podSecurityPolicies }}
-  - apiGroups: ['policy']
-    resources: ['podsecuritypolicies']
-    verbs: ['use']
-    resourceNames:
-      {{- toYaml .Values.rbac.podSecurityPolicies | nindent 6 }}
-  {{- end }}
+- apiGroups:
+  - spv.no
+  resources:
+  - azurekeyvaultsecrets
+  verbs:
+  - get
+  - list
+  - watch
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -86,11 +72,11 @@ metadata:
   labels:
     app: {{ template "akv2k8s.controller.name" . }}
     chart: {{ template "akv2k8s.chart" . }}
-    heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 subjects:
 - kind: ServiceAccount
-  name: {{ template "controller.serviceAccountName" . }}
+  name: {{ template "akv2k8s.controller.fullname" . }}
   namespace: {{ .Release.Namespace }}
 roleRef:
   kind: ClusterRole
@@ -104,8 +90,8 @@ metadata:
   labels:
     app: {{ template "akv2k8s.controller.name" . }}
     chart: {{ template "akv2k8s.chart" . }}
-    heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 subjects:
 - kind: Group
   name: system:serviceaccounts

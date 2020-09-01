@@ -1,4 +1,6 @@
 {{- if .Values.controller.enabled -}}
+{{- $dot := . }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -8,27 +10,28 @@ metadata:
     chart: {{ template "akv2k8s.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+{{- if .Values.controller.labels }}
+{{ toYaml .Values.controller.labels | indent 4 }}
+{{- end}}
 spec:
   selector:
     matchLabels:
-      app: {{ template "akv2k8s.controller.name" . }}
+      app: {{ template "akv2k8s.controller.fullname" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "akv2k8s.controller.name" . }}
+        app: {{ template "akv2k8s.controller.fullname" . }}
         release: {{ .Release.Name }}
-        {{- if and .Values.controller.keyVault.customAuth.enabled .Values.controller.keyVault.customAuth.podIdentitySelector}}
-        aadpodidbinding: {{ .Values.controller.keyVault.customAuth.podIdentitySelector }}
-        {{- end }}
+{{- if .Values.controller.podLabels }}
+{{ toYaml .Values.controller.podLabels | indent 8 }}
+{{- end}}
     spec:
       serviceAccountName: {{ template "controller.serviceAccountName" . }}
       containers:
-      - name: {{ .Values.controller.name}}
-        image: '{{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag }}'
-        imagePullPolicy: Always
-        args:
-          - "--cloudconfig={{ .Values.controller.cloudConfig }}"
+      - name: {{ .Values.controller.name }}
+        image: "{{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag }}"
+        imagePullPolicy: {{ .Values.controller.image.pullPolicy }}
         env:
         - name: AZURE_VAULT_NORMAL_POLL_INTERVALS
           value: "{{ .Values.controller.keyVault.polling.normalInterval }}"
@@ -41,38 +44,31 @@ spec:
             fieldRef:
               fieldPath:  metadata.labels['aadpodidbinding']
         - name: CUSTOM_AUTH
-          value: {{ .Values.controller.keyVault.customAuth.enabled | quote }}
+          value: {{ .Values.controller.keyVault.customAuth | quote }}
         - name: LOG_LEVEL
           value: "{{ .Values.controller.logLevel }}"
         {{- range $key, $value := .Values.controller.env }}
         - name: {{ $key }}
-          value: {{ $value }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "akv2k8s.controller.fullname" $dot }}-env
+              key: {{ $key }}
         {{- end }}
+    {{- if not .Values.controller.keyVault.customAuth }}
+        args:
+          - "--cloudconfig={{ .Values.controller.cloudConfig }}"
         volumeMounts:
           - name: azure-config
             mountPath: "{{ .Values.controller.cloudConfig }}"
             readOnly: true
-        resources:
-{{ toYaml .Values.controller.resources | indent 12 }}
-    {{- if .Values.controller.nodeSelector }}
-      nodeSelector:
-{{ toYaml .Values.controller.nodeSelector | indent 8 }}
-    {{- end }}
-  {{- if .Values.controller.tolerations }}
-      tolerations:
-{{ toYaml .Values.controller.tolerations | indent 8 }}
-  {{- end }}
-  {{- if .Values.controller.affinity }}
-      affinity:
-{{ toYaml .Values.controller.affinity | indent 8 }}
-  {{- end }}
-      {{- if .Values.controller.image.pullSecret }}
-      imagePullSecrets:
-      - name: "{{ .Values.controller.image.pullSecret }}"
-      {{- end }}
       volumes:
       - name: azure-config
         hostPath:
           path: "{{ .Values.controller.cloudConfig }}"
           type: File
+      {{- end }}
+      {{- if .Values.controller.image.pullSecret }}
+      imagePullSecrets:
+      - name: "{{ .Values.controller.image.pullSecret }}"
+      {{- end }}
 {{- end }}

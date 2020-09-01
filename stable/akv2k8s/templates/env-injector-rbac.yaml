@@ -1,43 +1,184 @@
 {{- if .Values.env_injector.enabled -}}
 {{- if .Values.rbac.create -}}
+
+# Create a akv2k8s reader cluster role
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: {{ template "akv2k8s.envinjector.fullname" . }}
+  labels:
+    app: {{ template "akv2k8s.controller.name" . }}
+    chart: {{ template "akv2k8s.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets # in order to inspect docker image with ImagePullSecrets
+  verbs:
+  - get
+---
+
+# Create a akv2k8s reader cluster role
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}-reader
+  labels:
+    app: {{ template "akv2k8s.controller.name" . }}
+    chart: {{ template "akv2k8s.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 rules:
-  - apiGroups:
-    - spv.no
-    resources:
-    - azurekeyvaultsecrets
-    verbs:
-    - get
-    - list
-    - watch
-  {{- if .Values.rbac.podSecurityPolicies }}
-  - apiGroups: ['policy']
-    resources: ['podsecuritypolicies']
-    verbs: ['use']
-    resourceNames:
-      {{- toYaml .Values.rbac.podSecurityPolicies | nindent 6 }}
-  {{- end }}
+- apiGroups:
+  - spv.no
+  resources:
+  - azurekeyvaultsecrets
+  verbs:
+  - get
+  - list
+  - watch
 ---
+
+{{- if .Values.env_injector.keyVault.authService.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: {{ template "akv2k8s.envinjector.fullname" . }}-ca-bundle
+  labels:
+    app: {{ template "akv2k8s.controller.name" . }}
+    chart: {{ template "akv2k8s.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - create
+  - update
+  - delete
+  - get
+  - watch
+  - list
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+  - watch
+  - list
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - update
+  - patch
+---
+
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: Role
+metadata:
+  name: {{ template "akv2k8s.envinjector.fullname" . }}-ca-bundle
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "akv2k8s.controller.name" . }}
+    chart: {{ template "akv2k8s.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - watch
+  - list
+---
+
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: {{ template "akv2k8s.envinjector.fullname" . }}-ca-bundle
+  labels:
+    app: {{ template "akv2k8s.controller.name" . }}
+    chart: {{ template "akv2k8s.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+subjects:
+- kind: ServiceAccount
+  namespace: {{ .Release.Namespace }}
+  name: {{ template "akv2k8s.envinjector.fullname" . }}
+roleRef:
+  kind: ClusterRole
+  name: {{ template "akv2k8s.envinjector.fullname" . }}-ca-bundle
+  apiGroup: rbac.authorization.k8s.io
+---
+
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  name: {{ template "akv2k8s.envinjector.fullname" . }}-ca-bundle
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "akv2k8s.controller.name" . }}
+    chart: {{ template "akv2k8s.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+subjects:
+- kind: ServiceAccount
+  namespace: {{ .Release.Namespace }}
+  name: {{ template "akv2k8s.envinjector.fullname" . }}
+roleRef:
+  kind: Role
+  name: {{ template "akv2k8s.envinjector.fullname" . }}-ca-bundle
+  apiGroup: rbac.authorization.k8s.io
+---
+{{- end }}
+
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
+  name: {{ template "akv2k8s.envinjector.fullname" . }}-sa
+  labels:
+    app: {{ template "akv2k8s.controller.name" . }}
+    chart: {{ template "akv2k8s.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+subjects:
+- kind: ServiceAccount
+  namespace: {{ .Release.Namespace }}
   name: {{ template "akv2k8s.envinjector.fullname" . }}
 roleRef:
   kind: ClusterRole
   apiGroup: rbac.authorization.k8s.io
-  name: cluster-admin
-subjects:
-- kind: ServiceAccount
-  namespace: {{ .Release.Namespace }}
-  name: {{ template "envinjector.serviceAccountName" . }}
+  name: {{ template "akv2k8s.envinjector.fullname" . }}
 ---
+
+# Give all service accounts read access to akvs
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}-reader
+  labels:
+    app: {{ template "akv2k8s.controller.name" . }}
+    chart: {{ template "akv2k8s.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 subjects:
 - kind: Group
   name: system:serviceaccounts
@@ -46,5 +187,6 @@ roleRef:
   kind: ClusterRole
   name: {{ template "akv2k8s.envinjector.fullname" . }}-reader
   apiGroup: rbac.authorization.k8s.io
+
 {{- end}}
 {{- end}}
