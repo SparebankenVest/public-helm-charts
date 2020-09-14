@@ -2,17 +2,13 @@
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ tpl .Values.global.zeebe . | quote }}
+  name: {{ include "zeebe-cluster.names.broker" . }}
   labels:
-    app.kubernetes.io/name: {{ include "zeebe-cluster.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app: {{ tpl .Values.global.zeebe . | quote }}
+    {{- include "zeebe-cluster.labels.broker" . | nindent 4 }}
 spec:
   minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
   maxUnavailable: {{ .Values.podDisruptionBudget.maxUnavailable }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "zeebe-cluster.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
-      app: {{ tpl .Values.global.zeebe . | quote }}
+      {{- include "zeebe-cluster.labels.broker" . | nindent 6 }}
 {{ end }}

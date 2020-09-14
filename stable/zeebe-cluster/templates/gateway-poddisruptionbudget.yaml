@@ -4,13 +4,11 @@ kind: PodDisruptionBudget
 metadata:
   name: {{ printf "%s-gateway" (tpl .Values.global.zeebe .) | quote }}
   labels:
-    app.kubernetes.io/name: {{ include "zeebe-cluster.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app: {{ printf "%s-gateway" (tpl .Values.global.zeebe .) | quote }}
+    {{- include "zeebe-cluster.labels.gateway" . | nindent 4 }}
 spec:
   minAvailable: {{ .Values.gateway.podDisruptionBudget.minAvailable }}
   maxUnavailable: {{ .Values.gateway.podDisruptionBudget.maxUnavailable }}
   selector:
     matchLabels:
-      app: {{ printf "%s-gateway" (tpl .Values.global.zeebe .) | quote }}
+      {{- include "zeebe-cluster.labels.gateway" . | nindent 6 }}
 {{ end }}

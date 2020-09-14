@@ -10,7 +10,7 @@ global:
 
 image:
   repository: camunda/zeebe
-  tag: 0.23.2
+  tag: 0.25.0-alpha2
   pullPolicy: IfNotPresent
 
 clusterSize: "3"
@@ -21,10 +21,11 @@ ioThreadCount: "2"
 pvcSize: "10Gi"
 pvcAccessModes: [ "ReadWriteOnce" ]
 env: []
+logLevel: info
 
 gateway:
   replicas: 1
-  logLevel: warn
+  logLevel: info
   env: []
   podDisruptionBudget:
     enabled: false
@@ -45,18 +46,11 @@ prometheus:
     enabled: false
 
 JavaOpts: >-
-  -XX:+UseParallelGC
-  -XX:MinHeapFreeRatio=5
-  -XX:MaxHeapFreeRatio=10
   -XX:MaxRAMPercentage=25.0
-  -XX:GCTimeRatio=4
-  -XX:AdaptiveSizePolicyWeight=90
-  -XX:+PrintFlagsFinal
-  -Xmx4g
-  -Xms4g
   -XX:+HeapDumpOnOutOfMemoryError
   -XX:HeapDumpPath=/usr/local/zeebe/data
   -XX:ErrorFile=/usr/local/zeebe/data/zeebe_error%p.log
+  -XX:+ExitOnOutOfMemoryError
 
 labels:
   app: zeebe    

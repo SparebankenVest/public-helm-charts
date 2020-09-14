@@ -2,15 +2,16 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: zeebe-monitor
+  name: {{ include "zeebe-cluster.fullname" . }}
   labels:
-      release: metrics
+    {{- include "zeebe-cluster.labels" . | nindent 4 }}
+    release: metrics
 spec:
   selector:
     matchLabels:
-      app: zeebe
+      {{- include "zeebe-cluster.labels" . | nindent 6 }}
   endpoints:
-      - honorLabels: true
-        port: http
-        interval: 10s
+    - honorLabels: true
+      port: http
+      interval: 10s
 {{- end }}

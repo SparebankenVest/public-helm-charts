@@ -1,10 +1,8 @@
 kind: ConfigMap
 metadata:
-  name: {{ tpl .Values.global.zeebe . | quote }}
+  name: {{ include "zeebe-cluster.fullname" . }}
   labels: 
-    app.kubernetes.io/name: {{ include "zeebe-cluster.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app: {{ tpl .Values.global.zeebe . | quote }}
+    {{- include "zeebe-cluster.labels" . | nindent 4 }}
 apiVersion: v1
 data:
   startup.sh: |
@@ -43,3 +41,14 @@ data:
 {{ . | toYaml | indent 4 }}
 {{- end }}
 {{- end }}
+
+  broker-log4j2.xml: |
+{{- if .Values.log4j2 }}
+    {{ .Values.log4j2 | indent 4 | trim }}
+{{- end }}
+
+  gateway-log4j2.xml: |
+{{- if .Values.gateway.log4j2 }}
+    {{ .Values.gateway.log4j2 | indent 4 | trim }}
+{{- end }}
+
