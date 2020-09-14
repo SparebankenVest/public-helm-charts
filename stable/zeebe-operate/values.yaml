@@ -15,7 +15,7 @@ service:
   port: 80
 image:
   repository: camunda/operate
-  tag: 0.25.0-alpha2
+  tag: 0.24.3
 
 resources: 
   requests:
