@@ -10,7 +10,7 @@ global:
 
 image:
   repository: camunda/zeebe
-  tag: 0.24.3
+  tag: 0.25.0-alpha2
   pullPolicy: IfNotPresent
 
 clusterSize: "3"
