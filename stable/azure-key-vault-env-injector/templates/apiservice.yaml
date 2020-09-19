@@ -42,7 +42,7 @@ webhooks:
       namespace: {{ .Release.Namespace }}
       name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
       path: /pods
-    caBundle: {{ b64enc $ca.Cert }}
+    caBundle: {{ $caCrt }}
   rules:
   - operations:
     - CREATE
