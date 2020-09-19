@@ -1,27 +1,28 @@
 # Default values 
 
-installCrd: true # if installing both controller and env injector, only one can install CRD
 replicaCount: 2
 
 image:
   repository: spvest/azure-keyvault-webhook
-  tag: 1.1.0-beta.44
+  tag: 1.1.0-beta.45
   pullPolicy: IfNotPresent
 
 envImage:
   repository: spvest/azure-keyvault-env
-  tag: 1.1.0-beta.44
+  tag: 1.1.0-beta.45
+
+runningInsideAzureAks: true
 
 cloudConfigHostPath: /etc/kubernetes/azure.json
 
 keyVault:
-  # Set to true to use custom auth - see https://github.com/SparebankenVest/azure-key-vault-to-kubernetes/blob/master/README.md#authentication
+  # Set to true to use custom auth - see https://akv2k8s.io/security/authentication/
   customAuth:
     enabled: false
 
-    # uncomment to use aad-pod-identity (MSI) and point to a selector
-    # if used, secretName must not be set
-    # podIdentitySelector: <selector name>
+dockerImageInspection:
+  timeout: 20 # Timeout in seconds
+  useAksCredentialsWithACS: true # Only applicable if runningInsideAzureAks is also true
 
 authService:
   enabled: true

@@ -90,6 +90,8 @@ spec:
           env:
           - name: PORT
             value: {{ .Values.service.internalTlsPort | quote }}
+          - name: RUNNING_INSIDE_AZURE_AKS
+            value: {{ .Values.runningInsideAzureAks | quote }}
           - name: TLS_CERT_FILE
             value: /var/serving-cert/servingCert
           - name: TLS_PRIVATE_KEY_FILE
@@ -113,7 +115,9 @@ spec:
           - name: CLOUD_CONFIG_HOST_PATH
             value: {{ .Values.cloudConfigHostPath }}
           - name: DOCKER_IMAGE_INSPECTION_TIMEOUT
-            value: {{ .Values.webhook.dockerImageInspectionTimeout | quote }}
+            value: {{ .Values.dockerImageInspection.timeout | quote }}
+          - name: DOCKER_IMAGE_INSPECTION_USE_ACS_CREDENTIALS
+            value: {{ .Values.dockerImageInspection.useAksCredentialsWithACS | quote }}
           - name: LOG_LEVEL
             value: {{ .Values.webhook.logLevel | quote }}
           - name: METRICS_ENABLED
@@ -139,7 +143,7 @@ spec:
           volumeMounts:
           - mountPath: /var/serving-cert
             name: serving-cert
-          {{- if not .Values.keyVault.customAuth.enabled }}
+          {{- if .Values.runningInsideAzureAks }}
           - mountPath: /etc/kubernetes/azure.json
             name: azureconf
             readOnly: true
@@ -151,7 +155,7 @@ spec:
         secret:
           defaultMode: 420
           secretName: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
-      {{- if not .Values.keyVault.customAuth.enabled }}
+      {{- if .Values.runningInsideAzureAks }}
       - name: azureconf
         hostPath:
           path: /etc/kubernetes/azure.json

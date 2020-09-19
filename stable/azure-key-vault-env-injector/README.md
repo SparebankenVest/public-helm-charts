@@ -3,83 +3,17 @@ title: "Env-Injector Helm Chart"
 description: "Azure Key Vault Env-Injector reference"
 ---
 
-This chart will install a Custom Resource Definition (`AzureKeyVaultEnvSecret`) and a mutating admission webhook, that together enable transparent injection of Azure Key Vault secrets to containers as environment variables.
+This chart will install the Azure Key Vault Env Injector as a mutating admission webhook, enabling transparent injection of Azure Key Vault secrets to applications running inside containers as environment variables.
 
 For more information see the main GitHub repository at https://github.com/SparebankenVest/azure-key-vault-to-kubernetes.
 
-## Note about installing both Azure Key Vault Env Injector AND Azure Key Vault Controller
+## Installation
 
-If installing both the [Controller](https://github.com/SparebankenVest/public-helm-charts/azure-key-vault-controller) and the Controller, they share the same Custom Resource Definition (CRD), so only one of them can install it. Set `installCrd` to `false` for either this Chart or the [Controller](https://github.com/SparebankenVest/azure-key-vault-controller) Chart. 
+See the documentation for installation instructions: https://akv2k8s.io/installation/
 
-## Installing the Chart
+## Not running akv2k8s inside Azure AKS?
 
-```bash
-helm repo add spv-charts http://charts.spvapi.no
-helm repo update
-```
-
-```bash
-helm install spv-charts/azure-key-vault-env-injector \
-  --namespace akv2k8s
-```
-
-**Note: Install akv2k8s in its own dedicated namespace** 
-
-**Note: The Env Injector needs to be enabled for each namespace**
-
-The Env Injector is developed using a Mutating Admission Webhook that triggers just before every Pod gets created. To allow cluster administrators some control over which Pods this Webhook gets triggered for, it must be enabled per namespace using the `azure-key-vault-env-injection` label, like in the example below:
-
-```
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: akv-test
-  labels:
-    azure-key-vault-env-injection: enabled
-```
-
-### Installation of both Env Injector and Controller
-```bash
-helm install spv-charts/azure-key-vault-env-injector \
-  --namespace akv2k8s
-
-helm install spv-charts/azure-key-vault-controller \
-    --set installCrd=false  --namespace akv2k8s
-```
-
-### Using custom authentication with AAD Pod Identity
-
-Requires Pod Identity: https://github.com/Azure/aad-pod-identity
-
-```bash
-helm install spv-charts/azure-key-vault-env-injector \
-  --namespace akv2k8s \
-  --set keyVault.customAuth.enabled=true \
-```
-
-When deploying Pods, set the `aadpodidbinding` according to the 
-[AAD Pod Identity project docs](https://github.com/Azure/aad-pod-identity/blob/master/README.md) and
-the env-injector will use these credentials when communicating with Azure Key Vault.
-
-### Using custom authentication with Service Principal
-
-```bash
-helm install spv-charts/azure-key-vault-env-injector \
-  --namespace akv2k8s \
-  --set keyVault.customAuth.enabled=true \
-  --set env.AZURE_TENANT_ID=... \
-  --set env.AZURE_CLIENT_ID=... \
-  --set env.AZURE_CLIENT_SECRET=...
-```
-
-### Disable central authentication, leaving all AKV authentication to individual Pods
-```bash
-helm install spv-charts/azure-key-vault-env-injector \
-  --namespace akv2k8s \
-  --set authService.enabled=false
-```
-
-See [Custom Authentication Options](https://akv2k8s.io/security/authentication/#custom-authentication-options) in the akv2k8s documentation for how you can configure individual pods with auth. 
+The most common scenario when using Azure Key Vault with Kubernetes, is running inside Azure AKS. Because of this some features are enabled by default, which will not work outside of Azure AKS. To disable these, set `runningInsideAzureAks` to `false`. 
 
 ## Configuration
 
@@ -87,6 +21,7 @@ The following tables lists configurable parameters of the azure-key-vault-env-in
 
 |               Parameter                        |                Description                  |                  Default                 |
 | ---------------------------------------------- | ------------------------------------------- | -----------------------------------------|
+|runningInsideAzureAks                           |if akv2k8s is running inside azure aks - set to false if running outside aks |true |
 |affinity                                        |affinities to use                            |{}                                        |
 |authService.enabled                             |if authservice is used for central akv authentication|true|
 |authService.caBundleController.image.repository |image repository for ca bundler|spvest/ca-bundle-controller|
@@ -96,13 +31,14 @@ The following tables lists configurable parameters of the azure-key-vault-env-in
 |authService.caBundleController.akvLabelName     |akv label used in namespaces|azure-key-vault-env-injection|
 |authService.caBundleController.configMapName    |configmap name to store ca cert|akv2k8s-ca|
 |cloudConfigHostPath                             |path to azure cloud config                   |/etc/kubernetes/azure.json                |
+|dockerImageInspection.timeout                   |timeout in seconds                           |20                                        |
+|dockerImageInspection.useAksCredentialsWithACS  |
 |env                                             |aditional env vars to send to pod            |{}                                        |
 |envImage.repository                             |image repo that contains the env image       |spvest/azure-keyvault-env                 |
 |envImage.tag                                    |image tag                                    |1.0.2                                    |
 |image.pullPolicy                                |image pull policy                            |IfNotPresent                              |
 |image.repository                                |image repo that contains the controller      |spvest/azure-keyvault-webhook             |
 |image.tag                                       |image tag                                    |1.0.2                                    |
-|installCrd                                      |install custom resource definition           |true                                      |
 |keyVault.customAuth.enabled                     |if custom authentication with azure key vault is enabled |false                         |
 |metrics.enabled                                 |if prometheus metrics is enabled             |false                                     |
 |nodeSelector                                    |node selector to use                         |{}                                        |
