@@ -29,7 +29,7 @@ authService:
   caBundleController:
     image:
       repository: spvest/ca-bundle-controller
-      tag: 1.1.0-beta.46
+      tag: 1.1.0-beta.47
       pullPolicy: IfNotPresent
     logLevel: Info
     akvLabelName: azure-key-vault-env-injection
