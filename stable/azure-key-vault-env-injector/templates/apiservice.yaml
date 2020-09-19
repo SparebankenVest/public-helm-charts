@@ -2,12 +2,12 @@
 {{- $tlsKey := "" }}
 {{- $caCrt := "" }}
 {{- if .Values.webhook.certificate.generate }}
-{{ $ca := genCA "svc-cat-ca" 3650 }}
-{{ $svcName := include "azure-key-vault-to-kubernetes.fullname" . }}
-{{ $cn := printf "%s.%s.svc" $svcName .Release.Namespace }}
+{{- $ca := genCA "svc-cat-ca" 3650 }}
+{{- $svcName := include "azure-key-vault-to-kubernetes.fullname" . }}
+{{- $cn := printf "%s.%s.svc" $svcName .Release.Namespace }}
 {{- $altName1 := printf "%s.cluster.local" $cn }}
 {{- $altName2 := printf "%s" $cn }}
-{{- $server := genSignedCert $cn $altName1 $altName2 730 $ca }}
+{{- $server := genSignedCert $cn nil (list $altName1 $altName2) 730 $ca }}
 {{- $tlsCrt = b64enc $server.Cert }}
 {{- $tlsKey = b64enc $server.Key }}
 {{- $caCrt =  b64enc $ca.Cert }}
