@@ -30,3 +30,19 @@ Create chart name and version as used by the chart label.
 {{- define "azure-key-vault-to-kubernetes.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{- define "azure-key-vault-to-kubernetes.selfSignedIssuer" -}}
+{{ printf "%s-selfsign" (include "azure-key-vault-to-kubernetes.fullname" .) }}
+{{- end -}}
+
+{{- define "azure-key-vault-to-kubernetes.rootCAIssuer" -}}
+{{ printf "%s-ca" (include "azure-key-vault-to-kubernetes.fullname" .) }}
+{{- end -}}
+
+{{- define "azure-key-vault-to-kubernetes.rootCACertificate" -}}
+{{ printf "%s-ca" (include "azure-key-vault-to-kubernetes.fullname" .) }}
+{{- end -}}
+
+{{- define "azure-key-vault-to-kubernetes.servingCertificate" -}}
+{{ printf "%s-webhook-tls" (include "azure-key-vault-to-kubernetes.fullname" .) }}
+{{- end -}}

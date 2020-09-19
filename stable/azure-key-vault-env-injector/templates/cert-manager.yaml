@@ -1,0 +1,79 @@
+{{- if .Values.webhook.certificate.useCertManager }}
+---
+# Create a selfsigned Issuer, in order to create a root CA certificate for
+# signing webhook serving certificates
+apiVersion: cert-manager.io/v1alpha2
+kind: Issuer
+metadata:
+  name: {{ include "azure-key-vault-to-kubernetes.selfSignedIssuer" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selfSigned: {}
+
+---
+
+# Generate a CA Certificate used to sign certificates for the webhook
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: {{ include "azure-key-vault-to-kubernetes.rootCACertificate" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  secretName: {{ include "azure-key-vault-to-kubernetes.rootCACertificate" . }}
+  duration: 43800h # 5y
+  issuerRef:
+    name: {{ include "azure-key-vault-to-kubernetes.selfSignedIssuer" . }}
+  commonName: "ca.azure-key-vault-to-kubernetes.cert-manager"
+  isCA: true
+
+---
+
+# Create an Issuer that uses the above generated CA certificate to issue certs
+apiVersion: cert-manager.io/v1alpha2
+kind: Issuer
+metadata:
+  name: {{ include "azure-key-vault-to-kubernetes.rootCAIssuer" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  ca:
+    secretName: {{ include "azure-key-vault-to-kubernetes.rootCACertificate" . }}
+
+---
+
+# Finally, generate a serving certificate for the webhook to use
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: {{ include "azure-key-vault-to-kubernetes.servingCertificate" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  secretName: {{ include "azure-key-vault-to-kubernetes.servingCertificate" . }}
+  duration: 8760h # 1y
+  issuerRef:
+    name: {{ include "azure-key-vault-to-kubernetes.rootCAIssuer" . }}
+  dnsNames:
+  - {{ include "azure-key-vault-to-kubernetes.fullname" . }}
+  - {{ include "azure-key-vault-to-kubernetes" . }}.{{ .Release.Namespace }}
+  - {{ include "azure-key-vault-to-kubernetes.fullname" . }}.{{ .Release.Namespace }}.svc
+
+{{- end }}
