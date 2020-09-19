@@ -51,7 +51,7 @@ webhook:
   dockerImageInspectionTimeout: 20 # will timeout after 20 seconds 
 
   # What will happen if the webhook fails? Ignore (continue) or Fail (prevent Pod from starting)?
-  failurePolicy: Ignore
+  failurePolicy: Fail
 
   # https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-namespaceselector
   namespaceSelector:
