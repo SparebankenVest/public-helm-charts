@@ -73,7 +73,7 @@ spec:
     name: {{ include "azure-key-vault-to-kubernetes.rootCAIssuer" . }}
   dnsNames:
   - {{ include "azure-key-vault-to-kubernetes.fullname" . }}
-  - {{ include "azure-key-vault-to-kubernetes" . }}.{{ .Release.Namespace }}
+  - {{ include "azure-key-vault-to-kubernetes.fullname" . }}.{{ .Release.Namespace }}
   - {{ include "azure-key-vault-to-kubernetes.fullname" . }}.{{ .Release.Namespace }}.svc
 
 {{- end }}
