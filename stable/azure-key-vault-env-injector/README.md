@@ -39,7 +39,7 @@ The following tables lists configurable parameters of the azure-key-vault-env-in
 |runningInsideAzureAks                           |if akv2k8s is running inside azure aks - set to false if running outside aks |true |
 |affinity                                        |affinities to use                            |{}                                        |
 |caBundleController.image.repository             |image repository for ca bundler|spvest/ca-bundle-controller|
-|caBundleController.image.tag                    |image tag for ca bundler|1.1.0-beta.24|
+|caBundleController.image.tag                    |image tag for ca bundler|1.1.0|
 |caBundleController.image.pullPolicy             |pull policy for ca bundler|IfNotPresent|
 |caBundleController.logLevel                     |log level - Trace, Debug, Info, Warning, Error, Fatal or Panic|Info|
 |caBundleController.logFormat                    |log format - fmt or json|fmt|
@@ -51,10 +51,10 @@ The following tables lists configurable parameters of the azure-key-vault-env-in
 |dockerImageInspection.useAksCredentialsWithACS  |                                             |true|
 |env                                             |aditional env vars to send to pod            |{}                                        |
 |envImage.repository                             |image repo that contains the env image       |spvest/azure-keyvault-env                 |
-|envImage.tag                                    |image tag                                    |1.0.2                                    |
+|envImage.tag                                    |image tag                                    |1.1.0                                    |
 |image.pullPolicy                                |image pull policy                            |IfNotPresent                              |
 |image.repository                                |image repo that contains the controller      |spvest/azure-keyvault-webhook             |
-|image.tag                                       |image tag                                    |1.0.2                                    |
+|image.tag                                       |image tag                                    |1.1.0                                    |
 |keyVault.customAuth.enabled                     |if custom authentication with azure key vault is enabled |false                         |
 |metrics.enabled                                 |if prometheus metrics is enabled             |false                                     |
 |nodeSelector                                    |node selector to use                         |{}                                        |

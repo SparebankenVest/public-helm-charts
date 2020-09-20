@@ -19,7 +19,7 @@ controller:
   name: controller
   image:
     repository: spvest/azure-keyvault-controller
-    tag: 1.1.0-beta.45
+    tag: 1.1.0
     pullPolicy: IfNotPresent
     #pullSecret: secretName
 
@@ -66,12 +66,12 @@ env_injector:
 
   image:
     repository: spvest/azure-keyvault-webhook
-    tag: 1.1.0-beta.47
+    tag: 1.1.0
     pullPolicy: IfNotPresent
 
   envImage:
     repository: spvest/azure-keyvault-env
-    tag: 1.1.0-beta.45
+    tag: 1.1.0
 
   cloudConfigHostPath: /etc/kubernetes/azure.json
 
@@ -87,7 +87,7 @@ env_injector:
   caBundleController:
     image:
       repository: spvest/ca-bundle-controller
-      tag: 1.1.0-beta.49
+      tag: 1.1.0
       pullPolicy: IfNotPresent
     env: {}
     labels: {}

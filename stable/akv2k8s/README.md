@@ -40,7 +40,7 @@ kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vau
 | ------------------------------------------------- | -------------------------------------------- | -----------------------------------------|
 |controller.env                                     |aditional env vars to send to pod             | {}                                       |
 |controller.image.repository                        |image repo that contains the controller image | spvest/azure-keyvault-controller         |
-|controller.image.tag                               |image tag                                     |1.0.2|
+|controller.image.tag                               |image tag                                     |1.1.0|
 |controller.image.pullPolicy                        |pull policy                                   | IfNotPresent |
 |controller.keyVault.customAuth                     |if custom auth is enabled                     | false |
 |controller.keyVault.customAuth.podIdentitySelector |if using aad-pod-identity, which selector to reference | "" |
@@ -62,7 +62,7 @@ kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vau
 |env_injector.caBundleController.env                          |Env vars to add to the ca-bundle pod         |{} |
 |env_injector.caBundleController.image.pullPolicy             |pull policy for ca bundler|IfNotPresent|
 |env_injector.caBundleController.image.repository             |image repository for ca bundler|spvest/ca-bundle-controller|
-|env_injector.caBundleController.image.tag                    |image tag for ca bundler|1.1.0-beta.24|
+|env_injector.caBundleController.image.tag                    |image tag for ca bundler                     |1.1.0|
 |env_injector.caBundleController.labels                       |Labels to add to the ca-bundle deployment    |{} |
 |env_injector.caBundleController.logLevel                     |log level - Trace, Debug, Info, Warning, Error, Fatal or Panic|Info|
 |env_injector.caBundleController.logFormat                    |log format - fmt or json|fmt|
@@ -72,10 +72,10 @@ kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vau
 |env_injector.dockerImageInspection.useAksCredentialsWithACS  |                                             |true|
 |env_injector.env                                             |aditional env vars to send to pod            |{}                                        |
 |env_injector.envImage.repository                             |image repo that contains the env image       |spvest/azure-keyvault-env                 |
-|env_injector.envImage.tag                                    |image tag                                    |1.0.2                                    |
+|env_injector.envImage.tag                                    |image tag                                    |1.1.0                                    |
 |env_injector.image.pullPolicy                                |image pull policy                            |IfNotPresent                              |
 |env_injector.image.repository                                |image repo that contains the controller      |spvest/azure-keyvault-webhook             |
-|env_injector.image.tag                                       |image tag                                    |1.0.2                                    |
+|env_injector.image.tag                                       |image tag                                    |1.1.0                                    |
 |env_injector.keyVault.customAuth.enabled                     |if custom authentication with azure key vault is enabled |false                         |
 |env_injector.metrics.enabled                                 |if prometheus metrics is enabled             |false                                     |
 |env_injector.name                                            ||env-injector|

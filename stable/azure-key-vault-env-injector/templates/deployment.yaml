@@ -50,7 +50,7 @@ spec:
           - name: {{ $key }}
             valueFrom:
               secretKeyRef:
-                name: {{ template "azure-key-vault-to-kubernetes.fullname" $dot }}-caBundleController-env
+                name: {{ template "azure-key-vault-to-kubernetes.fullname" $dot }}-cabundlecontroller-env
                 key: {{ $key }}
           {{- end }}
           imagePullPolicy: {{ .Values.caBundleController.image.pullPolicy }}

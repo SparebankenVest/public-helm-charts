@@ -34,7 +34,7 @@ The following table lists configurable parameters of the azure-key-vault-control
 | -------------------------------------- | -------------------------------------------- | -----------------------------------------|
 |env                                     |aditional env vars to send to pod             |{}                                        |
 |image.repository                        |image repo that contains the controller image | spvest/azure-keyvault-controller         |
-|image.tag                               |image tag|1.0.2|
+|image.tag                               |image tag|1.1.0|
 |image.pullPolicy                        |pull policy | IfNotPresent |
 |installCrd                              |install custom resource definition           |true                                      |
 |keyVault.customAuth.enabled             |if custom auth is enabled | false |
