@@ -1,4 +1,4 @@
-{{- if and .Values.env_injector.enabled .Values.env_injector.podDisruptionBudget.enabled }}
+{{- if and .Values.env_injector.enabled .Values.env_injector.webhook.podDisruptionBudget.enabled }}
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
@@ -10,9 +10,9 @@ metadata:
     heritage: {{ .Release.Service }}  
     component: webhook
 spec:
-  minAvailable: {{ .Values.env_injector.podDisruptionBudget.minAvailable }}
-{{- if .Values.env_injector.podDisruptionBudget.maxUnavailable }}
-  maxUnavailable: {{ .Values.env_injector.podDisruptionBudget.maxUnavailable }}
+  minAvailable: {{ .Values.env_injector.webhook.podDisruptionBudget.minAvailable }}
+{{- if .Values.env_injector.webhook.podDisruptionBudget.maxUnavailable }}
+  maxUnavailable: {{ .Values.env_injector.webhook.podDisruptionBudget.maxUnavailable }}
 {{- end }}
   selector:
     matchLabels:

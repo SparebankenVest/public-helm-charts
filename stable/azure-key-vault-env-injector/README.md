@@ -23,18 +23,17 @@ The following tables lists configurable parameters of the azure-key-vault-env-in
 | ---------------------------------------------- | ------------------------------------------- | -----------------------------------------|
 |runningInsideAzureAks                           |if akv2k8s is running inside azure aks - set to false if running outside aks |true |
 |affinity                                        |affinities to use                            |{}                                        |
-|authService.enabled                             |if authservice is used for central akv authentication|true|
-|authService.caBundleController.image.repository |image repository for ca bundler|spvest/ca-bundle-controller|
-|authService.caBundleController.image.tag        |image tag for ca bundler|1.1.0-beta.24|
-|authService.caBundleController.image.pullPolicy |pull policy for ca bundler|IfNotPresent|
-|authService.caBundleController.logLevel         |log level - Trace, Debug, Info, Warning, Error, Fatal or Panic|Info|
-|authService.caBundleController.logFormat        |log format - fmt or json|fmt|
-|authService.caBundleController.akvLabelName     |akv label used in namespaces|azure-key-vault-env-injection|
-|authService.caBundleController.configMapName    |configmap name to store ca cert|akv2k8s-ca|
-|authService.caBundleController.podLabels        |Labels to add to the ca-bundle pod           |{} |
+|caBundleController.image.repository |image repository for ca bundler|spvest/ca-bundle-controller|
+|caBundleController.image.tag        |image tag for ca bundler|1.1.0-beta.24|
+|caBundleController.image.pullPolicy |pull policy for ca bundler|IfNotPresent|
+|caBundleController.logLevel         |log level - Trace, Debug, Info, Warning, Error, Fatal or Panic|Info|
+|caBundleController.logFormat        |log format - fmt or json|fmt|
+|caBundleController.akvLabelName     |akv label used in namespaces|azure-key-vault-env-injection|
+|caBundleController.configMapName    |configmap name to store ca cert|akv2k8s-ca|
+|caBundleController.podLabels        |Labels to add to the ca-bundle pod           |{} |
 |cloudConfigHostPath                             |path to azure cloud config                   |/etc/kubernetes/azure.json                |
 |dockerImageInspection.timeout                   |timeout in seconds                           |20                                        |
-|dockerImageInspection.useAksCredentialsWithACS  |
+|dockerImageInspection.useAksCredentialsWithACS  |                                             |true|
 |env                                             |aditional env vars to send to pod            |{}                                        |
 |envImage.repository                             |image repo that contains the env image       |spvest/azure-keyvault-env                 |
 |envImage.tag                                    |image tag                                    |1.0.2                                    |
@@ -60,9 +59,10 @@ The following tables lists configurable parameters of the azure-key-vault-env-in
 |webhook.certificate.custom.server.tls.crt       |custom tls cert|""|
 |webhook.certificate.custom.server.tls.key       |custom tls key|""|
 |webhook.certificate.custom.ca.crt               |custom ca cert|""|
-|webhook.dockerImageInspectionTimeout            |max time to inspect docker image and find exec cmd|20 sec|
 |webhook.failurePolicy                           |  |Ignore|
 |webhook.podDisruptionBudget.enabled             |if pod disruption budget is enabled          |true                                      |
 |webhook.podDisruptionBudget.minAvailable        |pod disruption minimum available             |1                                         |
 |webhook.podDisruptionBudget.maxUnavailable      |pod disruption maximum unavailable           |nil                                       |
 |webhook.podLabels                               |Labels to add to the webhook pod             |{} |
+|serviceAccount.create                           |create service account?                      |true|
+|serviceAccount.name                             |name of service account                      |generated|

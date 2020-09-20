@@ -69,6 +69,13 @@ webhook:
       ca:
         crt:
 
+  ## See `kubectl explain poddisruptionbudget.spec` for more
+  ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 1
+  #  maxUnavailable: 1
+
   # What will happen if the webhook fails? Ignore (continue) or Fail (prevent Pod from starting)?
   failurePolicy: Fail
 
@@ -83,13 +90,6 @@ webhook:
       operator: NotIn
       values:
       - kube-system
-
-## See `kubectl explain poddisruptionbudget.spec` for more
-## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
-podDisruptionBudget:
-  enabled: true
-  minAvailable: 1
-#  maxUnavailable: 1
 
 serviceAccount:
   create: true
