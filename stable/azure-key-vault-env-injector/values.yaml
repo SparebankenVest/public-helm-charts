@@ -56,14 +56,15 @@ webhook:
   dockerImageInspectionTimeout: 20 # will timeout after 20 seconds 
 
   certificate:
-    generate: true
     useCertManager: false
-    server:
-      tls:
+    custom:
+      enabled: false
+      server:
+        tls:
+          crt:
+          key:
+      ca:
         crt:
-        key:
-    ca:
-      crt:
 
   # What will happen if the webhook fails? Ignore (continue) or Fail (prevent Pod from starting)?
   failurePolicy: Fail

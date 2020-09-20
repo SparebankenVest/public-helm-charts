@@ -1,7 +1,7 @@
 {{- $tlsCrt := "" }}
 {{- $tlsKey := "" }}
 {{- $caCrt := "" }}
-{{- if .Values.webhook.certificate.generate }}
+{{- if and (not .Values.webhook.certificate.custom.enabled) (not .Values.webhook.certificate.useCertManager) }}
 {{- $ca := genCA "svc-cat-ca" 3650 }}
 {{- $svcName := include "azure-key-vault-to-kubernetes.fullname" . }}
 {{- $cn := printf "%s.%s.svc" $svcName .Release.Namespace }}
@@ -11,15 +11,13 @@
 {{- $tlsCrt = b64enc $server.Cert }}
 {{- $tlsKey = b64enc $server.Key }}
 {{- $caCrt =  b64enc $ca.Cert }}
-{{- else if .Values.webhook.certificate.useCertManager }}
-{{/* do nothing with certs here. Cert-manager will handle it all */}}
-{{- else }}
-{{- $tlsCrt = required "Required when webhook.certificate.generate is false" .Values.webhook.certificate.server.tls.crt }}
-{{- $tlsKey = required "Required when webhook.certificate.generate is false" .Values.webhook.certificate.server.tls.key }}
-{{- $caCrt = required "Required when webhook.certificate.generate is false" .Values.webhook.certificate.ca.crt }}
+{{- else if .Values.webhook.certificate.custom.enabled }}
+{{- $tlsCrt = required "Required when webhook.certificate.generate is false" .Values.webhook.certificate.custom.server.tls.crt }}
+{{- $tlsKey = required "Required when webhook.certificate.generate is false" .Values.webhook.certificate.custom.server.tls.key }}
+{{- $caCrt = required "Required when webhook.certificate.generate is false" .Values.webhook.certificate.custom.ca.crt }}
 {{- end }}
 
-{{- if (eq .Values.webhook.certificate.useCertManager false) }}
+{{- if not .Values.webhook.certificate.useCertManager }}
 apiVersion: v1
 kind: Secret
 metadata:

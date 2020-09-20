@@ -55,6 +55,11 @@ The following tables lists configurable parameters of the azure-key-vault-env-in
 |tolerations                                     |tolerations to add                           |[]                                        |
 |webhook.logLevel                                |log level - Trace, Debug, Info, Warning, Error, Fatal or Panic | Info                   |
 |webhook.logFormat                               |log format - fmt or json | fmt                   |
+|webhook.certificate.useCertManager              |use cert manager to handle webhook certificates| false|
+|webhook.certificate.custom.enabled              |use custom certs for webhook|false|
+|webhook.certificate.custom.server.tls.crt       |custom tls cert|""|
+|webhook.certificate.custom.server.tls.key       |custom tls key|""|
+|webhook.certificate.custom.ca.crt               |custom ca cert|""|
 |webhook.dockerImageInspectionTimeout            |max time to inspect docker image and find exec cmd|20 sec|
 |webhook.failurePolicy                           |  |Ignore|
 |webhook.podDisruptionBudget.enabled             |if pod disruption budget is enabled          |true                                      |
