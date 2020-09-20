@@ -43,10 +43,14 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath:  metadata.labels['aadpodidbinding']
+        - name: RUNNING_INSIDE_AZURE_AKS
+          value: {{ .Values.runningInsideAzureAks | quote }}
         - name: CUSTOM_AUTH
-          value: {{ .Values.controller.keyVault.customAuth | quote }}
+          value: {{ .Values.controller.customAuth | quote }}
         - name: LOG_LEVEL
           value: "{{ .Values.controller.logLevel }}"
+        - name: LOG_FORMAT
+          value: "{{ .Values.controller.logFormat }}"
         {{- range $key, $value := .Values.controller.env }}
         - name: {{ $key }}
           valueFrom:

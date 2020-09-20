@@ -12,6 +12,8 @@ rbac:
   podSecurityPolicies:
     {}
 
+runningInsideAzureAks: true
+
 controller:
   enabled: true
   name: controller
@@ -29,6 +31,7 @@ controller:
       failureAttempts: 5
 
   logLevel: info
+  logFormat: fmt # fmt or json
   cloudConfig: /etc/kubernetes/azure.json
 
   customAuth:
@@ -69,8 +72,6 @@ env_injector:
   envImage:
     repository: spvest/azure-keyvault-env
     tag: 1.1.0-beta.45
-
-  runningInsideAzureAks: true
 
   cloudConfigHostPath: /etc/kubernetes/azure.json
 

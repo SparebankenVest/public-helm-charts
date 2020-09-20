@@ -21,6 +21,7 @@ For more information and installation instructions see the official documentatio
 | crds.keep                                         | if this chart should keep azurekeyvaultsecret crd after uninstalling the chart - note: if set to false, all azurekeyvaultsecret resources created in the cluster will automatically be removed when the crd gets removed | true | 
 | rbac.create                                       | create rbac resources|true|
 | rbac.podSecurityPolicies                          | any pod security policies|{}|
+| runningInsideAzureAks                             | if running inside azure aks - set to false if running outside aks |true |
 
 
 ### Controller
@@ -36,6 +37,7 @@ For more information and installation instructions see the official documentatio
 |controller.keyVault.polling.normalInterval         |interval to wait before polling azure key vault for secret updates | 1m |
 |controller.keyVault.polling.failureInterval        |interval to wait when polling has failed `failureAttempts` before polling azure key vault for secret updates | 5m |
 |controller.keyVault.polling.failureAttempts        |number of times to allow secret updates to fail before applying `failureInterval` | 5 |
+|controller.logFormat                               |log format - fmt or json | fmt                   |
 |controller.logLevel                                |log level | info |
 |controller.labels                                  |any additional labels | {}
 |controller.podLabels                               |any additional labels | {}
@@ -70,7 +72,6 @@ For more information and installation instructions see the official documentatio
 |env_injector.nodeSelector                                    |node selector to use                         |{}                                        |
 |env_injector.replicaCount                                    |number of replicas                           |2                                         |
 |env_injector.resources                                       |resources to request                         |{}                                        |
-|env_injector.runningInsideAzureAks                           |if running inside azure aks - set to false if running outside aks |true |
 |env_injector.service.name                                    |webhook service name                         |azure-keyvault-secrets-webhook            |
 |env_injector.service.type                                    |webhook service type                         |ClusterIP                                 |
 |env_injector.service.externalTlsPort                         |service tls port                     |443           |
