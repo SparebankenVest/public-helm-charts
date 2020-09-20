@@ -1,10 +1,6 @@
----
-title: "akv2k8s Helm Chart (Helm 3)"
-description: "Azure Key Vault to Kubernetes Helm reference"
----
+# akv2k8s Helm Chart (Helm 3)
 
 This chart will install:
-  * a Custom Resource Definition (`AzureKeyVaultSecret`)
   * a Controller for syncing AKV secrets to Kubernetes secrets
   * a Env-Injector enabling transparent environment injection of AKV secrets into container programs
 
