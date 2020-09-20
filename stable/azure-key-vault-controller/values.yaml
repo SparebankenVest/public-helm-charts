@@ -10,9 +10,6 @@ keyVault:
   customAuth:
     enabled: false
 
-    # Uncomment to use aad-pod-identity (MSI) and point to a selector
-    # podIdentitySelector: azure-key-vault
-
 # Uncomment to use client-id / secret - see https://akv2k8s.io/security/authentication/#custom-authentication-options
 # env:
 #   AZURE_TENANT_ID: <tenantId>
