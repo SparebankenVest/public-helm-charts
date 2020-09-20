@@ -19,7 +19,7 @@ controller:
   name: controller
   image:
     repository: spvest/azure-keyvault-controller
-    tag: 1.1.0-beta.44
+    tag: 1.1.0-beta.45
     pullPolicy: IfNotPresent
     #pullSecret: secretName
 
