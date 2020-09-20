@@ -18,10 +18,6 @@ We have removed the CRD from the Helm Chart and this must be manually installed/
 kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vault-to-kubernetes/{{ version }}/crds/AzureKeyVaultSecret.yaml
 ```
 
-## Not running akv2k8s inside Azure AKS?
-
-The most common scenario when using Azure Key Vault with Kubernetes, is running inside Azure AKS. Because of this some features are enabled by default, which will not work outside of Azure AKS. To disable these, set `runningInsideAzureAks` to `false`. 
-
 ## Configuration
 
 The following table lists configurable parameters of the azure-key-vault-controller chart and their default values.
