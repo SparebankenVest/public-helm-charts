@@ -14,7 +14,7 @@ For more information see the main GitHub repository at https://github.com/Spareb
 Before installing the Chart, the Custom Resource Definition must be installed.
 
 ```
-kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vault-to-kubernetes/{{ version }}/crds/AzureKeyVaultSecret.yaml
+kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vault-to-kubernetes/crd-{{ version }}/crds/AzureKeyVaultSecret.yaml
 ```
 
 ### Installing the Chart
@@ -61,8 +61,10 @@ The following table lists configurable parameters of the azure-key-vault-control
 |image.pullPolicy                        |pull policy | IfNotPresent |
 |installCrd                              |install custom resource definition           |true                                      |
 |keyVault.customAuth.enabled             |if custom auth is enabled | false |
-|keyVault.customAuth.podIdentitySelector |if using aad-pod-identity, which selector to reference | "" |
 |keyVault.polling.normalInterval         |interval to wait before polling azure key vault for secret updates | 1m |
 |keyVault.polling.failureInterval        |interval to wait when polling has failed `failureAttempts` before polling azure key vault for secret updates | 5m |
 |keyVault.polling.failureAttempts        |number of times to allow secret updates to fail before applying `failureInterval` | 5 |
-|logLevel                                | log level | info |
+|labels                                  |any additional labels | {}
+|logFormat                               |log format - fmt or json | fmt                   |
+|logLevel                                |log level | info |
+|podLabels                               |any additional labels | {}

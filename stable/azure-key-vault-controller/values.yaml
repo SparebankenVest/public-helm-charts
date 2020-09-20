@@ -27,3 +27,13 @@ keyVault:
 logLevel: info
 logFormat: fmt # fmt or json
 cloudConfig: /etc/kubernetes/azure.json
+
+env: {}
+labels: {}
+podLabels: {}
+
+serviceAccount:
+  create: true
+  ## The name of the ServiceAccount to use.
+  ## If not set and create is true, a name is generated using the fullname template
+  name:

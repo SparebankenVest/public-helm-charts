@@ -23,14 +23,14 @@ The following tables lists configurable parameters of the azure-key-vault-env-in
 | ---------------------------------------------- | ------------------------------------------- | -----------------------------------------|
 |runningInsideAzureAks                           |if akv2k8s is running inside azure aks - set to false if running outside aks |true |
 |affinity                                        |affinities to use                            |{}                                        |
-|caBundleController.image.repository |image repository for ca bundler|spvest/ca-bundle-controller|
-|caBundleController.image.tag        |image tag for ca bundler|1.1.0-beta.24|
-|caBundleController.image.pullPolicy |pull policy for ca bundler|IfNotPresent|
-|caBundleController.logLevel         |log level - Trace, Debug, Info, Warning, Error, Fatal or Panic|Info|
-|caBundleController.logFormat        |log format - fmt or json|fmt|
-|caBundleController.akvLabelName     |akv label used in namespaces|azure-key-vault-env-injection|
-|caBundleController.configMapName    |configmap name to store ca cert|akv2k8s-ca|
-|caBundleController.podLabels        |Labels to add to the ca-bundle pod           |{} |
+|caBundleController.image.repository             |image repository for ca bundler|spvest/ca-bundle-controller|
+|caBundleController.image.tag                    |image tag for ca bundler|1.1.0-beta.24|
+|caBundleController.image.pullPolicy             |pull policy for ca bundler|IfNotPresent|
+|caBundleController.logLevel                     |log level - Trace, Debug, Info, Warning, Error, Fatal or Panic|Info|
+|caBundleController.logFormat                    |log format - fmt or json|fmt|
+|caBundleController.akvLabelName                 |akv label used in namespaces|azure-key-vault-env-injection|
+|caBundleController.configMapName                |configmap name to store ca cert|akv2k8s-ca|
+|caBundleController.podLabels                    |Labels to add to the ca-bundle pod           |{} |
 |cloudConfigHostPath                             |path to azure cloud config                   |/etc/kubernetes/azure.json                |
 |dockerImageInspection.timeout                   |timeout in seconds                           |20                                        |
 |dockerImageInspection.useAksCredentialsWithACS  |                                             |true|

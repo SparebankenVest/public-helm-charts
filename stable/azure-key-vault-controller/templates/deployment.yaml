@@ -9,21 +9,24 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+{{- if .Values.labels }}
+{{ toYaml .Values.labels | indent 4 }}
+{{- end}}
 spec:
   selector:
     matchLabels:
       app: {{ template "azure-key-vault-controller.name" . }}
       release: {{ .Release.Name }}
+{{- if .Values.podLabels }}
+{{ toYaml .Values.podLabels | indent 8 }}
+{{- end}}
   template:
     metadata:
       labels:
         app: {{ template "azure-key-vault-controller.name" . }}
         release: {{ .Release.Name }}
-        {{- if and .Values.keyVault.customAuth.enabled .Values.keyVault.customAuth.podIdentitySelector}}
-        aadpodidbinding: {{ .Values.keyVault.customAuth.podIdentitySelector }}
-        {{- end }}
     spec:
-      serviceAccountName: {{ template "azure-key-vault-controller.fullname" . }}
+      serviceAccountName: {{ template "azure-key-vault-controller.serviceAccountName" . }}
       containers:
       - name: azure-keyvault-controller
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -43,6 +46,8 @@ spec:
           value: {{ .Values.keyVault.customAuth.enabled | quote }}
         - name: LOG_LEVEL
           value: "{{ .Values.logLevel }}"
+        - name: LOG_FORMAT
+          value: "{{ .Values.logFormat }}"
         {{- range $key, $value := .Values.env }}
         - name: {{ $key }}
           valueFrom:
