@@ -51,7 +51,7 @@ spec:
           - name: {{ $key }}
             valueFrom:
               secretKeyRef:
-                name: {{ template "akv2k8s.envinjector.fullname" $dot }}-caBundleController-env
+                name: {{ template "akv2k8s.envinjector.fullname" $dot }}-cabundlecontroller-env
                 key: {{ $key }}
           {{- end }}
           imagePullPolicy: {{ .Values.env_injector.caBundleController.image.pullPolicy }}
