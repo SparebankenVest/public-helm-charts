@@ -168,7 +168,7 @@ spec:
         secret:
           defaultMode: 420
           secretName: {{ template "envinjector.servingCertificate" . }}
-      {{- if .Values.env_injector.runningInsideAzureAks }}
+      {{- if .Values.runningInsideAzureAks }}
       - name: azureconf
         hostPath:
           path: /etc/kubernetes/azure.json
