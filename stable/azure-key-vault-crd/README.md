@@ -5,7 +5,7 @@
 This chart is deprecated. For installing akv2k8s, including CRDs, use the [new Helm 3 Chart](../akv2k8s) or Install the CRD manually by running:
 
 ```
-kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vault-to-kubernetes/{{ version }}/crds/AzureKeyVaultSecret.yaml
+kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vault-to-kubernetes/crd-{{ version }}/crds/AzureKeyVaultSecret.yaml
 ```
 
 ---

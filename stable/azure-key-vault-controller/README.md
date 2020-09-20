@@ -1,6 +1,8 @@
 # Azure Key Vault Controller Helm Chart
 
->**Deprecated - This Chart is deprecated in favor of the new [Helm 3 Chart](../akv2k8s).**
+>**Deprecated - This Chart is deprecated in favor of the new [Helm 3 Chart](../akv2k8s). The chart will still be updated for a migration period, but we recommend everyone to start using the new chart.**
+
+---
 
 This chart will install a Kubernetes controller and a Custom Resource Definition (`AzureKeyVaultSecret`), that together enable secrets from Azure Key Vault to be stored as Kubernetes native `Secret` resources.
 
