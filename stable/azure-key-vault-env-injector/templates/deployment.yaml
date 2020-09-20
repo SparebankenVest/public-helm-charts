@@ -34,7 +34,7 @@ spec:
               fieldRef:
                 fieldPath: metadata.namespace
           - name: AKV_SECRET_NAME
-            value: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
+            value: {{ template "azure-key-vault-to-kubernetes.servingCertificate" . }}
           - name: CA_CONFIG_MAP_NAME
             value: {{ .Values.authService.caBundleController.configMapName }}
           - name: LOG_LEVEL
