@@ -15,7 +15,13 @@ See the documentation for installation instructions: https://akv2k8s.io/installa
 We have removed the CRD from the Helm Chart and this must be manually installed/updated prior to installing the chart:
 
 ```
-kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vault-to-kubernetes/{{ version }}/crds/AzureKeyVaultSecret.yaml
+kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vault-to-kubernetes/crd-{{ version }}/crds/AzureKeyVaultSecret.yaml
+```
+
+To use the latest CRD, run:
+
+```
+kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vault-to-kubernetes/crd-1.1.0/crds/AzureKeyVaultSecret.yaml
 ```
 
 ## Configuration
