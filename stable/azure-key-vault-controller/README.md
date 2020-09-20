@@ -7,11 +7,17 @@ This chart will install a Kubernetes controller and a Custom Resource Definition
 
 For more information see the main GitHub repository at https://github.com/SparebankenVest/azure-key-vault-to-kubernetes.
 
-## Note about installing both Azure Key Vault Controller AND Azure Key Vault Env Injector
+## Installation
 
-If installing both the Controller and the [Env Injector](https://github.com/SparebankenVest/public-helm-charts/azure-key-vault-env-injector), they share the same Custom Resource Definition (CRD), so only one of them can install it. Set `installCrd` to `false` for either this Chart or the [Env Injector](https://github.com/SparebankenVest/public-helm-charts/azure-key-vault-env-injector) Chart. 
+### Installing the CRD
 
-## Installing the Chart
+Before installing the Chart, the Custom Resource Definition must be installed.
+
+```
+kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vault-to-kubernetes/{{ version }}/crds/AzureKeyVaultSecret.yaml
+```
+
+### Installing the Chart
 
 ```bash
 helm repo add spv-charts http://charts.spvapi.no
@@ -19,21 +25,21 @@ helm repo update
 ```
 
 ```bash
-helm install spv-charts/azure-key-vault-controller \
-  --namespace akv2k8s
+helm upgrade -i azure-key-vault-controller spv-charts/azure-key-vault-controller \
+    --namespace akv2k8s
 ```
 
-**Installation of both Controller and env-injector**
+### Installing both the Controller and Env Injector
+
 ```bash
-helm install spv-charts/azure-key-vault-controller \
+helm upgrade -i azure-key-vault-controller spv-charts/azure-key-vault-controller \
+    --namespace akv2k8s
+
+helm upgrade -i azure-key-vault-env-injector spv-charts/azure-key-vault-env-injector \
   --namespace akv2k8s
-helm install spv-charts/azure-key-vault-env-injector \
-  --set installCrd=false  --namespace akv2k8s
 ```
 
-We set `installCrd=false` on the last helm chart we install, or else the second install (injector in this case) will fail when the CRD already exists.
-
-**Using custom authentication**
+## Using custom authentication
 
 ```bash
 helm install spv-charts/azure-key-vault-env-injector \

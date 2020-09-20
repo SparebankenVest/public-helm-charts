@@ -1,56 +1,74 @@
 {{- if .Values.env_injector.enabled -}}
-{{ $ca := genCA "svc-cat-ca" 3650 }}
-{{ $svcName := include "akv2k8s.envinjector.fullname" . }}
-{{ $cn := printf "%s.%s.svc" $svcName .Release.Namespace }}
-{{ $server := genSignedCert $cn nil nil 365 $ca }}
+{{- $tlsCrt := "" }}
+{{- $tlsKey := "" }}
+{{- $caCrt := "" }}
+{{- if and (not .Values.env_injector.webhook.certificate.custom.enabled) (not .Values.env_injector.webhook.certificate.useCertManager) }}
+{{- $ca := genCA "svc-cat-ca" 3650 }}
+{{- $svcName := include "akv2k8s.envinjector.fullname" . }}
+{{- $cn := printf "%s.%s.svc" $svcName .Release.Namespace }}
+{{- $altName1 := printf "%s.cluster.local" $cn }}
+{{- $altName2 := printf "%s" $cn }}
+{{- $server := genSignedCert $cn nil (list $altName1 $altName2) 730 $ca }}
+{{- $tlsCrt = b64enc $server.Cert }}
+{{- $tlsKey = b64enc $server.Key }}
+{{- $caCrt =  b64enc $ca.Cert }}
+{{- else if .Values.env_injector.webhook.certificate.custom.enabled }}
+{{- $tlsCrt = required "Required when env_injector.webhook.certificate.generate is false" .Values.env_injector.webhook.certificate.custom.server.tls.crt }}
+{{- $tlsKey = required "Required when env_injector.webhook.certificate.generate is false" .Values.env_injector.webhook.certificate.custom.server.tls.key }}
+{{- $caCrt = required "Required when env_injector.webhook.certificate.generate is false" .Values.env_injector.webhook.certificate.custom.ca.crt }}
+{{- end }}
 
+{{- if not .Values.env_injector.webhook.certificate.useCertManager }}
 apiVersion: v1
-kind: List
+kind: Secret
 metadata:
-items:
+  name: {{ template "envinjector.servingCertificate" . }}
+  namespace: {{ .Release.Namespace }}
+data:
+  tls.crt: {{ $tlsCrt }}
+  tls.key: {{ $tlsKey }}
+  ca.crt:  {{ $caCrt }}
+{{- end }}
 
-- apiVersion: v1
-  kind: Secret
-  metadata:
-    name: {{ template "akv2k8s.envinjector.fullname" . }}
-  data:
-    servingCert: {{ b64enc $server.Cert }}
-    servingKey: {{ b64enc $server.Key }}
-    caCert: {{ b64enc $ca.Cert }}
-
-- apiVersion: admissionregistration.k8s.io/v1beta1
-  kind: MutatingWebhookConfiguration
-  metadata:
-    name: {{ template "akv2k8s.envinjector.fullname" . }}
-  webhooks:
-  - name: pods.{{ template "akv2k8s.envinjector.name" . }}.admission.spv.no
-    clientConfig:
-      service:
-        namespace: {{ .Release.Namespace }}
-        name: {{ template "akv2k8s.envinjector.fullname" . }}
-        path: /pods
-      caBundle: {{ b64enc $ca.Cert }}
-    rules:
-    - operations:
-      - CREATE
-      apiGroups:
-      - "*"
-      apiVersions:
-      - "*"
-      resources:
-      - pods
-    failurePolicy: {{ .Values.env_injector.webhook.failurePolicy }}
-    namespaceSelector:
-      {{- if .Values.env_injector.webhook.namespaceSelector.matchLabels }}
-      matchLabels:
-{{ toYaml .Values.env_injector.webhook.namespaceSelector.matchLabels | indent 8 }}
-      {{- end }}
-      matchExpressions:
-      {{- if .Values.env_injector.webhook.namespaceSelector.matchExpressions }}
-{{ toYaml .Values.env_injector.webhook.namespaceSelector.matchExpressions | indent 6 }}
-      {{- end }}
-      - key: name
-        operator: NotIn
-        values:
-        - {{ .Release.Namespace }}
-{{- end}}
+---
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: {{ template "akv2k8s.envinjector.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+{{- if .Values.env_injector.webhook.certificate.useCertManager }}
+  annotations:
+    cert-manager.io/inject-ca-from: "{{ .Release.Namespace }}/{{ include "envinjector.servingCertificate" . }}"
+{{- end }}
+webhooks:
+- name: pods.{{ template "akv2k8s.envinjector.name" . }}.admission.spv.no
+  clientConfig:
+    service:
+      namespace: {{ .Release.Namespace }}
+      name: {{ template "akv2k8s.envinjector.fullname" . }}
+      path: /pods
+    caBundle: {{ $caCrt }}
+  rules:
+  - operations:
+    - CREATE
+    apiGroups:
+    - "*"
+    apiVersions:
+    - "*"
+    resources:
+    - pods
+  failurePolicy: {{ .Values.env_injector.webhook.failurePolicy }}
+  namespaceSelector:
+    {{- if .Values.env_injector.webhook.namespaceSelector.matchLabels }}
+    matchLabels:
+{{ toYaml .Values.env_injector.webhook.namespaceSelector.matchLabels | indent 6 }}
+    {{- end }}
+    matchExpressions:
+    {{- if .Values.env_injector.webhook.namespaceSelector.matchExpressions }}
+{{ toYaml .Values.env_injector.webhook.namespaceSelector.matchExpressions | indent 4 }}
+    {{- end }}
+    - key: name
+      operator: NotIn
+      values:
+      - {{ .Release.Namespace }}
+{{- end }}

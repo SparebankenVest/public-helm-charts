@@ -10,6 +10,9 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     component: ca-bundle
+{{- if .Values.caBundleController.labels }}
+{{ toYaml .Values.caBundleController.labels | indent 4 }}
+{{- end}}
 spec:
   selector:
     matchLabels:
@@ -20,18 +23,17 @@ spec:
       labels:
         app: {{ template "azure-key-vault-to-kubernetes.name" . }}-ca-bundle
         release: {{ .Release.Name }}
-{{- if .Values.authService.caBundleController.podLabels }}
-{{ toYaml .Values.authService.caBundleController.podLabels | indent 8 }}
+{{- if .Values.caBundleController.podLabels }}
+{{ toYaml .Values.caBundleController.podLabels | indent 8 }}
 {{- end }}
     spec:
       serviceAccountName: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
       containers:
-        {{- if .Values.authService.enabled }}
         - name: ca-bundle-controller
-          image: "{{ .Values.authService.caBundleController.image.repository }}:{{ .Values.authService.caBundleController.image.tag }}"
+          image: "{{ .Values.caBundleController.image.repository }}:{{ .Values.caBundleController.image.tag }}"
           env:
           - name: AKV_LABEL_NAME
-            value: {{ .Values.authService.caBundleController.akvLabelName }}
+            value: {{ .Values.caBundleController.akvLabelName }}
           - name: AKV_NAMESPACE
             valueFrom:
               fieldRef:
@@ -39,13 +41,19 @@ spec:
           - name: AKV_SECRET_NAME
             value: {{ template "azure-key-vault-to-kubernetes.servingCertificate" . }}
           - name: CA_CONFIG_MAP_NAME
-            value: {{ .Values.authService.caBundleController.configMapName }}
+            value: {{ .Values.caBundleController.configMapName }}
           - name: LOG_LEVEL
-            value: {{ .Values.authService.caBundleController.logLevel | quote }}
+            value: {{ .Values.caBundleController.logLevel | quote }}
           - name: LOG_FORMAT
-            value: {{ .Values.authService.caBundleController.logFormat | quote }}
-          imagePullPolicy: {{ .Values.authService.caBundleController.image.pullPolicy }}
-        {{- end }}
+            value: {{ .Values.caBundleController.logFormat | quote }}
+          {{- range $key, $value := .Values.caBundleController.env }}
+          - name: {{ $key }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "azure-key-vault-to-kubernetes.fullname" $dot }}-caBundleController-env
+                key: {{ $key }}
+          {{- end }}
+          imagePullPolicy: {{ .Values.caBundleController.image.pullPolicy }}
     {{- if .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
@@ -69,6 +77,9 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     component: webhook
+{{- if .Values.webhook.labels }}
+{{ toYaml .Values.webhook.labels | indent 4 }}
+{{- end}}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -101,16 +112,12 @@ spec:
             value: /var/serving-cert/tls.key
           - name: TLS_CA_FILE
             value: /var/serving-cert/ca.crt
-          - name: USE_AUTH_SERVICE
-            value: {{ .Values.authService.enabled | quote }}
-          {{- if .Values.authService.enabled }}
           - name: WEBHOOK_AUTH_SERVICE
             value: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
           - name: WEBHOOK_AUTH_SERVICE_PORT
             value: {{ .Values.service.externalTlsPort | quote }}
           - name: CA_CONFIG_MAP_NAME
-            value: {{ .Values.authService.caBundleController.configMapName }}
-          {{- end }}
+            value: {{ .Values.caBundleController.configMapName }}
           - name: CUSTOM_AUTH
             value: {{ .Values.keyVault.customAuth.enabled | quote }}
           - name: AZUREKEYVAULT_ENV_IMAGE
@@ -127,11 +134,11 @@ spec:
             value: {{ .Values.webhook.logFormat | quote }}
           - name: METRICS_ENABLED
             value: {{ .Values.metrics.enabled | quote }}
-          {{- range $key, $value := .Values.env }}
+          {{- range $key, $value := .Values.webhook.env }}
           - name: {{ $key }}
             valueFrom:
               secretKeyRef:
-                name: {{ template "azure-key-vault-to-kubernetes.fullname" $dot }}-env
+                name: {{ template "azure-key-vault-to-kubernetes.fullname" $dot }}-webhook-env
                 key: {{ $key }}
           {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}

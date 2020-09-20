@@ -91,6 +91,22 @@ Create the name of the service account to use
 {{- end -}}
 {{- end -}}
 
+{{- define "envinjector.selfSignedIssuer" -}}
+{{ printf "%s-selfsign" (include "akv2k8s.envinjector.fullname" .) }}
+{{- end -}}
+
+{{- define "envinjector.rootCAIssuer" -}}
+{{ printf "%s-ca" (include "akv2k8s.envinjector.fullname" .) }}
+{{- end -}}
+
+{{- define "envinjector.rootCACertificate" -}}
+{{ printf "%s-ca" (include "akv2k8s.envinjector.fullname" .) }}
+{{- end -}}
+
+{{- define "envinjector.servingCertificate" -}}
+{{ printf "%s-webhook-tls" (include "akv2k8s.envinjector.fullname" .) }}
+{{- end -}}
+
 {{/*
 Create chart name and version as used by the chart label.
 */}}

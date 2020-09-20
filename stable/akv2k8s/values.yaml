@@ -12,7 +12,7 @@ rbac:
   podSecurityPolicies:
     {}
 
-commonLabels: []
+commonLabels: {}
 
 controller:
   enabled: true
@@ -36,26 +36,21 @@ controller:
   customAuth:
     enabled: false
 
-      # Uncomment to use aad-pod-identity (MSI) and point to a selector
-      # podIdentitySelector: azure-key-vault
-
   # Uncomment to use client-id / secret - see https://akv2k8s.io/security/authentication/#custom-authentication-options
   # env:
   #   AZURE_TENANT_ID: <tenantId>
   #   AZURE_CLIENT_ID: <clientId>
   #   AZURE_CLIENT_SECRET: <clientSecret>
   
-  # replicaCount: 1
-
   serviceAccount:
     create: true
     ## The name of the ServiceAccount to use.
     ## If not set and create is true, a name is generated using the fullname template
     name:
 
-  env: []
-  labels: []
-  podLabels: []
+  env: {}
+  labels: {}
+  podLabels: {}
 
   resources: {}
   nodeSelector: {}
@@ -70,33 +65,38 @@ env_injector:
 
   image:
     repository: spvest/azure-keyvault-webhook
-    tag: 1.1.0-beta.44
+    tag: 1.1.0-beta.47
     pullPolicy: IfNotPresent
 
   envImage:
     repository: spvest/azure-keyvault-env
-    tag: 1.1.0-beta.44
+    tag: 1.1.0-beta.45
+
+  runningInsideAzureAks: true
 
   cloudConfigHostPath: /etc/kubernetes/azure.json
 
   keyVault:
     # Set to true to use custom auth - see https://github.com/SparebankenVest/azure-key-vault-to-kubernetes/blob/master/README.md#authentication
-    customAuth: false
+    customAuth: 
+      enabled: false
 
-    authService:
-      enabled: true
-      caBundleController:
-        image:
-          repository: spvest/ca-bundle-controller
-          tag: 1.1.0-beta.44
-          pullPolicy: IfNotPresent
-        logLevel: Info
-        akvLabelName: azure-key-vault-env-injection
-        configMapName: akv2k8s-ca
+  dockerImageInspection:
+    timeout: 20 # Timeout in seconds
+    useAksCredentialsWithACS: true # Only applicable if runningInsideAzureAks is also true
 
-  env: []
-  labels: []
-  podLabels: []
+  caBundleController:
+    image:
+      repository: spvest/ca-bundle-controller
+      tag: 1.1.0-beta.49
+      pullPolicy: IfNotPresent
+    env: {}
+    labels: {}
+    podLabels: {}
+    logLevel: Info
+    logFormat: fmt # fmt or json
+    akvLabelName: azure-key-vault-env-injection
+    configMapName: akv2k8s-ca
 
   service:
     name: azure-keyvault-secrets-webhook
@@ -111,10 +111,26 @@ env_injector:
 
   webhook:
     logLevel: Info
+    logFormat: fmt # ftm or json
+
+    env: {}
+    labels: {}
+    podLabels: {}
     dockerImageInspectionTimeout: 20 # will timeout after 20 seconds 
 
+    certificate:
+      useCertManager: false
+      custom:
+        enabled: false
+        server:
+          tls:
+            crt:
+            key:
+        ca:
+          crt:
+
     # What will happen if the webhook fails? Ignore (continue) or Fail (prevent Pod from starting)?
-    failurePolicy: Ignore
+    failurePolicy: Fail
 
     # https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-namespaceselector
     namespaceSelector:

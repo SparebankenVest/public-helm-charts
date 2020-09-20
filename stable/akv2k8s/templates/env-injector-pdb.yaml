@@ -1,0 +1,21 @@
+{{- if and .Values.env_injector.enabled .Values.env_injector.podDisruptionBudget.enabled }}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ template "akv2k8s.envinjector.fullname" . }}
+  labels:
+    app: {{ template "akv2k8s.envinjector.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}  
+    component: webhook
+spec:
+  minAvailable: {{ .Values.env_injector.podDisruptionBudget.minAvailable }}
+{{- if .Values.env_injector.podDisruptionBudget.maxUnavailable }}
+  maxUnavailable: {{ .Values.env_injector.podDisruptionBudget.maxUnavailable }}
+{{- end }}
+  selector:
+    matchLabels:
+      app: {{ template "akv2k8s.envinjector.name" . }}
+      release: {{ .Release.Name }}
+{{- end }}

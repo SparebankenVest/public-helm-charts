@@ -24,18 +24,18 @@ dockerImageInspection:
   timeout: 20 # Timeout in seconds
   useAksCredentialsWithACS: true # Only applicable if runningInsideAzureAks is also true
 
-authService:
-  enabled: true
-  caBundleController:
-    image:
-      repository: spvest/ca-bundle-controller
-      tag: 1.1.0-beta.49
-      pullPolicy: IfNotPresent
-    podLabels: {}
-    logLevel: Info
-    logFormat: fmt # fmt or json
-    akvLabelName: azure-key-vault-env-injection
-    configMapName: akv2k8s-ca
+caBundleController:
+  image:
+    repository: spvest/ca-bundle-controller
+    tag: 1.1.0-beta.49
+    pullPolicy: IfNotPresent
+  env: {}
+  labels: {}
+  podLabels: {}
+  logLevel: Info
+  logFormat: fmt # fmt or json
+  akvLabelName: azure-key-vault-env-injection
+  configMapName: akv2k8s-ca
 
 service:
   name: azure-keyvault-secrets-webhook
@@ -52,7 +52,10 @@ webhook:
   logLevel: Info
   logFormat: fmt # fmt or json
 
+  env: {}
+  labels: {}
   podLabels: {}
+
   dockerImageInspectionTimeout: 20 # will timeout after 20 seconds 
 
   certificate:
@@ -87,6 +90,12 @@ podDisruptionBudget:
   enabled: true
   minAvailable: 1
 #  maxUnavailable: 1
+
+serviceAccount:
+  create: true
+  ## The name of the ServiceAccount to use.
+  ## If not set and create is true, a name is generated using the fullname template
+  name:
 
 resources: {}
 
