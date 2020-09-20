@@ -31,6 +31,7 @@ authService:
       repository: spvest/ca-bundle-controller
       tag: 1.1.0-beta.48
       pullPolicy: IfNotPresent
+    podLabels: {}
     logLevel: Info
     akvLabelName: azure-key-vault-env-injection
     configMapName: akv2k8s-ca
@@ -48,6 +49,9 @@ metrics:
 
 webhook:
   logLevel: Info
+  logFormat: fmt # fmt or json
+  
+  podLabels: {}
   dockerImageInspectionTimeout: 20 # will timeout after 20 seconds 
 
   certificate:

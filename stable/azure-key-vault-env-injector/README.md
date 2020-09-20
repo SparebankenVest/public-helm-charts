@@ -30,6 +30,7 @@ The following tables lists configurable parameters of the azure-key-vault-env-in
 |authService.caBundleController.logLevel         |log level - Trace, Debug, Info, Warning, Error, Fatal or Panic|Info|
 |authService.caBundleController.akvLabelName     |akv label used in namespaces|azure-key-vault-env-injection|
 |authService.caBundleController.configMapName    |configmap name to store ca cert|akv2k8s-ca|
+|authService.caBundleController.podLabels        |Labels to add to the ca-bundle pod           |{} |
 |cloudConfigHostPath                             |path to azure cloud config                   |/etc/kubernetes/azure.json                |
 |dockerImageInspection.timeout                   |timeout in seconds                           |20                                        |
 |dockerImageInspection.useAksCredentialsWithACS  |
@@ -52,8 +53,10 @@ The following tables lists configurable parameters of the azure-key-vault-env-in
 |service.internalHttpPort                        |pod http port for metrics and healthz|443               |
 |tolerations                                     |tolerations to add                           |[]                                        |
 |webhook.logLevel                                |log level - Trace, Debug, Info, Warning, Error, Fatal or Panic | Info                   |
+|webhook.logFormat                               |log format - fmt or json | fmt                   |
 |webhook.dockerImageInspectionTimeout            |max time to inspect docker image and find exec cmd|20 sec|
 |webhook.failurePolicy                           |  |Ignore|
 |webhook.podDisruptionBudget.enabled             |if pod disruption budget is enabled          |true                                      |
 |webhook.podDisruptionBudget.minAvailable        |pod disruption minimum available             |1                                         |
 |webhook.podDisruptionBudget.maxUnavailable      |pod disruption maximum unavailable           |nil                                       |
+|webhook.podLabels                               |Labels to add to the webhook pod             |{} |

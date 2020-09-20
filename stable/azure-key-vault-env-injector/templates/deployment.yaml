@@ -20,6 +20,9 @@ spec:
       labels:
         app: {{ template "azure-key-vault-to-kubernetes.name" . }}-ca-bundle
         release: {{ .Release.Name }}
+{{- if .Values.authService.caBundleController.podLabels }}
+{{ toYaml .Values.authService.caBundleController.podLabels | indent 8 }}
+{{- end }}
     spec:
       serviceAccountName: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
       containers:
@@ -75,11 +78,9 @@ spec:
       labels:
         app: {{ template "azure-key-vault-to-kubernetes.name" . }}
         release: {{ .Release.Name }}
-        {{- if .Values.keyVault.customAuth.enabled }}
-          {{- if .Values.keyVault.customAuth.podIdentitySelector }}
-        aadpodidbinding: {{ .Values.keyVault.customAuth.podIdentitySelector }}
-          {{- end}}
-        {{- end}}
+{{- if .Values.webhook.podLabels }}
+{{ toYaml .Values.webhook.podLabels | indent 8 }}
+{{- end }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/apiservice.yaml") . | sha256sum }}
     spec:
@@ -120,6 +121,8 @@ spec:
             value: {{ .Values.dockerImageInspection.useAksCredentialsWithACS | quote }}
           - name: LOG_LEVEL
             value: {{ .Values.webhook.logLevel | quote }}
+          - name: LOG_FORMAT
+            value: {{ .Values.webhook.logFormat | quote }}
           - name: METRICS_ENABLED
             value: {{ .Values.metrics.enabled | quote }}
           {{- range $key, $value := .Values.env }}
