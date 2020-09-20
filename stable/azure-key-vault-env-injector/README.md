@@ -1,7 +1,6 @@
----
-title: "Env-Injector Helm Chart"
-description: "Azure Key Vault Env-Injector reference"
----
+# Azure Key Vault Env-Injector Helm Chart
+
+>**Deprecated - This Chart is deprecated in favor of the new [Helm 3 Chart](../akv2k8s).**
 
 This chart will install the Azure Key Vault Env Injector as a mutating admission webhook, enabling transparent injection of Azure Key Vault secrets to applications running inside containers as environment variables.
 

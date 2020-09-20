@@ -1,7 +1,6 @@
----
-title: "Controller Helm Chart"
-description: "Azure Key Vault Controller reference"
----
+# Azure Key Vault Controller Helm Chart
+
+>**Deprecated - This Chart is deprecated in favor of the new [Helm 3 Chart](../akv2k8s).**
 
 This chart will install a Kubernetes controller and a Custom Resource Definition (`AzureKeyVaultSecret`), that together enable secrets from Azure Key Vault to be stored as Kubernetes native `Secret` resources.
 
@@ -9,45 +8,7 @@ For more information see the main GitHub repository at https://github.com/Spareb
 
 ## Installation
 
-### Installing the CRD
-
-Before installing the Chart, the Custom Resource Definition must be installed.
-
-```
-kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vault-to-kubernetes/crd-{{ version }}/crds/AzureKeyVaultSecret.yaml
-```
-
-### Installing the Chart
-
-```bash
-helm repo add spv-charts http://charts.spvapi.no
-helm repo update
-```
-
-```bash
-helm upgrade -i azure-key-vault-controller spv-charts/azure-key-vault-controller \
-    --namespace akv2k8s
-```
-
-### Installing both the Controller and Env Injector
-
-```bash
-helm upgrade -i azure-key-vault-controller spv-charts/azure-key-vault-controller \
-    --namespace akv2k8s
-
-helm upgrade -i azure-key-vault-env-injector spv-charts/azure-key-vault-env-injector \
-  --namespace akv2k8s
-```
-
-## Using custom authentication
-
-```bash
-helm install spv-charts/azure-key-vault-env-injector \
-  --set keyVault.customAuth.enabled=true \
-  --set env.AZURE_TENANT_ID=... \
-  --set env.AZURE_CLIENT_ID=... \
-  --set env.AZURE_CLIENT_SECRET=...
-```
+See the documentation for installation instructions: https://akv2k8s.io/installation/
 
 ## Configuration
 
