@@ -28,6 +28,7 @@ The following tables lists configurable parameters of the azure-key-vault-env-in
 |authService.caBundleController.image.tag        |image tag for ca bundler|1.1.0-beta.24|
 |authService.caBundleController.image.pullPolicy |pull policy for ca bundler|IfNotPresent|
 |authService.caBundleController.logLevel         |log level - Trace, Debug, Info, Warning, Error, Fatal or Panic|Info|
+|authService.caBundleController.logFormat        |log format - fmt or json|fmt|
 |authService.caBundleController.akvLabelName     |akv label used in namespaces|azure-key-vault-env-injection|
 |authService.caBundleController.configMapName    |configmap name to store ca cert|akv2k8s-ca|
 |authService.caBundleController.podLabels        |Labels to add to the ca-bundle pod           |{} |

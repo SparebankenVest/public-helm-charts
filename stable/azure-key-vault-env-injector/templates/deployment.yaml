@@ -42,6 +42,8 @@ spec:
             value: {{ .Values.authService.caBundleController.configMapName }}
           - name: LOG_LEVEL
             value: {{ .Values.authService.caBundleController.logLevel | quote }}
+          - name: LOG_FORMAT
+            value: {{ .Values.authService.caBundleController.logFormat | quote }}
           imagePullPolicy: {{ .Values.authService.caBundleController.image.pullPolicy }}
         {{- end }}
     {{- if .Values.nodeSelector }}
