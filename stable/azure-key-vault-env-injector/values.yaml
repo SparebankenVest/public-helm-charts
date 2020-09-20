@@ -4,7 +4,7 @@ replicaCount: 2
 
 image:
   repository: spvest/azure-keyvault-webhook
-  tag: 1.1.0-beta.45
+  tag: 1.1.0-beta.46
   pullPolicy: IfNotPresent
 
 envImage:
@@ -50,7 +50,7 @@ metrics:
 webhook:
   logLevel: Info
   logFormat: fmt # fmt or json
-  
+
   podLabels: {}
   dockerImageInspectionTimeout: 20 # will timeout after 20 seconds 
 
