@@ -1,11 +1,5 @@
 # Default values 
 
-# Will create CRD's
-crds:
-  enabled: true
-  create: true
-  keep: true
-
 rbac:
   # Specifies whether RBAC resources should be created
   create: true
