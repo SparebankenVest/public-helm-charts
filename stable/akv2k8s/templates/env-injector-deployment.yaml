@@ -19,11 +19,13 @@ spec:
     matchLabels:
       app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: akv2k8s-ca-bundle
   template:
     metadata:
       labels:
         app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/component: akv2k8s-ca-bundle
 {{- if .Values.env_injector.caBundleController.podLabels }}
 {{ toYaml .Values.env_injector.caBundleController.podLabels | indent 8 }}
 {{- end }}
@@ -97,11 +99,13 @@ spec:
     matchLabels:
       app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: akv2k8s-webhook
   template:
     metadata:
       labels:
         app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/component: akv2k8s-webhook
 {{- if .Values.env_injector.webhook.podLabels }}
 {{ toYaml .Values.env_injector.webhook.podLabels | indent 8 }}
 {{- end }}

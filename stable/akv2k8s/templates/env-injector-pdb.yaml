@@ -16,6 +16,7 @@ spec:
 {{- end }}
   selector:
     matchLabels:
-      app: {{ template "akv2k8s.envinjector.name" . }}
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: akv2k8s-webhook
 {{- end }}
