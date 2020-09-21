@@ -104,7 +104,11 @@ Create the name of the service account to use
 {{- end -}}
 
 {{- define "envinjector.servingCertificate" -}}
+{{- if .Values.env_injector.webhook.certificate.useCertManager -}}
+{{ printf "%s-webhook-tls-cm" (include "akv2k8s.envinjector.fullname" .) }}
+{{- else -}}
 {{ printf "%s-webhook-tls" (include "akv2k8s.envinjector.fullname" .) }}
+{{- end -}}
 {{- end -}}
 
 {{/*
