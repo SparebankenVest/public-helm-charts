@@ -21,8 +21,6 @@ spec:
       targetPort: {{ .Values.env_injector.service.internallHttpPort }}
       protocol: TCP
   selector:
-    app: {{ template "akv2k8s.envinjector.name" . }}
-    release: {{ .Release.Name }}
-
-
+    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end}}
