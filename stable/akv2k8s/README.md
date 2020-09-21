@@ -40,7 +40,6 @@ kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vau
 |controller.image.tag                               |image tag                                     |1.1.0|
 |controller.image.pullPolicy                        |pull policy                                   | IfNotPresent |
 |controller.keyVault.customAuth                     |if custom auth is enabled                     | false |
-|controller.keyVault.customAuth.podIdentitySelector |if using aad-pod-identity, which selector to reference | "" |
 |controller.keyVault.polling.normalInterval         |interval to wait before polling azure key vault for secret updates | 1m |
 |controller.keyVault.polling.failureInterval        |interval to wait when polling has failed `failureAttempts` before polling azure key vault for secret updates | 5m |
 |controller.keyVault.polling.failureAttempts        |number of times to allow secret updates to fail before applying `failureInterval` | 5 |
