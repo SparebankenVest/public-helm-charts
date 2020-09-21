@@ -6,24 +6,24 @@ kind: Deployment
 metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}-ca-bundle
   labels:
-    app: {{ template "akv2k8s.envinjector.name" . }}-ca-bundle
-    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-    component: ca-bundle
+    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+    helm.sh/chart: {{ template "akv2k8s.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: akv2k8s-ca-bundle
 {{- if .Values.env_injector.caBundleController.labels }}
 {{ toYaml .Values.env_injector.caBundleController.labels | indent 4 }}
 {{- end}}
 spec:
   selector:
     matchLabels:
-      app: {{ template "akv2k8s.envinjector.name" . }}-ca-bundle
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "akv2k8s.envinjector.name" . }}-ca-bundle
-        release: {{ .Release.Name }}
+        app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
 {{- if .Values.env_injector.caBundleController.podLabels }}
 {{ toYaml .Values.env_injector.caBundleController.podLabels | indent 8 }}
 {{- end }}
@@ -41,6 +41,8 @@ spec:
                 fieldPath: metadata.namespace
           - name: AKV_SECRET_NAME
             value: {{ template "envinjector.servingCertificate" . }}
+          - name: CA_FILE
+            value: /var/ca-cert/ca.crt
           - name: CA_CONFIG_MAP_NAME
             value: {{ .Values.env_injector.caBundleController.configMapName }}
           - name: LOG_LEVEL
@@ -54,7 +56,15 @@ spec:
                 name: {{ template "akv2k8s.envinjector.fullname" $dot }}-cabundlecontroller-env
                 key: {{ $key }}
           {{- end }}
+          volumeMounts:
+          - mountPath: /var/ca-cert
+            name: ca-cert
           imagePullPolicy: {{ .Values.env_injector.caBundleController.image.pullPolicy }}
+      volumes:
+      - name: ca-cert
+        secret:
+          defaultMode: 420
+          secretName: {{ template "envinjector.servingCertificate" . }}
     {{- if .Values.env_injector.nodeSelector }}
       nodeSelector:
 {{ toYaml .Values.env_injector.nodeSelector | indent 8 }}
@@ -73,11 +83,11 @@ kind: Deployment
 metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}
   labels:
-    app: {{ template "akv2k8s.envinjector.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-    component: webhook
+    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+    helm.sh/chart: {{ template "akv2k8s.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: akv2k8s-webhook
 {{- if .Values.env_injector.webhook.labels }}
 {{ toYaml .Values.env_injector.webhook.labels | indent 4 }}
 {{- end}}
@@ -85,13 +95,13 @@ spec:
   replicas: {{ .Values.env_injector.replicaCount }}
   selector:
     matchLabels:
-      app: {{ template "akv2k8s.envinjector.name" . }}
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "akv2k8s.envinjector.name" . }}
-        release: {{ .Release.Name }}
+        app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
 {{- if .Values.env_injector.webhook.podLabels }}
 {{ toYaml .Values.env_injector.webhook.podLabels | indent 8 }}
 {{- end }}

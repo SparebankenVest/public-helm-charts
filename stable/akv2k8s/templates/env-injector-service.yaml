@@ -4,11 +4,11 @@ kind: Service
 metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}
   labels:
-    app: {{ template "akv2k8s.envinjector.fullname" . }}
-    chart: {{ template "akv2k8s.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-    component: mutating
+    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+    helm.sh/chart: {{ template "akv2k8s.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: akv2k8s-webhook
 spec:
   type: {{ .Values.env_injector.service.type }}
   ports:

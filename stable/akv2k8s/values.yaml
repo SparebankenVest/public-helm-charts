@@ -101,6 +101,13 @@ env_injector:
 
   metrics:
     enabled: false
+    port: 8443
+    serviceMonitor:
+      enabled: false
+      scheme: https
+      tlsConfig:
+        insecureSkipVerify: true
+      additionalLabels: {}
 
   webhook:
     logLevel: Info

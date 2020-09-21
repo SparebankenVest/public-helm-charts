@@ -6,23 +6,24 @@ kind: Deployment
 metadata:
   name: {{ template "akv2k8s.controller.fullname" . }}
   labels:
-    app: {{ template "akv2k8s.controller.name" . }}
-    chart: {{ template "akv2k8s.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "akv2k8s.controller.name" . }}
+    helm.sh/chart: {{ template "akv2k8s.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: akv2k8s-controller
 {{- if .Values.controller.labels }}
 {{ toYaml .Values.controller.labels | indent 4 }}
 {{- end}}
 spec:
   selector:
     matchLabels:
-      app: {{ template "akv2k8s.controller.fullname" . }}
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: {{ template "akv2k8s.controller.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "akv2k8s.controller.fullname" . }}
-        release: {{ .Release.Name }}
+        app.kubernetes.io/name: {{ template "akv2k8s.controller.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
 {{- if .Values.controller.podLabels }}
 {{ toYaml .Values.controller.podLabels | indent 8 }}
 {{- end}}

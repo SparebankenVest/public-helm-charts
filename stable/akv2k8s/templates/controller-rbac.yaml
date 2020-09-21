@@ -5,10 +5,10 @@ kind: ClusterRole
 metadata:
   name: {{ template "akv2k8s.controller.fullname" . }}
   labels:
-    app: {{ template "akv2k8s.controller.name" . }}
-    chart: {{ template "akv2k8s.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "akv2k8s.controller.name" . }}
+    helm.sh/chart: {{ template "akv2k8s.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 rules:
 - apiGroups:
   - spv.no
@@ -51,10 +51,10 @@ kind: ClusterRole
 metadata:
   name: {{ template "akv2k8s.controller.fullname" . }}-reader
   labels:
-    app: {{ template "akv2k8s.controller.name" . }}
-    chart: {{ template "akv2k8s.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "akv2k8s.controller.name" . }}
+    helm.sh/chart: {{ template "akv2k8s.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 rules:
 - apiGroups:
   - spv.no
@@ -70,10 +70,10 @@ apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: {{ template "akv2k8s.controller.fullname" . }}
   labels:
-    app: {{ template "akv2k8s.controller.name" . }}
-    chart: {{ template "akv2k8s.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "akv2k8s.controller.name" . }}
+    helm.sh/chart: {{ template "akv2k8s.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 subjects:
 - kind: ServiceAccount
   name: {{ template "akv2k8s.controller.fullname" . }}
@@ -88,10 +88,10 @@ apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: {{ template "akv2k8s.controller.fullname" . }}-reader
   labels:
-    app: {{ template "akv2k8s.controller.name" . }}
-    chart: {{ template "akv2k8s.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "akv2k8s.controller.name" . }}
+    helm.sh/chart: {{ template "akv2k8s.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 subjects:
 - kind: Group
   name: system:serviceaccounts

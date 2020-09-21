@@ -5,10 +5,10 @@ kind: ClusterRole
 metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}
   labels:
-    app: {{ template "akv2k8s.envinjector.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+    helm.sh/chart: {{ template "akv2k8s.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 rules:
 - apiGroups:
   - ""
@@ -32,10 +32,10 @@ kind: ClusterRole
 metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}-reader
   labels:
-    app: {{ template "akv2k8s.envinjector.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+    helm.sh/chart: {{ template "akv2k8s.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 rules:
 - apiGroups:
   - spv.no
@@ -52,10 +52,10 @@ kind: ClusterRole
 metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}-ca-bundle
   labels:
-    app: {{ template "akv2k8s.envinjector.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+    helm.sh/chart: {{ template "akv2k8s.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 rules:
 - apiGroups:
   - ""
@@ -92,10 +92,10 @@ metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}-ca-bundle
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "akv2k8s.envinjector.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+    helm.sh/chart: {{ template "akv2k8s.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 rules:
 - apiGroups:
   - ""
@@ -112,10 +112,10 @@ apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}-ca-bundle
   labels:
-    app: {{ template "akv2k8s.envinjector.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+    helm.sh/chart: {{ template "akv2k8s.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 subjects:
 - kind: ServiceAccount
   namespace: {{ .Release.Namespace }}
@@ -132,10 +132,10 @@ metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}-ca-bundle
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "akv2k8s.envinjector.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+    helm.sh/chart: {{ template "akv2k8s.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 subjects:
 - kind: ServiceAccount
   namespace: {{ .Release.Namespace }}
@@ -151,10 +151,10 @@ kind: ClusterRoleBinding
 metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}-sa
   labels:
-    app: {{ template "akv2k8s.envinjector.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+    helm.sh/chart: {{ template "akv2k8s.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 subjects:
 - kind: ServiceAccount
   namespace: {{ .Release.Namespace }}
@@ -171,10 +171,10 @@ apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}-reader
   labels:
-    app: {{ template "akv2k8s.envinjector.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+    helm.sh/chart: {{ template "akv2k8s.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 subjects:
 - kind: Group
   name: system:serviceaccounts

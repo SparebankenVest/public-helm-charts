@@ -4,10 +4,10 @@ kind: PodDisruptionBudget
 metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}
   labels:
-    app: {{ template "akv2k8s.envinjector.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}  
+    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+    helm.sh/chart: {{ template "akv2k8s.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
     component: webhook
 spec:
   minAvailable: {{ .Values.env_injector.webhook.podDisruptionBudget.minAvailable }}
