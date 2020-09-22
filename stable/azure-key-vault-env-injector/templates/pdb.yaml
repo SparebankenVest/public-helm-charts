@@ -18,4 +18,5 @@ spec:
     matchLabels:
       app: {{ template "azure-key-vault-to-kubernetes.name" . }}
       release: {{ .Release.Name }}
+      component: webhook
 {{- end }}

@@ -40,6 +40,8 @@ spec:
                 fieldPath: metadata.namespace
           - name: AKV_SECRET_NAME
             value: {{ template "azure-key-vault-to-kubernetes.servingCertificate" . }}
+          - name: CA_FILE
+            value: /var/ca-cert/ca.crt
           - name: CA_CONFIG_MAP_NAME
             value: {{ .Values.caBundleController.configMapName }}
           - name: LOG_LEVEL
@@ -53,7 +55,15 @@ spec:
                 name: {{ template "azure-key-vault-to-kubernetes.fullname" $dot }}-cabundlecontroller-env
                 key: {{ $key }}
           {{- end }}
+          volumeMounts:
+          - mountPath: /var/ca-cert
+            name: ca-cert
           imagePullPolicy: {{ .Values.caBundleController.image.pullPolicy }}
+      volumes:
+      - name: ca-cert
+        secret:
+          defaultMode: 420
+          secretName: {{ template "azure-key-vault-to-kubernetes.servingCertificate" . }}
     {{- if .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
@@ -86,12 +96,14 @@ spec:
     matchLabels:
       app: {{ template "azure-key-vault-to-kubernetes.name" . }}
       release: {{ .Release.Name }}
+      component: webhook
   template:
     metadata:
       labels:
         app: {{ template "azure-key-vault-to-kubernetes.name" . }}
         release: {{ .Release.Name }}
-{{- if .Values.webhook.podLabels }}
+        component: webhook
+ {{- if .Values.webhook.podLabels }}
 {{ toYaml .Values.webhook.podLabels | indent 8 }}
 {{- end }}
       annotations:
