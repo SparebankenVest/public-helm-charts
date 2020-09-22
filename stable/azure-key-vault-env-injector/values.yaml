@@ -4,7 +4,7 @@ replicaCount: 2
 
 image:
   repository: spvest/azure-keyvault-webhook
-  tag: 1.1.3
+  tag: 1.1.4
   pullPolicy: IfNotPresent
 
 envImage:

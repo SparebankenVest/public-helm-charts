@@ -1,8 +1,8 @@
 apiVersion: v1
-appVersion: 1.1.3
+appVersion: 1.1.4
 description: A Helm chart that deploys the azure-key-vault-env-injector Helm chart
 name: azure-key-vault-env-injector
-version: 1.1.4
+version: 1.1.5
 icon: https://raw.githubusercontent.com/SparebankenVest/azure-key-vault-to-kubernetes/master/akv2k8s_small.svgs
 maintainers:
 - name: Sparebanken Vest
