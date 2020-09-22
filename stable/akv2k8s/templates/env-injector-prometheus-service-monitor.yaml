@@ -1,0 +1,57 @@
+{{- if and .Values.env_injector.metrics.enabled .Values.env_injector.metrics.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ template "akv2k8s.envinjector.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+    helm.sh/chart: {{ template "akv2k8s.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- if .Values.env_injector.metrics.serviceMonitor.additionalLabels }}
+{{ toYaml .Values.env_injector.metrics.serviceMonitor.additionalLabels | indent 4 }}
+    {{- end }}
+spec:
+  endpoints:
+  - interval: 30s
+    port: metrics
+    scheme: {{ .Values.env_injector.metrics.serviceMonitor.scheme }}
+    {{- if .Values.env_injector.metrics.serviceMonitor.relabellings }}
+    metricrelabelings:
+{{ toYaml .Values.env_injector.metrics.serviceMonitor.relabellings | indent 6 }}
+    {{- end }}
+    {{- if .Values.env_injector.metrics.serviceMonitor.tlsConfig }}
+    tlsConfig:
+{{ toYaml .Values.env_injector.metrics.serviceMonitor.tlsConfig | indent 6 }}
+    {{- end }}
+  jobLabel: {{ template "akv2k8s.envinjector.name" . }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+      app.kubernetes.io/instance: "{{ .Release.Name }}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+  name: {{ template "akv2k8s.envinjector.fullname" . }}-metrics
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+    helm.sh/chart: {{ template "akv2k8s.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  clusterIP: None
+  ports:
+  - name: metrics
+    port: {{ .Values.env_injector.metrics.port }}
+    protocol: TCP
+    targetPort: {{ .Values.env_injector.metrics.port }}
+  selector:
+    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+  sessionAffinity: None
+  type: ClusterIP
+{{- end }}
