@@ -54,7 +54,7 @@ The following tables lists configurable parameters of the azure-key-vault-env-in
 |envImage.tag                                    |image tag                                    |1.1.0                                    |
 |image.pullPolicy                                |image pull policy                            |IfNotPresent                              |
 |image.repository                                |image repo that contains the controller      |spvest/azure-keyvault-webhook             |
-|image.tag                                       |image tag                                    |1.1.0                                    |
+|image.tag                                       |image tag                                    |1.1.6                                    |
 |keyVault.customAuth.enabled                     |if custom authentication with azure key vault is enabled |false                         |
 |metrics.enabled                                 |if prometheus metrics is enabled             |false                                     |
 |nodeSelector                                    |node selector to use                         |{}                                        |
