@@ -1,0 +1,11 @@
+{{- if and .Values.controller.enabled .Values.addAzurePodIdentityException }}
+apiVersion: "aadpodidentity.k8s.io/v1"
+kind: AzurePodIdentityException
+metadata:
+  name: akv2k8s-controller-exception
+  namespace: akv2k8s # change if akv2k8s is installed in a different ns
+spec:
+  podLabels:
+    app.kubernetes.io/name: {{ template "akv2k8s.controller.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

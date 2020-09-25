@@ -89,7 +89,7 @@ metadata:
     helm.sh/chart: {{ template "akv2k8s.chart" . }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/component: akv2k8s-webhook
+    app.kubernetes.io/component: {{ template "envinjector.webhook.component" . }}
 {{- if .Values.env_injector.webhook.labels }}
 {{ toYaml .Values.env_injector.webhook.labels | indent 4 }}
 {{- end}}
@@ -99,13 +99,13 @@ spec:
     matchLabels:
       app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-      app.kubernetes.io/component: akv2k8s-webhook
+      app.kubernetes.io/component: {{ template "envinjector.webhook.component" . }}
   template:
     metadata:
       labels:
         app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/component: akv2k8s-webhook
+        app.kubernetes.io/component: {{ template "envinjector.webhook.component" . }}
 {{- if .Values.env_injector.webhook.podLabels }}
 {{ toYaml .Values.env_injector.webhook.podLabels | indent 8 }}
 {{- end }}
@@ -175,6 +175,11 @@ spec:
             name: azureconf
             readOnly: true
           {{- end }}
+          securityContext:
+            {{- if .Values.env_injector.webhook.securityContext.runAsUser }}
+            runAsUser: {{ .Values.env_injector.webhook.securityContext.runAsUser }}
+            {{- end }}
+            allowPrivilegeEscalation: false
           resources:
 {{ toYaml .Values.env_injector.resources | indent 12 }}
       volumes:

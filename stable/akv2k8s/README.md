@@ -102,3 +102,5 @@ kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vau
 |env_injector.webhook.env                                     |Env vars to add to the webhook pod         |{} |
 |env_injector.webhook.labels                                  |Labels to add to the webhook deployment    |{} |
 |env_injector.webhook.podLabels                               |Labels to add to the webhook pod           |{} |
+|env_injector.webhook.securityContext.runAsUser               |Which user to run processes                  |65534|
+

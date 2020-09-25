@@ -7,6 +7,7 @@ rbac:
     {}
 
 runningInsideAzureAks: true
+addAzurePodIdentityException: false
 
 controller:
   enabled: true
@@ -19,6 +20,9 @@ controller:
 
   keyVault:
     # Set to true to use custom auth - see https://akv2k8s.io/security/authentication/#custom-authentication-for-the-controller
+    customAuth:
+      enabled: false
+      
     polling:
       normalInterval: 1m
       failureInterval: 10m
@@ -28,8 +32,7 @@ controller:
   logFormat: fmt # fmt or json
   cloudConfig: /etc/kubernetes/azure.json
 
-  customAuth:
-    enabled: false
+  
 
   # Uncomment to use client-id / secret - see https://akv2k8s.io/security/authentication/#custom-authentication-options
   # env:
@@ -112,6 +115,9 @@ env_injector:
   webhook:
     logLevel: Info
     logFormat: fmt # ftm or json
+
+    securityContext:
+      runAsUser: 65534
 
     env: {}
     labels: {}

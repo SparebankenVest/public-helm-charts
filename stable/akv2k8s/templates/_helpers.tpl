@@ -68,6 +68,12 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 {{- end -}}
 
+{{/*
+Create the name of the component label to use
+*/}}
+{{- define "envinjector.webhook.component" -}}
+{{ print "%s-webhook" (include "akv2k8s.envinjector.name" .) }}
+{{- end -}}
 
 {{/*
 Create the name of the service account to use
