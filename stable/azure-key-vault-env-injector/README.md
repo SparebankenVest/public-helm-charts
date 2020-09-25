@@ -66,6 +66,8 @@ The following tables lists configurable parameters of the azure-key-vault-env-in
 |service.internalTlsPort                         |pod tls port                         |443               |
 |service.externalHttpPort                        |service http port for metrics and healthz|443           |
 |service.internalHttpPort                        |pod http port for metrics and healthz|443               |
+|serviceAccount.create                           |create service account?                      |true|
+|serviceAccount.name                             |name of service account                      |generated|
 |tolerations                                     |tolerations to add                           |[]                                        |
 |webhook.logLevel                                |log level - Trace, Debug, Info, Warning, Error, Fatal or Panic | Info                   |
 |webhook.logFormat                               |log format - fmt or json | fmt                   |
@@ -79,5 +81,4 @@ The following tables lists configurable parameters of the azure-key-vault-env-in
 |webhook.podDisruptionBudget.minAvailable        |pod disruption minimum available             |1                                         |
 |webhook.podDisruptionBudget.maxUnavailable      |pod disruption maximum unavailable           |nil                                       |
 |webhook.podLabels                               |Labels to add to the webhook pod             |{} |
-|serviceAccount.create                           |create service account?                      |true|
-|serviceAccount.name                             |name of service account                      |generated|
+|webhook.securityContext.runAsUser               |Which user to run processes                  |65534|

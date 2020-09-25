@@ -172,6 +172,11 @@ spec:
             name: azureconf
             readOnly: true
           {{- end }}
+          securityContext:
+            {{- if .Values.webhook.securityContext.runAsUser }}
+            runAsUser: {{ .Values.webhook.securityContext.runAsUser }}
+            {{- end }}
+            allowPrivilegeEscalation: false
           resources:
 {{ toYaml .Values.resources | indent 12 }}
       volumes:
