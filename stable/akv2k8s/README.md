@@ -26,6 +26,9 @@ kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vau
 
 |               Parameter                           |                Description                   |                  Default                 |
 | ------------------------------------------------- | -------------------------------------------- | -----------------------------------------|
+| crds.enabled                                      | if this chart should manage the azurekeyvaultsecret crd     | true |
+| crds.create                                       | if this chart should create the azurekeyvaultsecret crd | true |
+| crds.keep                                         | if this chart should keep azurekeyvaultsecret crd after uninstalling the chart - note: if set to false, all azurekeyvaultsecret resources created in the cluster will automatically be removed when the crd gets removed | true | 
 | rbac.create                                       | create rbac resources|true|
 | rbac.podSecurityPolicies                          | any pod security policies|{}|
 | runningInsideAzureAks                             | if running inside azure aks - set to false if running outside aks |true |
