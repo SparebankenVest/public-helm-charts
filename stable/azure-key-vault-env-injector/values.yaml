@@ -12,6 +12,7 @@ envImage:
   tag: 1.1.0
 
 runningInsideAzureAks: true
+addAzurePodIdentityException: false
 
 cloudConfigHostPath: /etc/kubernetes/azure.json
 
