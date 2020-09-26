@@ -178,8 +178,8 @@ spec:
             readOnly: true
           {{- end }}
           securityContext:
-            {{- if .Values.webhook.securityContext }}
-{{ toYaml .Values.webhook.securityContext | indent 12 }}
+            {{- if .Values.env_injector.webhook.securityContext }}
+{{ toYaml .Values.env_injector.webhook.securityContext | indent 12 }}
             {{- end }}
           resources:
 {{ toYaml .Values.env_injector.resources | indent 12 }}
