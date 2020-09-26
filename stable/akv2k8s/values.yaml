@@ -121,8 +121,9 @@ env_injector:
     logLevel: Info
     logFormat: fmt # ftm or json
 
-    securityContext: {}
-      #runAsUser: 65534
+    securityContext:
+      allowPrivilegeEscalation: true # must be true if using aks identity
+    #   runAsUser: 65534
 
     env: {}
     labels: {}

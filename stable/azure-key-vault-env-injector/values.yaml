@@ -52,7 +52,8 @@ webhook:
   logLevel: Info
   logFormat: fmt # fmt or json
 
-  securityContext: {}
+  securityContext:
+    allowPrivilegeEscalation: true # must be true if using aks identity
   #   runAsUser: 65534
 
   env: {}

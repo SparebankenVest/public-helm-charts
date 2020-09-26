@@ -175,10 +175,9 @@ spec:
             readOnly: true
           {{- end }}
           securityContext:
-            {{- if .Values.webhook.securityContext.runAsUser }}
-            runAsUser: {{ .Values.webhook.securityContext.runAsUser }}
+            {{- if .Values.webhook.securityContext }}
+{{ toYaml .Values.webhook.securityContext | indent 12 }}
             {{- end }}
-            allowPrivilegeEscalation: false
           resources:
 {{ toYaml .Values.resources | indent 12 }}
       volumes:
