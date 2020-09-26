@@ -6,7 +6,7 @@ metadata:
   namespace: akv2k8s # change if akv2k8s is installed in a different ns
 spec:
   podLabels:
-    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/component: {{ template "envinjector.webhook.component" . }}
+    app: {{ template "azure-key-vault-to-kubernetes.name" . }}
+    release: {{ .Release.Name }}
+    component: webhook
 {{- end }}
