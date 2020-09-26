@@ -29,6 +29,8 @@ spec:
 {{- if .Values.env_injector.caBundleController.podLabels }}
 {{ toYaml .Values.env_injector.caBundleController.podLabels | indent 8 }}
 {{- end }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/env-injector-apiservice.yaml") . | sha256sum }}
     spec:
       serviceAccountName: {{ template "envinjector.serviceAccountName" . }}
       containers:

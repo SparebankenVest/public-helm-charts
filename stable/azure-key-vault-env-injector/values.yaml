@@ -52,8 +52,8 @@ webhook:
   logLevel: Info
   logFormat: fmt # fmt or json
 
-  securityContext:
-    runAsUser: 65534
+  securityContext: {}
+  #   runAsUser: 65534
 
   env: {}
   labels: {}

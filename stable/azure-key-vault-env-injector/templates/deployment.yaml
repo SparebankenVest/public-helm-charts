@@ -26,6 +26,8 @@ spec:
 {{- if .Values.caBundleController.podLabels }}
 {{ toYaml .Values.caBundleController.podLabels | indent 8 }}
 {{- end }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/apiservice.yaml") . | sha256sum }}
     spec:
       serviceAccountName: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
       containers:
