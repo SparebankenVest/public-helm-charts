@@ -62,7 +62,7 @@ spec:
     {{- if not .Values.controller.keyVault.customAuth.enabled }}
         args:
           - "--cloudconfig={{ .Values.cloudConfig }}"
-          - "--version={{ .Values.controller.image.tag }}"
+          # - "--version={{ .Values.controller.image.tag }}"
         volumeMounts:
           - name: azure-config
             mountPath: "{{ .Values.cloudConfig }}"
