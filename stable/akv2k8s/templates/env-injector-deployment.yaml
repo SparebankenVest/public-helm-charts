@@ -36,6 +36,9 @@ spec:
       containers:
         - name: ca-bundle-controller
           image: "{{ .Values.env_injector.caBundleController.image.repository }}:{{ .Values.env_injector.caBundleController.image.tag }}"
+          args:
+            - "--cloudconfig={{ .Values.cloudConfig }}"
+            - "--version={{ .Values.caBundleController.image.tag }}"
           env:
           - name: AKV_LABEL_NAME
             value: {{ .Values.env_injector.caBundleController.akvLabelName }}
@@ -118,6 +121,9 @@ spec:
       containers:
         - name: webhook
           image: "{{ .Values.env_injector.image.repository }}:{{ .Values.env_injector.image.tag }}"
+          args:
+            - "--version={{ .Values.env_injector.image.tag }}"
+            - "--versionEnvIage={{ .Values.env_injector.envImage.tag }}"
           env:
           - name: PORT
             value: {{ .Values.env_injector.service.internalTlsPort | quote }}
@@ -140,7 +146,7 @@ spec:
           - name: AZUREKEYVAULT_ENV_IMAGE
             value: {{ .Values.env_injector.envImage.repository }}:{{ .Values.env_injector.envImage.tag }}
           - name: CLOUD_CONFIG_HOST_PATH
-            value: {{ .Values.env_injector.cloudConfigHostPath }}
+            value: {{ .Values.cloudConfig }}
           - name: DOCKER_IMAGE_INSPECTION_TIMEOUT
             value: {{ .Values.env_injector.dockerImageInspection.timeout | quote }}
           - name: DOCKER_IMAGE_INSPECTION_USE_ACS_CREDENTIALS
@@ -173,7 +179,7 @@ spec:
           - mountPath: /var/serving-cert
             name: serving-cert
           {{- if .Values.runningInsideAzureAks }}
-          - mountPath: /etc/kubernetes/azure.json
+          - mountPath: "{{ .Values.cloudConfig }}"
             name: azureconf
             readOnly: true
           {{- end }}
@@ -191,7 +197,7 @@ spec:
       {{- if .Values.runningInsideAzureAks }}
       - name: azureconf
         hostPath:
-          path: /etc/kubernetes/azure.json
+          path: "{{ .Values.cloudConfig }}"
           type: File
       {{- end }}
     {{- if .Values.env_injector.nodeSelector }}

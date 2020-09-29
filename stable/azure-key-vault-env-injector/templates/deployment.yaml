@@ -33,6 +33,9 @@ spec:
       containers:
         - name: ca-bundle-controller
           image: "{{ .Values.caBundleController.image.repository }}:{{ .Values.caBundleController.image.tag }}"
+          args:
+            - "--cloudconfig={{ .Values.cloudConfig }}"
+            - "--version={{ .Values.caBundleController.image.tag }}"
           env:
           - name: AKV_LABEL_NAME
             value: {{ .Values.caBundleController.akvLabelName }}
@@ -42,6 +45,10 @@ spec:
                 fieldPath: metadata.namespace
           - name: AKV_SECRET_NAME
             value: {{ template "azure-key-vault-to-kubernetes.servingCertificate" . }}
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
           - name: CA_FILE
             value: /var/ca-cert/ca.crt
           - name: CA_CONFIG_MAP_NAME
@@ -115,6 +122,9 @@ spec:
       containers:
         - name: webhook
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          args:
+            - "--version={{ .Values.image.tag }}"
+            - "--versionEnvIage={{ .Values.envImage.tag }}"
           env:
           - name: PORT
             value: {{ .Values.service.internalTlsPort | quote }}

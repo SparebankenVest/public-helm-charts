@@ -61,15 +61,16 @@ spec:
         {{- end }}
     {{- if not .Values.controller.keyVault.customAuth.enabled }}
         args:
-          - "--cloudconfig={{ .Values.controller.cloudConfig }}"
+          - "--cloudconfig={{ .Values.cloudConfig }}"
+          - "--version={{ .Values.controller.image.tag }}"
         volumeMounts:
           - name: azure-config
-            mountPath: "{{ .Values.controller.cloudConfig }}"
+            mountPath: "{{ .Values.cloudConfig }}"
             readOnly: true
       volumes:
       - name: azure-config
         hostPath:
-          path: "{{ .Values.controller.cloudConfig }}"
+          path: "{{ .Values.cloudConfig }}"
           type: File
       {{- end }}
       {{- if .Values.controller.image.pullSecret }}

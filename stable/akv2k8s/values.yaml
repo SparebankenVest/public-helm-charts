@@ -13,6 +13,7 @@ crds:
 
 runningInsideAzureAks: true
 addAzurePodIdentityException: false
+cloudConfig: /etc/kubernetes/azure.json
 
 controller:
   enabled: true
@@ -35,7 +36,6 @@ controller:
 
   logLevel: info
   logFormat: fmt # fmt or json
-  cloudConfig: /etc/kubernetes/azure.json
 
   
 
@@ -74,8 +74,6 @@ env_injector:
   envImage:
     repository: spvest/azure-keyvault-env
     tag: 1.1.0
-
-  cloudConfigHostPath: /etc/kubernetes/azure.json
 
   keyVault:
     # Set to true to use custom auth - see https://github.com/SparebankenVest/azure-key-vault-to-kubernetes/blob/master/README.md#authentication
