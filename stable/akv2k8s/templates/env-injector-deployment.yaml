@@ -38,7 +38,7 @@ spec:
           image: "{{ .Values.env_injector.caBundleController.image.repository }}:{{ .Values.env_injector.caBundleController.image.tag }}"
           args:
             - "--cloudconfig={{ .Values.cloudConfig }}"
-            - "--version={{ .Values.env_injector.caBundleController.image.tag }}"
+            # - "--version={{ .Values.env_injector.caBundleController.image.tag }}"
           env:
           - name: AKV_LABEL_NAME
             value: {{ .Values.env_injector.caBundleController.akvLabelName }}
