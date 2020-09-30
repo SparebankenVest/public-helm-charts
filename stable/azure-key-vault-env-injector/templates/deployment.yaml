@@ -35,7 +35,7 @@ spec:
           image: "{{ .Values.caBundleController.image.repository }}:{{ .Values.caBundleController.image.tag }}"
           args:
             - "--cloudconfig={{ .Values.cloudConfig }}"
-            - "--version={{ .Values.caBundleController.image.tag }}"
+            # - "--version={{ .Values.caBundleController.image.tag }}"
           env:
           - name: AKV_LABEL_NAME
             value: {{ .Values.caBundleController.akvLabelName }}
@@ -123,7 +123,7 @@ spec:
         - name: webhook
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           args:
-            - "--version={{ .Values.image.tag }}"
+            # - "--version={{ .Values.image.tag }}"
             - "--versionEnvIage={{ .Values.envImage.tag }}"
           env:
           - name: PORT
