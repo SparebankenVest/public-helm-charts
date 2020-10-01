@@ -112,7 +112,7 @@ spec:
         app: {{ template "azure-key-vault-to-kubernetes.name" . }}
         release: {{ .Release.Name }}
         component: webhook
- {{- if .Values.webhook.podLabels }}
+{{- if .Values.webhook.podLabels }}
 {{ toYaml .Values.webhook.podLabels | indent 8 }}
 {{- end }}
       annotations:

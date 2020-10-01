@@ -40,10 +40,6 @@ spec:
           value: "{{ .Values.controller.keyVault.polling.failureInterval }}"
         - name: AZURE_VAULT_MAX_FAILURE_ATTEMPTS
           value: "{{ .Values.controller.keyVault.polling.failureAttempts }}"
-        - name: AAD_POD_BINDING_LABEL
-          valueFrom:
-            fieldRef:
-              fieldPath:  metadata.labels['aadpodidbinding']
         - name: RUNNING_INSIDE_AZURE_AKS
           value: {{ .Values.runningInsideAzureAks | quote }}
         - name: CUSTOM_AUTH

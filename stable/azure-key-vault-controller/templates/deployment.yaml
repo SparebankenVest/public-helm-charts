@@ -17,14 +17,14 @@ spec:
     matchLabels:
       app: {{ template "azure-key-vault-controller.name" . }}
       release: {{ .Release.Name }}
-{{- if .Values.podLabels }}
-{{ toYaml .Values.podLabels | indent 8 }}
-{{- end}}
   template:
     metadata:
       labels:
         app: {{ template "azure-key-vault-controller.name" . }}
         release: {{ .Release.Name }}
+{{- if .Values.podLabels }}
+{{ toYaml .Values.podLabels | indent 8 }}
+{{- end}}
     spec:
       serviceAccountName: {{ template "azure-key-vault-controller.serviceAccountName" . }}
       containers:
@@ -38,10 +38,6 @@ spec:
           value: "{{ .Values.keyVault.polling.failureInterval }}"
         - name: AZURE_VAULT_MAX_FAILURE_ATTEMPTS
           value: "{{ .Values.keyVault.polling.failureAttempts }}"
-        - name: AAD_POD_BINDING_LABEL
-          valueFrom:
-            fieldRef:
-              fieldPath:  metadata.labels['aadpodidbinding']
         - name: CUSTOM_AUTH
           value: {{ .Values.keyVault.customAuth.enabled | quote }}
         - name: LOG_LEVEL

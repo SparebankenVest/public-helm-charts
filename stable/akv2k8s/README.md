@@ -33,11 +33,11 @@ kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vau
 | rbac.podSecurityPolicies                          | any pod security policies|{}|
 | runningInsideAzureAks                             | if running inside azure aks - set to false if running outside aks |true |
 
-
 ### Controller
 
 |               Parameter                           |                Description                   |                  Default                 |
 | ------------------------------------------------- | -------------------------------------------- | -----------------------------------------|
+|controller.enabled                                 | if controller will be installed | true |
 |controller.env                                     |aditional env vars to send to pod             | {}                                       |
 |controller.image.repository                        |image repo that contains the controller image | spvest/azure-keyvault-controller         |
 |controller.image.tag                               |image tag                                     |1.1.0|
@@ -55,6 +55,7 @@ kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vau
 
 |               Parameter                                     |                Description                  |                  Default                 |
 | ----------------------------------------------------------- | ------------------------------------------- | -----------------------------------------|
+|env_injector.enabled                                         | if the env-injector will be installed | true |
 |env_injector.affinity                                        |affinities to use                            |{}                                        |
 |env_injector.caBundleController.akvLabelName                 |akv label used in namespaces|azure-key-vault-env-injection|
 |env_injector.caBundleController.configMapName                |configmap name to store ca cert|akv2k8s-ca|

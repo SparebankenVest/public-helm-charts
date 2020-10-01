@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: 1.1.0
 description: A Helm chart that deploys akv2k8s Controller and Env-Injector to Kubernetes
 name: akv2k8s
-version: 1.1.19
+version: 1.1.20
 
 maintainers:
 - name: Jon Arild Tørresdal
