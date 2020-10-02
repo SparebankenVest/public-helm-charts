@@ -98,7 +98,7 @@ Create the name of the service account to use
 {{- end -}}
 
 {{- define "envinjector.useAuthService" -}}
-{{- if and (.Values.keyVault.customAuth.enabled) (not .Values.keyVault.customAuth.useAuthService) -}}
+{{- if and (.Values.env_injector.keyVault.customAuth.enabled) (not .Values.env_injector.keyVault.customAuth.useAuthService) -}}
 {{ default "false" }}
 {{- else -}}
 {{ default "true" }}
