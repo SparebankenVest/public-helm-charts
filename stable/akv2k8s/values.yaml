@@ -79,6 +79,7 @@ env_injector:
     # Set to true to use custom auth - see https://github.com/SparebankenVest/azure-key-vault-to-kubernetes/blob/master/README.md#authentication
     customAuth: 
       enabled: false
+      useAuthService: true # set to false to use Azure Key Vault credentials from own pod
 
   dockerImageInspection:
     timeout: 20 # Timeout in seconds

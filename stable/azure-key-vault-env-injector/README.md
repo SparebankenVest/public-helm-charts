@@ -56,6 +56,7 @@ The following tables lists configurable parameters of the azure-key-vault-env-in
 |image.repository                                |image repo that contains the controller      |spvest/azure-keyvault-webhook             |
 |image.tag                                       |image tag                                    |1.1.7                                    |
 |keyVault.customAuth.enabled                     |if custom authentication with azure key vault is enabled |false                         |
+|keyVault.customAuth.useAuthService              |if authService is to be used with custom auth |true                         |
 |metrics.enabled                                 |if prometheus metrics is enabled             |false                                     |
 |nodeSelector                                    |node selector to use                         |{}                                        |
 |replicaCount                                    |number of replicas                           |1                                         |

@@ -35,6 +35,14 @@ Create the name of the service account to use
 {{- end -}}
 {{- end -}}
 
+{{- define "azure-key-vault-to-kubernetes.useAuthService" -}}
+{{- if and (.Values.keyVault.customAuth.enabled) (not .Values.keyVault.customAuth.useAuthService) -}}
+{{ default "false" }}
+{{- else -}}
+{{ default "true" }}
+{{- end -}}
+{{- end -}}
+
 {{/*
 Create chart name and version as used by the chart label.
 */}}

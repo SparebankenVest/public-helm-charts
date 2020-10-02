@@ -97,6 +97,14 @@ Create the name of the service account to use
 {{- end -}}
 {{- end -}}
 
+{{- define "envinjector.useAuthService" -}}
+{{- if and (.Values.keyVault.customAuth.enabled) (not .Values.keyVault.customAuth.useAuthService) -}}
+{{ default "false" }}
+{{- else -}}
+{{ default "true" }}
+{{- end -}}
+{{- end -}}
+
 {{- define "envinjector.selfSignedIssuer" -}}
 {{ printf "%s-selfsign" (include "akv2k8s.envinjector.fullname" .) }}
 {{- end -}}

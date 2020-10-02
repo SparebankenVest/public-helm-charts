@@ -144,6 +144,8 @@ spec:
             value: {{ .Values.caBundleController.configMapName }}
           - name: CUSTOM_AUTH
             value: {{ .Values.keyVault.customAuth.enabled | quote }}
+          - name: USE_AUTH_SERVICE
+            value: {{ include "azure-key-vault-to-kubernetes.useAuthService" . | quote }}
           - name: AZUREKEYVAULT_ENV_IMAGE
             value: {{ .Values.envImage.repository }}:{{ .Values.envImage.tag }}
           - name: CLOUD_CONFIG_HOST_PATH

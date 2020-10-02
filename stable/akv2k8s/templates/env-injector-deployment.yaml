@@ -143,6 +143,8 @@ spec:
             value: {{ .Values.env_injector.caBundleController.configMapName }}
           - name: CUSTOM_AUTH
             value: {{ .Values.env_injector.keyVault.customAuth.enabled | quote }}
+          - name: USE_AUTH_SERVICE
+            value: {{ include "envinjector.useAuthService" . | quote }}
           - name: AZUREKEYVAULT_ENV_IMAGE
             value: {{ .Values.env_injector.envImage.repository }}:{{ .Values.env_injector.envImage.tag }}
           - name: CLOUD_CONFIG_HOST_PATH

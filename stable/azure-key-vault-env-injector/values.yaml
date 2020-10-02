@@ -20,6 +20,7 @@ keyVault:
   # Set to true to use custom auth - see https://akv2k8s.io/security/authentication/
   customAuth:
     enabled: false
+    useAuthService: true # set to false to use Azure Key Vault credentials from own pod
 
 dockerImageInspection:
   timeout: 20 # Timeout in seconds

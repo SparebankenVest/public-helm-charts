@@ -77,6 +77,7 @@ kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vau
 |env_injector.image.repository                                |image repo that contains the controller      |spvest/azure-keyvault-webhook             |
 |env_injector.image.tag                                       |image tag                                    |1.1.7                                    |
 |env_injector.keyVault.customAuth.enabled                     |if custom authentication with azure key vault is enabled |false                         |
+|env_injector.keyVault.customAuth.useAuthService              |if authService is to be used with custom auth |true                         |
 |env_injector.metrics.enabled                                 |if prometheus metrics is enabled             |false                                     |
 |env_injector.name                                            ||env-injector|
 |env_injector.nodeSelector                                    |node selector to use                         |{}                                        |
