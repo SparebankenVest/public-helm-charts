@@ -1,6 +1,6 @@
 # Azure Key Vault Env-Injector Helm Chart
 
->**Deprecated - This Chart is deprecated in favor of the new [Helm 3 Chart](../akv2k8s). The chart will still be updated for a migration period, but we recommend everyone to start using the new chart.**
+>**Deprecated - This Chart is deprecated in favor of the new [Akv2k8s Helm 3 Chart](../akv2k8s). Last supported version of the env-injector was `1.1.x`. This chart will be patched with any changes to env-injector versions <= `1.1.x`, but new env-injector versions (>= 1.2.x) will only be added to the new [Akv2k8s Helm 3 Chart](../akv2k8s).**
 
 ---
 
