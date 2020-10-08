@@ -9,7 +9,100 @@ rbac:
   create: true
   podSecurityPolicies: {}
 
-# -- If running inside azure aks - set to false if running outside aks
+mangedIdentities:
+  enabled: false
+  crd:
+    enabled: true
+    create: true
+    keep: true
+  mic:
+    name: mic
+    repository: mcr.microsoft.com/oss/azure/aad-pod-identity/mic
+    tag: v1.6.3
+    pullPolicy: IfNotPresent
+
+    priorityClassName: ""
+    forceNamespaced: "false"
+
+    # log level. Uses V logs (glog)
+    logVerbosity: 0
+
+    resources:
+      limits:
+        cpu: 200m
+        memory: 1024Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+
+    imagePullSecrets: {}
+
+    serviceAccount:
+      create: true
+      ## The name of the ServiceAccount to use.
+      ## If not set and create is true, a name is generated using the fullname template
+      name:
+
+    podAnnotations: {}
+
+    ## Node labels for pod assignment
+    ## aad-pod-identity is currently only supported on linux
+    nodeSelector:
+      kubernetes.io/os: linux
+
+    tolerations: []
+
+    affinity: {}
+
+    leaderElection:
+      # Override leader election instance name (default is 'hostname')
+      instance: ""
+      # Override the namespace to create leader election objects (default is default namespace)
+      namespace: ""
+      # Override leader election name (default is aad-pod-identity-mic)
+      name: ""
+      # Override leader election duration (default is 15s)
+      duration: ""
+
+    # Override http liveliness probe port (default is 8080)
+    probePort: ""
+
+    # Override interval in seconds at which sync loop should periodically check for errors and reconcile (default is 3600s)
+    syncRetryDuration: ""
+
+    # Override the defult value of immutable identities.
+    immutableUserMSIs: []
+      # Example of MSIs (should be replaced with the real client ids)
+      #- "00000000-0000-0000-0000-000000000000"
+      #- "11111111-1111-1111-1111-111111111111"
+
+    # https://github.com/Azure/aad-pod-identity/blob/master/docs/readmes/README.featureflags.md#batch-create-delete-flag
+    # default value is 20
+    createDeleteBatch: ""
+
+    # https://github.com/Azure/aad-pod-identity/blob/master/docs/readmes/README.featureflags.md#client-qps-flag
+    # default value is 5
+    clientQps: ""
+
+    # default value is 8888
+    # prometheus port for metrics
+    prometheusPort: ""
+
+    # The maximum retry of UpdateUserMSI call. MIC updates all the identities in a batch. If a single identity contains an error
+    # or is invalid, then the entire operation fails. Configuring this flag will make MIC retry by removing the erroneous identities
+    # returned in the error
+    # Default value is 2.
+    updateUserMSIMaxRetry: ""
+
+    # The duration to wait before retrying UpdateUserMSI (batch assigning/un-assigning identity from VM/VMSS) in case of errors
+    # Default value is 1s
+    updateUserMSIRetryInterval: ""
+
+    # The interval between reconciling identity assignment on Azure based on an existing list of AzureAssignedIdentities
+    # Default value is 3m
+    identityAssignmentReconcileInterval: ""
+
+
 runningInsideAzureAks: true
 
 # -- Add Azure Pod Identity Exception

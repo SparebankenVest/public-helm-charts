@@ -8,5 +8,5 @@ spec:
   podLabels:
     app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/component: {{ template "envinjector.webhook.component" . }}
+    app.kubernetes.io/component: webhook
 {{- end }}

@@ -1,0 +1,186 @@
+{{- if .Values.mangedIdentities.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "akv2k8s.mic.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "mic.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mic
+  annotations:
+    description: {{ .Chart.Description }}
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      {{- include "mic.selectors" . | nindent 6 }}
+      app.kubernetes.io/component: mic
+  template:
+    metadata:
+      labels:
+        {{- include "mic.labels" . | nindent 8 }}
+        app.kubernetes.io/component: mic
+{{- if .Values.mangedIdentities.mic.podAnnotations }}
+      annotations:
+{{ toYaml .Values.mangedIdentities.mic.podAnnotations | indent 8 }}
+{{- end }}
+    spec:
+      {{- if .Values.mangedIdentities.mic.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.mangedIdentities.mic.imagePullSecrets | indent 8 }}
+      {{- end }}
+      {{- if .Values.rbac.create }}
+      serviceAccountName: {{ template "mic.serviceAccountName" . }}
+      {{- end }}
+      {{- if .Values.mangedIdentities.mic.priorityClassName }}
+      priorityClassName: {{ .Values.mangedIdentities.mic.priorityClassName | quote }}
+      {{- end }}
+      containers:
+      - name: mic
+        image: "{{ .Values.mangedIdentities.mic.repository }}:{{ .Values.mangedIdentities.mic.tag }}"
+        imagePullPolicy: {{ .Values.mangedIdentities.mic.pullPolicy }}
+        args:
+          # {{- if not .Values.adminsecret }}
+          # - "--cloudconfig={{ .Values.mangedIdentities.mic.cloudConfig }}"
+          # {{- end }}
+          - "--logtostderr"
+          {{- if .Values.mangedIdentities.mic.logVerbosity }}
+          - -v={{ .Values.mangedIdentities.mic.logVerbosity }}
+          {{- end }}
+          {{- if .Values.mangedIdentities.mic.leaderElection.instance }}
+          - --leader-election-instance={{ .Values.mangedIdentities.mic.leaderElection.instance }}
+          {{- end }}
+          {{- if .Values.mangedIdentities.mic.leaderElection.namespace }}
+          - --leader-election-namespace={{ .Values.mangedIdentities.mic.leaderElection.namespace }}
+          {{- end }}
+          {{- if .Values.mangedIdentities.mic.leaderElection.name }}
+          - --leader-election-name={{ .Values.mangedIdentities.mic.leaderElection.name }}
+          {{- end }}
+          {{- if .Values.mangedIdentities.mic.leaderElection.duration }}
+          - --leader-election-duration={{ .Values.mangedIdentities.mic.leaderElection.duration }}
+          {{- end }}
+          {{- if .Values.mangedIdentities.mic.probePort }}
+          - --http-probe-port={{ .Values.mangedIdentities.mic.probePort }}
+          {{- end }}
+          {{- if .Values.mangedIdentities.mic.createDeleteBatch }}
+          - --createDeleteBatch={{ .Values.mangedIdentities.mic.createDeleteBatch }}
+          {{- end }}
+          {{- if .Values.mangedIdentities.mic.clientQps }}
+          - --clientQps={{ .Values.mangedIdentities.mic.clientQps }}
+          {{- end }}
+          {{- if .Values.mangedIdentities.mic.immutableUserMSIs }}
+          - "--immutable-user-msis={{- join "," .Values.mangedIdentities.mic.immutableUserMSIs}}"
+          {{- end }}
+          {{- if .Values.mangedIdentities.mic.prometheusPort }}
+          - --prometheus-port={{ .Values.mangedIdentities.mic.prometheusPort }}
+          {{- end }}
+          {{- if .Values.mangedIdentities.mic.updateUserMSIMaxRetry }}
+          - --update-user-msi-max-retry={{ .Values.mangedIdentities.mic.updateUserMSIMaxRetry }}
+          {{- end }}
+          {{- if .Values.mangedIdentities.mic.updateUserMSIRetryInterval }}
+          - --update-user-msi-retry-interval={{ .Values.mangedIdentities.mic.updateUserMSIRetryInterval }}
+          {{- end }}
+          {{- if .Values.mangedIdentities.mic.identityAssignmentReconcileInterval }}
+          - --identity-assignment-reconcile-interval={{ .Values.mangedIdentities.mic.identityAssignmentReconcileInterval }}
+          {{- end }}
+        env:
+          - name: MIC_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: FORCENAMESPACED
+            value: "{{ .Values.mangedIdentities.mic.forceNamespaced }}"
+          # {{- if .Values.adminsecret }}
+          # - name: CLOUD
+          #   valueFrom:
+          #     secretKeyRef:
+          #       key: Cloud
+          #       name: {{ template "akv2k8s.mic.fullname" . }}
+          # - name: SUBSCRIPTION_ID
+          #   valueFrom:
+          #     secretKeyRef:
+          #       key: SubscriptionID
+          #       name: {{ template "akv2k8s.mic.fullname" . }}
+          # - name: RESOURCE_GROUP
+          #   valueFrom:
+          #     secretKeyRef:
+          #       key: ResourceGroup
+          #       name: {{ template "akv2k8s.mic.fullname" . }}
+          # - name: VM_TYPE
+          #   valueFrom:
+          #     secretKeyRef:
+          #       key: VMType
+          #       name: {{ template "akv2k8s.mic.fullname" . }}
+          # - name: TENANT_ID
+          #   valueFrom:
+          #     secretKeyRef:
+          #       key: TenantID
+          #       name: {{ template "akv2k8s.mic.fullname" . }}
+          # - name: CLIENT_ID
+          #   valueFrom:
+          #     secretKeyRef:
+          #       key: ClientID
+          #       name: {{ template "akv2k8s.mic.fullname" . }}
+          # - name: CLIENT_SECRET
+          #   valueFrom:
+          #     secretKeyRef:
+          #       key: ClientSecret
+          #       name: {{ template "akv2k8s.mic.fullname" . }}
+          # {{- if .Values.adminsecret.useMSI }}
+          # - name: USE_MSI
+          #   valueFrom:
+          #     secretKeyRef:
+          #       key: UseMSI
+          #       name: {{ template "akv2k8s.mic.fullname" . }}
+          # - name: USER_ASSIGNED_MSI_CLIENT_ID
+          #   valueFrom:
+          #     secretKeyRef:
+          #       key: UserAssignedMSIClientID
+          #       name: {{ template "akv2k8s.mic.fullname" . }}
+          # {{- end }}
+          # {{- end }}
+        {{- if .Values.mangedIdentities.mic.prometheusPort }}
+        ports:
+          - containerPort: {{ .Values.mangedIdentities.mic.prometheusPort }}
+            name: metrics
+            protocol: TCP
+        {{- end }}
+        {{- if not .Values.runningInsideAzureAks }}
+        volumeMounts:
+          - name: k8s-azure-file
+            mountPath: {{ .Values.cloudConfig }}
+            readOnly: true
+        {{- end }}
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            {{- if .Values.mangedIdentities.mic.probePort }}
+            port: {{ .Values.mangedIdentities.mic.probePort }}
+            {{- else }}
+            port: 8080
+            {{- end }}
+          initialDelaySeconds: 10
+          periodSeconds: 5
+{{- with .Values.mangedIdentities.mic.resources }}
+        resources:
+{{ toYaml . | indent 12 }}
+{{- end }}
+      # {{- if not .Values.adminsecret }}
+      # volumes:
+      # - name: k8s-azure-file
+      #   hostPath:
+      #     path: {{ .Values.mangedIdentities.mic.cloudConfig }}
+      # {{- end }}
+{{- with .Values.mangedIdentities.mic.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.mangedIdentities.mic.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.mangedIdentities.mic.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- end }}

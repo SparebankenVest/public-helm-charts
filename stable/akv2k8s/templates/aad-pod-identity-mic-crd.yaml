@@ -1,0 +1,6 @@
+{{- if and .Values.mangedIdentities.enabled .Values.mangedIdentities.crd.create }}
+{{- range $path, $bytes := .Files.Glob "crds/azureidentity.yaml" }}
+  {{ $.Files.Get $path }}
+---
+{{- end }}
+{{- end }}

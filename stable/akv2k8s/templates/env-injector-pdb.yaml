@@ -8,7 +8,7 @@ metadata:
     helm.sh/chart: {{ template "akv2k8s.chart" . }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/component: {{ template "envinjector.webhook.component" . }}
+    app.kubernetes.io/component: webhook
 spec:
   minAvailable: {{ .Values.env_injector.webhook.podDisruptionBudget.minAvailable }}
 {{- if .Values.env_injector.webhook.podDisruptionBudget.maxUnavailable }}
@@ -18,5 +18,5 @@ spec:
     matchLabels:
       app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-      app.kubernetes.io/component: {{ template "envinjector.webhook.component" . }}
+      app.kubernetes.io/component: webhook
 {{- end }}
