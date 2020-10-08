@@ -1,6 +1,5 @@
 {{- if .Values.env_injector.enabled -}}
 {{- $dot := . }}
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -60,8 +59,10 @@ spec:
             value: {{ .Values.env_injector.service.externalAuthServiceMutualTlsPort | quote }}
           - name: WEBHOOK_AUTH_SERVICE_PORT_INTERNAL
             value: {{ .Values.env_injector.service.internalAuthServiceMutualTlsPort | quote }}
+          {{- if and .Values.env_injector.keyVault.customAuth.useAuthService }}
           - name: CA_CONFIG_MAP_NAME
-            value: {{ .Values.env_injector.caBundleController.configMapName }}
+            value: {{ .Values.controller.caBundle.configMapName }}
+          {{- end }}
           - name: CUSTOM_AUTH
             value: {{ .Values.env_injector.keyVault.customAuth.enabled | quote }}
           - name: USE_AUTH_SERVICE

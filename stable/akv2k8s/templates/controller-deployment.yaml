@@ -64,7 +64,7 @@ spec:
         {{- end }}
         {{- if and .Values.env_injector.enabled .Values.env_injector.keyVault.customAuth.useAuthService }}
         - name: AKV_LABEL_NAME
-          value: {{ .Values.env_injector.caBundleController.akvLabelName }}
+          value: {{ .Values.controller.caBundle.akvLabelName }}
         - name: AKV_NAMESPACE
           valueFrom:
             fieldRef:
@@ -74,26 +74,40 @@ spec:
         - name: CA_FILE
           value: /var/ca-cert/ca.crt
         - name: CA_CONFIG_MAP_NAME
-          value: {{ .Values.env_injector.caBundleController.configMapName }}
+          value: {{ .Values.controller.caBundle.configMapName }}
         {{- end }}
-    {{- if not .Values.controller.keyVault.customAuth.enabled }}
         args:
           - "--cloudconfig={{ .Values.cloudConfig }}"
           # - "--version={{ .Values.controller.image.tag }}"
-        volumeMounts:
-          - name: azure-config
-            mountPath: "{{ .Values.cloudConfig }}"
-            readOnly: true
         {{- if .Values.controller.resources }}
         resources:
           {{ toYaml .Values.controller.resources | nindent 10 }}
         {{- end }}
+  {{- if or (not .Values.controller.keyVault.customAuth.enabled) (and .Values.env_injector.enabled .Values.env_injector.keyVault.customAuth.useAuthService) }}
+        volumeMounts:
+          {{- if not .Values.controller.keyVault.customAuth.enabled }}
+          - name: azure-config
+            mountPath: "{{ .Values.cloudConfig }}"
+            readOnly: true
+          {{- end }}
+          {{- if and .Values.env_injector.enabled .Values.env_injector.keyVault.customAuth.useAuthService }}
+          - mountPath: /var/ca-cert
+            name: ca-cert
+          {{- end }}
       volumes:
+      {{- if not .Values.controller.keyVault.customAuth.enabled }}
       - name: azure-config
         hostPath:
           path: "{{ .Values.cloudConfig }}"
           type: File
       {{- end }}
+      {{- if and .Values.env_injector.enabled .Values.env_injector.keyVault.customAuth.useAuthService }}
+      - name: ca-cert
+        secret:
+          defaultMode: 420
+          secretName: {{ template "envinjector.servingCertificate" . }}
+      {{- end }}
+  {{- end }}
       {{- if .Values.controller.image.pullSecret }}
       imagePullSecrets:
       - name: "{{ .Values.controller.image.pullSecret }}"
