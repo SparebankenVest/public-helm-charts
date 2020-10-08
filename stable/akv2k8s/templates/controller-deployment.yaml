@@ -62,6 +62,20 @@ spec:
               name: {{ template "akv2k8s.controller.fullname" $dot }}-env
               key: {{ $key }}
         {{- end }}
+        {{- if and .Values.env_injector.enabled .Values.env_injector.keyVault.customAuth.useAuthService }}
+        - name: AKV_LABEL_NAME
+          value: {{ .Values.env_injector.caBundleController.akvLabelName }}
+        - name: AKV_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: AKV_SECRET_NAME
+          value: {{ template "envinjector.servingCertificate" . }}
+        - name: CA_FILE
+          value: /var/ca-cert/ca.crt
+        - name: CA_CONFIG_MAP_NAME
+          value: {{ .Values.env_injector.caBundleController.configMapName }}
+        {{- end }}
     {{- if not .Values.controller.keyVault.customAuth.enabled }}
         args:
           - "--cloudconfig={{ .Values.cloudConfig }}"

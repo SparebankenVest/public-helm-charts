@@ -26,7 +26,7 @@ controller:
     # -- Image repository that contains the controller image
     repository: spvest/azure-keyvault-controller
     # -- Image tag
-    tag: 1.1.0
+    tag: 1.2.0-beta.1
     # -- Image pull policy for controller
     pullPolicy: IfNotPresent
 
@@ -45,8 +45,11 @@ controller:
 
   # -- Controller log level
   logLevel: info
-  # -- Controller log format fmt or json
-  logFormat: fmt
+  logFormat: fmt # fmt or json
+
+  caBundle:
+    akvLabelName: azure-key-vault-env-injection
+    configMapName: akv2k8s-ca
 
   serviceAccount:
     # -- Create service account for controller
@@ -82,9 +85,7 @@ env_injector:
   image:
     # -- Image repository that contains the env-injector image
     repository: spvest/azure-keyvault-webhook
-    # -- Image tag
-    tag: 1.1.10
-    # -- Image pull policy for env-injector
+    tag: 1.2.0-beta.1
     pullPolicy: IfNotPresent
 
   envImage:
@@ -105,31 +106,6 @@ env_injector:
     timeout: 20
     # -- Only applicable if `runningInsideAzureAks` is also `true`
     useAksCredentialsWithACS: true
-
-  caBundleController:
-    image:
-      # -- Image repository that contains the ca-bundle image
-      repository: spvest/ca-bundle-controller
-      # -- Image tag
-      tag: 1.1.0
-      # -- Image pull policy for ca bundler
-      pullPolicy: IfNotPresent
-    # -- Additional env vars to add to the ca-bundle pod
-    env: {}
-    # -- Additional labels
-    labels: {}
-    # -- Additional pod labels
-    podLabels: {}
-    # -- Log level ca-bundle pod
-    logLevel: Info
-    # -- fmt or json
-    logFormat: fmt
-    # -- AKV label used in namespaces for injection
-    akvLabelName: azure-key-vault-env-injection
-    # -- Configmap name to store ca cert
-    configMapName: akv2k8s-ca
-    # -- Resources for ca-bundle pod
-    resources: {}
 
   service:
     # -- Webhook service name
