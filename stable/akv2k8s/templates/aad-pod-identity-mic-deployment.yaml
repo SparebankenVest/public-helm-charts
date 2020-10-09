@@ -143,7 +143,7 @@ spec:
             name: metrics
             protocol: TCP
         {{- end }}
-        {{- if not .Values.runningInsideAzureAks }}
+        {{- if .Values.runningInsideAzureAks }}
         volumeMounts:
           - name: k8s-azure-file
             mountPath: {{ .Values.cloudConfig }}
@@ -163,12 +163,12 @@ spec:
         resources:
 {{ toYaml . | indent 12 }}
 {{- end }}
-      # {{- if not .Values.adminsecret }}
-      # volumes:
-      # - name: k8s-azure-file
-      #   hostPath:
-      #     path: {{ .Values.mangedIdentities.mic.cloudConfig }}
-      # {{- end }}
+      {{- if .Values.runningInsideAzureAks }}
+      volumes:
+      - name: k8s-azure-file
+        hostPath:
+          path: {{ .Values.cloudConfig }}
+      {{- end }}
 {{- with .Values.mangedIdentities.mic.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
