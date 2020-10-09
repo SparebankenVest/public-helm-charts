@@ -40,9 +40,7 @@ spec:
         image: "{{ .Values.mangedIdentities.mic.repository }}:{{ .Values.mangedIdentities.mic.tag }}"
         imagePullPolicy: {{ .Values.mangedIdentities.mic.pullPolicy }}
         args:
-          # {{- if not .Values.adminsecret }}
-          # - "--cloudconfig={{ .Values.mangedIdentities.mic.cloudConfig }}"
-          # {{- end }}
+          - "--cloudconfig={{ .Values.cloudConfig }}"
           - "--logtostderr"
           {{- if .Values.mangedIdentities.mic.logVerbosity }}
           - -v={{ .Values.mangedIdentities.mic.logVerbosity }}
