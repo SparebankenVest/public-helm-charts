@@ -42,6 +42,7 @@ spec:
         args:
           - "--cloudconfig={{ .Values.cloudConfig }}"
           - "--logtostderr"
+          - "--enable-type-upgrade=false"
           {{- if .Values.mangedIdentities.mic.logVerbosity }}
           - -v={{ .Values.mangedIdentities.mic.logVerbosity }}
           {{- end }}
