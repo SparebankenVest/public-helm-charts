@@ -72,10 +72,10 @@ kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vau
 |env_injector.dockerImageInspection.useAksCredentialsWithACS  |                                             |true|
 |env_injector.env                                             |aditional env vars to send to pod            |{}                                        |
 |env_injector.envImage.repository                             |image repo that contains the env image       |spvest/azure-keyvault-env                 |
-|env_injector.envImage.tag                                    |image tag                                    |1.1.0                                    |
+|env_injector.envImage.tag                                    |image tag                                    |1.1.1                                    |
 |env_injector.image.pullPolicy                                |image pull policy                            |IfNotPresent                              |
 |env_injector.image.repository                                |image repo that contains the controller      |spvest/azure-keyvault-webhook             |
-|env_injector.image.tag                                       |image tag                                    |1.1.8                                    |
+|env_injector.image.tag                                       |image tag                                    |1.1.10                                    |
 |env_injector.keyVault.customAuth.enabled                     |if custom authentication with azure key vault is enabled |false                         |
 |env_injector.keyVault.customAuth.useAuthService              |if authService is to be used with custom auth |true                         |
 |env_injector.metrics.enabled                                 |if prometheus metrics is enabled             |false                                     |

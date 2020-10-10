@@ -4,12 +4,12 @@ replicaCount: 2
 
 image:
   repository: spvest/azure-keyvault-webhook
-  tag: 1.1.8
+  tag: 1.1.10
   pullPolicy: IfNotPresent
 
 envImage:
   repository: spvest/azure-keyvault-env
-  tag: 1.1.0
+  tag: 1.1.1
 
 runningInsideAzureAks: true
 addAzurePodIdentityException: false

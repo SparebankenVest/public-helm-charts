@@ -51,10 +51,10 @@ The following tables lists configurable parameters of the azure-key-vault-env-in
 |dockerImageInspection.useAksCredentialsWithACS  |                                             |true|
 |env                                             |aditional env vars to send to pod            |{}                                        |
 |envImage.repository                             |image repo that contains the env image       |spvest/azure-keyvault-env                 |
-|envImage.tag                                    |image tag                                    |1.1.0                                    |
+|envImage.tag                                    |image tag                                    |1.1.1                                    |
 |image.pullPolicy                                |image pull policy                            |IfNotPresent                              |
 |image.repository                                |image repo that contains the controller      |spvest/azure-keyvault-webhook             |
-|image.tag                                       |image tag                                    |1.1.8                                    |
+|image.tag                                       |image tag                                    |1.1.10                                    |
 |keyVault.customAuth.enabled                     |if custom authentication with azure key vault is enabled |false                         |
 |keyVault.customAuth.useAuthService              |if authService is to be used with custom auth |true                         |
 |metrics.enabled                                 |if prometheus metrics is enabled             |false                                     |

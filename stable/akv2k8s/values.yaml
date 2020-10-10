@@ -68,12 +68,12 @@ env_injector:
 
   image:
     repository: spvest/azure-keyvault-webhook
-    tag: 1.1.8
+    tag: 1.1.10
     pullPolicy: IfNotPresent
 
   envImage:
     repository: spvest/azure-keyvault-env
-    tag: 1.1.0
+    tag: 1.1.1
 
   keyVault:
     # Set to true to use custom auth - see https://github.com/SparebankenVest/azure-key-vault-to-kubernetes/blob/master/README.md#authentication
