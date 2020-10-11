@@ -64,7 +64,9 @@ spec:
         {{- end }}
         {{- if and .Values.env_injector.enabled .Values.env_injector.keyVault.customAuth.useAuthService }}
         - name: AKV_LABEL_NAME
-          value: {{ .Values.controller.caBundle.akvLabelName }}
+          value: {{ .Values.env_injector.namespaceEnableLabel.name }}
+        - name: AKV_LABEL_VALUE
+          value: {{ .Values.env_injector.namespaceEnableLabel.value }}
         - name: AKV_NAMESPACE
           valueFrom:
             fieldRef:
@@ -74,7 +76,7 @@ spec:
         - name: CA_FILE
           value: /var/ca-cert/ca.crt
         - name: CA_CONFIG_MAP_NAME
-          value: {{ .Values.controller.caBundle.configMapName }}
+          value: {{ .Values.env_injector.caBundleConfigMapName }}
         {{- end }}
         args:
           - "--cloudconfig={{ .Values.cloudConfig }}"

@@ -15,13 +15,6 @@ The env-injector name
 {{- end -}}
 
 {{/*
-The mic name
-*/}}
-{{- define "akv2k8s.mic.name" -}}
-{{- default .Values.mangedIdentities.mic.name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
 Create a default fully qualified app name for the Helm install
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
@@ -75,24 +68,6 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 {{- end -}}
 
-{{/*
-Create a default fully qualified app name for the mic.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
-*/}}
-{{- define "akv2k8s.mic.fullname" -}}
-{{- if .Values.fullnameOverride -}}
-{{- printf "%s-%s" .Values.fullnameOverride "mic" | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- $name := default .Chart.Name .Values.nameOverride -}}
-{{- if contains $name .Release.Name -}}
-{{- printf "%s-%s" .Release.Name "mic" | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- printf "%s-%s-%s" .Release.Name $name "mic" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-{{- end -}}
-{{- end -}}
-
 
 {{/*
 Create the name of the service account to use
@@ -116,16 +91,6 @@ Create the name of the service account to use
 {{- end -}}
 {{- end -}}
 
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "mic.serviceAccountName" -}}
-{{- if .Values.mangedIdentities.mic.serviceAccount.create -}}
-{{ default (include "akv2k8s.mic.fullname" .) .Values.mangedIdentities.mic.serviceAccount.name }}
-{{- else -}}
-{{ default "default" .Values.mangedIdentities.mic.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
 
 {{- define "envinjector.useAuthService" -}}
 {{- if and (.Values.env_injector.keyVault.customAuth.enabled) (not .Values.env_injector.keyVault.customAuth.useAuthService) -}}
@@ -192,23 +157,6 @@ Common EnvInjector labels.
 */}}
 {{- define "envinjector.labels" -}}
 {{- include "envinjector.selectors" . }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-helm.sh/chart: {{ template "akv2k8s.chart" . }}
-{{- end -}}
-
-{{/*
-Common MIC selectors.
-*/}}
-{{- define "mic.selectors" -}}
-app.kubernetes.io/name: {{ template "akv2k8s.mic.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end -}}
-
-{{/*
-Common MIC labels.
-*/}}
-{{- define "mic.labels" -}}
-{{- include "mic.selectors" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 helm.sh/chart: {{ template "akv2k8s.chart" . }}
 {{- end -}}

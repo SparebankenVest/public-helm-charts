@@ -61,7 +61,7 @@ spec:
             value: {{ .Values.env_injector.service.internalAuthServiceMutualTlsPort | quote }}
           {{- if and .Values.env_injector.keyVault.customAuth.useAuthService }}
           - name: CA_CONFIG_MAP_NAME
-            value: {{ .Values.controller.caBundle.configMapName }}
+            value: {{ .Values.env_injector.caBundleConfigMapName }}
           {{- end }}
           - name: CUSTOM_AUTH
             value: {{ .Values.env_injector.keyVault.customAuth.enabled | quote }}

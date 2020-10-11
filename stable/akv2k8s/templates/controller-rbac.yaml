@@ -49,6 +49,29 @@ rules:
   - create
   - update
   - patch
+# CA Bundle
+{{- if and .Values.env_injector.enabled .Values.env_injector.keyVault.customAuth.useAuthService }}
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - create
+  - update
+  - delete
+  - get
+  - watch
+  - list
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+  - watch
+  - list
+{{- end }}
+
 ---
 {{- if .Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1/ClusterRole" }}
 apiVersion: rbac.authorization.k8s.io/v1
@@ -116,46 +139,9 @@ roleRef:
   kind: ClusterRole
   name: {{ template "akv2k8s.controller.fullname" . }}-reader
   apiGroup: rbac.authorization.k8s.io
-{{- end}}
-{{- end}}
 
----
-
-# CA Bundle
 {{- if and .Values.env_injector.enabled .Values.env_injector.keyVault.customAuth.useAuthService }}
-
-# CA Bundle cluster role giving full access to ConfigMaps and read access to Namespaces
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRole
-metadata:
-  name: {{ template "akv2k8s.controller.fullname" . }}-ca-bundle
-  labels:
-    app.kubernetes.io/name: {{ template "akv2k8s.controller.name" . }}
-    helm.sh/chart: {{ template "akv2k8s.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - configmaps
-  verbs:
-  - create
-  - update
-  - delete
-  - get
-  - watch
-  - list
-- apiGroups:
-  - ""
-  resources:
-  - namespaces
-  verbs:
-  - get
-  - watch
-  - list
 ---
-
 # Role giving access to local secret containing CA Bundle for akv2k8s and write access to Events
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: Role
@@ -176,21 +162,13 @@ rules:
   - get
   - watch
   - list
-- apiGroups:
-  - ""
-  resources:
-  - events
-  verbs:
-  - create
-  - update
-  - patch
----
 
-# Link controller ServiceAccount to Cluster Role
-kind: ClusterRoleBinding
+# Link controller ServiceAccount to Role
 apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
 metadata:
   name: {{ template "akv2k8s.controller.fullname" . }}-ca-bundle
+  namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: {{ template "akv2k8s.controller.name" . }}
     helm.sh/chart: {{ template "akv2k8s.chart" . }}
@@ -201,29 +179,10 @@ subjects:
   namespace: {{ .Release.Namespace }}
   name: {{ template "akv2k8s.controller.fullname" . }}
 roleRef:
-  kind: ClusterRole
+  kind: Role
   name: {{ template "akv2k8s.controller.fullname" . }}-ca-bundle
   apiGroup: rbac.authorization.k8s.io
----
-
-# Link controller ServiceAccount to Role
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: RoleBinding
-metadata:
-  name: {{ template "akv2k8s.envinjector.fullname" . }}-ca-bundle
-  namespace: {{ .Release.Namespace }}
-  labels:
-    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
-    helm.sh/chart: {{ template "akv2k8s.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-subjects:
-- kind: ServiceAccount
-  namespace: {{ .Release.Namespace }}
-  name: {{ template "akv2k8s.envinjector.fullname" . }}
-roleRef:
-  kind: Role
-  name: {{ template "akv2k8s.envinjector.fullname" . }}-ca-bundle
-  apiGroup: rbac.authorization.k8s.io
----
 {{- end }}
+
+{{- end}}
+{{- end}}
