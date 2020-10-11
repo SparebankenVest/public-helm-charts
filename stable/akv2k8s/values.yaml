@@ -30,20 +30,6 @@ controller:
     # -- Image pull policy for controller
     pullPolicy: IfNotPresent
 
-  keyVault:
-    customAuth:
-      # -- Set to true to use custom auth - see https://akv2k8s.io/security/authentication/#custom-authentication-for-the-controller
-      enabled: false
-
-    polling:
-      # -- Interval to wait before polling azure key vault for secret updates
-      normalInterval: 1m
-      # -- Interval to wait when polling has failed `failureAttempts` before polling azure key vault for secret updates
-      failureInterval: 10m
-      # -- Number of times to allow secret updates to fail before applying `failureInterval`
-      failureAttempts: 5
-
-  # -- Controller log level
   logLevel: info
   logFormat: fmt # fmt or json
 

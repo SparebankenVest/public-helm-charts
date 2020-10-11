@@ -19,7 +19,7 @@ spec:
     matchLabels:
       app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-      app.kubernetes.io/component: webhook
+      app.kubernetes.io/component: env-injector-webhook
   template:
     metadata:
       labels:

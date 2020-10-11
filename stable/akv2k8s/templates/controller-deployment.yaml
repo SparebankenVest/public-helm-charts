@@ -34,12 +34,6 @@ spec:
         image: "{{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag }}"
         imagePullPolicy: {{ .Values.controller.image.pullPolicy }}
         env:
-        - name: AZURE_VAULT_NORMAL_POLL_INTERVALS
-          value: "{{ .Values.controller.keyVaultPolling.normalInterval }}"
-        - name: AZURE_VAULT_EXCEPTION_POLL_INTERVALS
-          value: "{{ .Values.controller.keyVaultPolling.failureInterval }}"
-        - name: AZURE_VAULT_MAX_FAILURE_ATTEMPTS
-          value: "{{ .Values.controller.keyVaultPolling.failureAttempts }}"
         - name: RUNNING_INSIDE_AZURE_AKS
           value: {{ .Values.runningInsideAzureAks | quote }}
         - name: CUSTOM_AUTH
