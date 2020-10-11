@@ -62,12 +62,15 @@ spec:
               name: {{ template "akv2k8s.controller.fullname" $dot }}-env
               key: {{ $key }}
         {{- end }}
+        {{- end }}
+        {{- if .Values.keyVault.env }}
         {{- range $key, $value := .Values.keyVault.env }}
         - name: {{ $key }}
           valueFrom:
             secretKeyRef:
-              name: {{ template "akv2k8s.controller.fullname" $dot }}-env
+              name: {{ template "akv2k8s.fullname" $dot }}-env
               key: {{ $key }}
+        {{- end }}
         {{- end }}
         {{- if and .Values.env_injector.enabled .Values.keyVault.useAuthService }}
         - name: AKV_LABEL_NAME
