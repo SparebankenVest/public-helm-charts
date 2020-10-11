@@ -1,4 +1,5 @@
 # Default values
+name: akv2k8s
 
 global:
   # -- Env vars to be used with all enabled pods, eg. for akv credentials

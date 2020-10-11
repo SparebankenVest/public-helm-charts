@@ -50,7 +50,7 @@ rules:
   - update
   - patch
 # CA Bundle
-{{- if and .Values.env_injector.enabled .Values.env_injector.keyVault.customAuth.useAuthService }}
+{{- if and .Values.env_injector.enabled .Values.keyVault.useAuthService }}
 - apiGroups:
   - ""
   resources:
@@ -140,7 +140,7 @@ roleRef:
   name: {{ template "akv2k8s.controller.fullname" . }}-reader
   apiGroup: rbac.authorization.k8s.io
 
-{{- if and .Values.env_injector.enabled .Values.env_injector.keyVault.customAuth.useAuthService }}
+{{- if and .Values.env_injector.enabled .Values.keyVault.useAuthService }}
 ---
 # Role giving access to local secret containing CA Bundle for akv2k8s and write access to Events
 apiVersion: rbac.authorization.k8s.io/v1beta1

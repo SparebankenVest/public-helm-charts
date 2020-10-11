@@ -1,6 +1,13 @@
 {{/* vim: set filetype=mustache: */}}
 
 {{/*
+The akv2k8s name
+*/}}
+{{- define "akv2k8s.name" -}}
+{{- default .Values.name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
 The controller name
 */}}
 {{- define "akv2k8s.controller.name" -}}
@@ -88,15 +95,6 @@ Create the name of the service account to use
 {{ default (include "akv2k8s.envinjector.fullname" .) .Values.env_injector.serviceAccount.name }}
 {{- else -}}
 {{ default "default" .Values.env_injector.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
-
-{{- define "envinjector.useAuthService" -}}
-{{- if and (.Values.env_injector.keyVault.customAuth.enabled) (not .Values.env_injector.keyVault.customAuth.useAuthService) -}}
-{{ default "false" }}
-{{- else -}}
-{{ default "true" }}
 {{- end -}}
 {{- end -}}
 

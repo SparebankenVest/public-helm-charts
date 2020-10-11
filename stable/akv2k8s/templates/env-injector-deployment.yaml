@@ -59,14 +59,14 @@ spec:
             value: {{ .Values.env_injector.service.externalAuthServiceMutualTlsPort | quote }}
           - name: WEBHOOK_AUTH_SERVICE_PORT_INTERNAL
             value: {{ .Values.env_injector.service.internalAuthServiceMutualTlsPort | quote }}
-          {{- if and .Values.env_injector.keyVault.customAuth.useAuthService }}
+          {{- if and .Values.keyVault.useAuthService }}
           - name: CA_CONFIG_MAP_NAME
             value: {{ .Values.env_injector.caBundleConfigMapName }}
           {{- end }}
           - name: CUSTOM_AUTH
-            value: {{ .Values.env_injector.keyVault.customAuth.enabled | quote }}
+            value: {{ .Values.keyVault.customAuth | quote }}
           - name: USE_AUTH_SERVICE
-            value: {{ include "envinjector.useAuthService" . | quote }}
+            value: {{ .Values.keyVault.useAuthService | quote }}
           - name: AZUREKEYVAULT_ENV_IMAGE
             value: {{ .Values.env_injector.envImage.repository }}:{{ .Values.env_injector.envImage.tag }}
           - name: CLOUD_CONFIG_HOST_PATH
