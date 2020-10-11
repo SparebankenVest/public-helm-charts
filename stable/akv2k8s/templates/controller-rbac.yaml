@@ -163,6 +163,7 @@ rules:
   - watch
   - list
 
+---
 # Link controller ServiceAccount to Role
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: RoleBinding
