@@ -38,11 +38,3 @@ runs:
         git remote rm origin || true
         git remote add origin "git@github.com:${{ inputs.publish-repository }}.git"
         git push origin gh-pages
-
-    # - name: Verify
-    #   shell: bash  
-    #   run: |
-    #     helm repo add spv-charts ${{ inputs.helm-verify-repo }}
-    #     helm repo update
-    #     helm repo list
-    #     helm show chart spv-charts/azure-key-vault-controller --version 0.1.0-alpha.2
