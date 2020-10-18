@@ -15,11 +15,6 @@ jobs:
       with:
         path: master
 
-    - name: Init
-      run: |
-        mkdir -p /tmp/helm/bin
-        mkdir -p /tmp/helm/publish
-
     - name: checkout gh-pages
       uses: actions/checkout@v2
       with:
@@ -28,82 +23,104 @@ jobs:
         path: publish
 
     - name: Install Helm
-      env:
-        HELM_VERSION: v3.0.2
-      run: |
-        echo '>> Installing Helm...'
-        cd /tmp/helm/bin
-        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
-        chmod 700 get_helm.sh
-        ./get_helm.sh -v ${HELM_VERSION}
-        # wget "https://storage.googleapis.com/kubernetes-helm/helm-v${HELM_VERSION}-linux-amd64.tar.gz"
-        # tar -zxf "helm-v${HELM_VERSION}-linux-amd64.tar.gz"
-        # chmod +x linux-amd64/helm
-        # alias helm=/tmp/helm/bin/linux-amd64/helm
-        helm version -c
+      uses: ./.github/actions/install-helm
 
-    - name: Build Helm Repo
-      env:
-        CUSTOM_DOMAIN: charts.spvapi.no
-      run: |
-        cd publish
-        helm repo add spv-pub-charts https://$CUSTOM_DOMAIN
+    - name: Build Helm Charts
+      uses: ./.github/actions/build
+
+    - name: Release Helm Charts
+      uses: ./.github/actions/release
+
+    # - name: checkout master
+    #   uses: actions/checkout@v2
+    #   with:
+    #     path: master
+
+    # - name: Init
+    #   run: |
+    #     mkdir -p /tmp/helm/bin
+    #     mkdir -p /tmp/helm/publish
+
+    # - name: checkout gh-pages
+    #   uses: actions/checkout@v2
+    #   with:
+    #     repository: sparebankenvest/helm-charts
+    #     ref: gh-pages
+    #     path: publish
+
+    # - name: Install Helm
+    #   env:
+    #     HELM_VERSION: v3.0.2
+    #   run: |
+    #     echo '>> Installing Helm...'
+    #     cd /tmp/helm/bin
+    #     curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
+    #     chmod 700 get_helm.sh
+    #     ./get_helm.sh -v ${HELM_VERSION}
+    #     helm version -c
+
+    # - name: Build Helm Repo
+    #   env:
+    #     CUSTOM_DOMAIN: charts.spvapi.no
+    #   run: |
+    #     cd publish
+    #     helm repo add spv-pub-charts https://$CUSTOM_DOMAIN
         
-        echo '>> Building charts...'
-        find "$GITHUB_WORKSPACE/master/stable" -mindepth 1 -maxdepth 1 -type d | while read chart; do
-          echo ">>> helm lint $chart"
-          helm lint "$chart"
-          chart_name="`basename "$chart"`"
-          echo ">>> helm update dependencies $chart"
-          helm dependency update "$chart"
-          echo ">>> helm package -d $chart_name $chart"
-          mkdir -p "$chart_name"
-          helm package -d "$chart_name" "$chart"
-        done
+    #     echo '>> Building charts...'
+    #     find "$GITHUB_WORKSPACE/master/stable" -mindepth 1 -maxdepth 1 -type d | while read chart; do
+    #       echo ">>> helm lint $chart"
+    #       helm lint "$chart"
+    #       chart_name="`basename "$chart"`"
+    #       echo ">>> helm update dependencies $chart"
+    #       helm dependency update "$chart"
+    #       echo ">>> helm package -d $chart_name $chart"
+    #       mkdir -p "$chart_name"
+    #       helm package -d "$chart_name" "$chart"
+    #     done
         
-        find "." -mindepth 1 -maxdepth 1 -type d | while read existingFolder; do
-          folder="$(basename $existingFolder)"
-          if [ "$folder" != ".git" ] && [ ! -d $GITHUB_WORKSPACE/master/stable/$folder ]; then
-            echo ">>> Removing deleted folder $existingFolder"
-            rm -rf "$existingFolder"
-          fi
-        done
+    #     find "." -mindepth 1 -maxdepth 1 -type d | while read existingFolder; do
+    #       folder="$(basename $existingFolder)"
+    #       if [ "$folder" != ".git" ] && [ ! -d $GITHUB_WORKSPACE/master/stable/$folder ]; then
+    #         echo ">>> Removing deleted folder $existingFolder"
+    #         rm -rf "$existingFolder"
+    #       fi
+    #     done
         
-        echo '>>> helm repo index'
-        helm repo index .
+    #     echo '>>> helm repo index'
+    #     helm repo index .
 
-    - name: Commit files
-      run: |
-        cd publish
-        git config user.name "${GITHUB_ACTOR}"
-        git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-        git add .
-        git commit -m "Published by GitHubActions"
+    # - name: Commit files
+    #   run: |
+    #     cd publish
+    #     git config user.name "${GITHUB_ACTOR}"
+    #     git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+    #     git add .
+    #     git commit -m "Published by GitHubActions"
 
-    - name: Configure git key
-      env:
-        ACTIONS_DEPLOY_KEY: ${{ secrets.GH_PAGES_TOKEN }}
-      run: |
-        SSH_DIR="${HOME}/.ssh"
-        mkdir "${SSH_DIR}"
-        ssh-keyscan -t rsa github.com > "${SSH_DIR}/known_hosts"
-        echo "${ACTIONS_DEPLOY_KEY}" > "${SSH_DIR}/id_rsa"
-        chmod 400 "${SSH_DIR}/id_rsa"
+    # - name: Configure git key
+    #   env:
+    #     ACTIONS_DEPLOY_KEY: ${{ secrets.GH_PAGES_TOKEN }}
+    #   run: |
+    #     SSH_DIR="${HOME}/.ssh"
+    #     mkdir "${SSH_DIR}"
+    #     ssh-keyscan -t rsa github.com > "${SSH_DIR}/known_hosts"
+    #     echo "${ACTIONS_DEPLOY_KEY}" > "${SSH_DIR}/id_rsa"
+    #     chmod 400 "${SSH_DIR}/id_rsa"
 
-    - name: Push Helm charts
-      env:
-        PUBLISH_REPOSITORY: sparebankenvest/helm-charts
-        PUBLISH_BRANCH: gh-pages
-      run: |
-        cd publish
+    # - name: Push Helm charts
+    #   env:
+    #     PUBLISH_REPOSITORY: sparebankenvest/helm-charts
+    #     PUBLISH_BRANCH: gh-pages
+    #   run: |
+    #     cd publish
 
-        git remote rm origin || true
-        git remote add origin "git@github.com:${PUBLISH_REPOSITORY}.git"
-        git push origin "${PUBLISH_BRANCH}"
+    #     git remote rm origin || true
+    #     git remote add origin "git@github.com:${PUBLISH_REPOSITORY}.git"
+    #     git push origin "${PUBLISH_BRANCH}"
 
-    - name: Verify
-      run: |
-        helm repo add spv-charts https://charts.spvapi.no
-        helm repo update
-        helm repo list
-        helm show chart spv-charts/azure-key-vault-controller --version 0.1.0-alpha.2
+    # - name: Verify
+    #   run: |
+    #     helm repo add spv-charts https://charts.spvapi.no
+    #     helm repo update
+    #     helm repo list
+    #     helm show chart spv-charts/azure-key-vault-controller --version 0.1.0-alpha.2

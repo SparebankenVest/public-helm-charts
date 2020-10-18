@@ -1,0 +1,22 @@
+name: 'Install Helm'
+description: 'Install Helm'
+inputs:
+  helm-version:  
+    description: 'Version of helm to install'
+    required: false
+    default: 'v3.3.4'
+  
+runs:
+  using: "composite"
+  steps: 
+    - name: Install Helm
+      shell: bash  
+      run: |
+        mkdir -p /tmp/helm/bin
+        mkdir -p /tmp/helm/publish
+        echo '>> Installing Helm...'
+        cd /tmp/helm/bin
+        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
+        chmod 700 get_helm.sh
+        ./get_helm.sh -v ${{ inputs.helm-version }}
+        helm version -c
