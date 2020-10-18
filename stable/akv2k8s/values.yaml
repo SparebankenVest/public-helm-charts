@@ -6,11 +6,6 @@ rbac:
   podSecurityPolicies:
     {}
 
-crds:
-  enabled: true
-  create: true
-  keep: true
-
 runningInsideAzureAks: true
 addAzurePodIdentityException: false
 cloudConfig: /etc/kubernetes/azure.json
