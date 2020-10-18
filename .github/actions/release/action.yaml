@@ -1,18 +1,13 @@
 name: 'Build'
 description: 'Build helm chart'
 inputs:
-  helm-publish-repository:  
+  publish-repository:  
     description: 'Helm repository to publish to'
     required: false
     default: 'sparebankenvest/helm-charts'
-  helm-publish-branch:  
-    description: 'Helm branch to publish to'
-    required: false
-    default: 'gh-pages'
-  helm-verify-repo:  
-    description: 'Helm repo to verify against'
-    required: false
-    default: 'https://charts.spvapi.no'
+  publish-token:  
+    description: 'Github token for publishing'
+    required: true
   
 runs:
   using: "composite"
@@ -32,7 +27,7 @@ runs:
         SSH_DIR="${HOME}/.ssh"
         mkdir "${SSH_DIR}"
         ssh-keyscan -t rsa github.com > "${SSH_DIR}/known_hosts"
-        echo "${{ secrets.GH_PAGES_TOKEN }}" > "${SSH_DIR}/id_rsa"
+        echo "${{ inputs.publish-token }}" > "${SSH_DIR}/id_rsa"
         chmod 400 "${SSH_DIR}/id_rsa"
 
     - name: Push Helm charts
@@ -41,8 +36,8 @@ runs:
         cd publish
 
         git remote rm origin || true
-        git remote add origin "git@github.com:${{ inputs.helm-publish-repository }}.git"
-        git push origin "${{ inputs.helm-publish-branch }}"
+        git remote add origin "git@github.com:${{ inputs.publish-repository }}.git"
+        git push origin gh-pages
 
     # - name: Verify
     #   shell: bash  

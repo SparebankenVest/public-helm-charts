@@ -35,6 +35,8 @@ jobs:
 
     - name: Release Helm Charts
       uses: ./master/.github/actions/release
+      with:
+        publish-token: ${{ secrets.GH_PAGES_TOKEN }}
 
     # - name: checkout master
     #   uses: actions/checkout@v2
