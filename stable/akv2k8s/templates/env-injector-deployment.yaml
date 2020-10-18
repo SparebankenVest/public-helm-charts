@@ -41,26 +41,20 @@ spec:
             value: {{ .Values.env_injector.service.internalHttpPort | quote }}
           - name: RUNNING_INSIDE_AZURE_AKS
             value: {{ .Values.runningInsideAzureAks | quote }}
-          - name: TLS_CERT_FILE
-            value: /var/serving-cert/tls.crt
-          - name: TLS_PRIVATE_KEY_FILE
-            value: /var/serving-cert/tls.key
-          - name: TLS_CA_FILE
-            value: /var/serving-cert/ca.crt
+          - name: TLS_CERT_DIR
+            value: /var/serving-cert
+          - name: CA_CERT_DIR
+            value: /var/ca-cert
           - name: WEBHOOK_AUTH_SERVICE
             value: {{ template "akv2k8s.envinjector.fullname" . }}
           - name: WEBHOOK_AUTH_SERVICE_PORT
             value: {{ .Values.env_injector.service.externalAuthServiceMutualTlsPort | quote }}
           - name: WEBHOOK_AUTH_SERVICE_PORT_INTERNAL
             value: {{ .Values.env_injector.service.internalAuthServiceMutualTlsPort | quote }}
-          {{- if and .Values.keyVault.useAuthService }}
-          - name: CA_CONFIG_MAP_NAME
-            value: {{ .Values.env_injector.caBundleConfigMapName }}
-          {{- end }}
-          - name: CUSTOM_AUTH
-            value: {{ .Values.keyVault.customAuth | quote }}
+          - name: AUTH_TYPE
+            value: {{ .Values.env_injector.keyVaultAuth | quote }}
           - name: USE_AUTH_SERVICE
-            value: {{ .Values.keyVault.useAuthService | quote }}
+            value: {{ .Values.env_injector.authService | quote }}
           - name: AZUREKEYVAULT_ENV_IMAGE
             value: {{ .Values.env_injector.envImage.repository }}:{{ .Values.env_injector.envImage.tag }}
           - name: CLOUD_CONFIG_HOST_PATH
@@ -104,7 +98,9 @@ spec:
           volumeMounts:
           - mountPath: /var/serving-cert
             name: serving-cert
-          {{- if .Values.runningInsideAzureAks }}
+          - mountPath: /var/ca-cert
+            name: ca-cert
+          {{- if eq .Values.env_injector.keyVaultAuth "cloudConfig" }}
           - mountPath: "{{ .Values.cloudConfig }}"
             name: azureconf
             readOnly: true
@@ -122,7 +118,13 @@ spec:
         secret:
           defaultMode: 420
           secretName: {{ template "envinjector.servingCertificate" . }}
-      {{- if .Values.runningInsideAzureAks }}
+      {{- if .Values.env_injector.authService }}
+      - name: ca-cert
+        secret:
+          defaultMode: 420
+          secretName: {{ template "envinjector.rootCACertificate" . }}
+      {{- end }}
+      {{- if eq .Values.env_injector.keyVaultAuth "cloudConfig" }}
       - name: azureconf
         hostPath:
           path: "{{ .Values.cloudConfig }}"

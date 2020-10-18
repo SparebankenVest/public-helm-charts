@@ -58,8 +58,7 @@ env_injector:
   name: env-injector
 
   keyVaultAuth: cloudConfig # cloudConfig, environment,
-  authService: true # set to false to provide azure key vault credentials
-                    # locally (through e.g. env vars) in each pod
+  authService: true # set to false to provide azure key vault credentials locally (through e.g. env vars) in each pod
 
   image:
     # -- Image repository that contains the env-injector image

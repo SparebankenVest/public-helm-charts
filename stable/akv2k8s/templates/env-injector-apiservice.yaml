@@ -2,6 +2,7 @@
 {{- $tlsCrt := "" }}
 {{- $tlsKey := "" }}
 {{- $caCrt := "" }}
+{{- $caKey := "" }}
 {{- if and (not .Values.env_injector.certificate.custom.enabled) (not .Values.env_injector.certificate.useCertManager) }}
 {{- $ca := genCA "svc-cat-ca" 3650 }}
 {{- $svcName := include "akv2k8s.envinjector.fullname" . }}
@@ -12,6 +13,7 @@
 {{- $tlsCrt = b64enc $server.Cert }}
 {{- $tlsKey = b64enc $server.Key }}
 {{- $caCrt =  b64enc $ca.Cert }}
+{{- $caKey =  b64enc $ca.Key }}
 {{- else if .Values.env_injector.certificate.custom.enabled }}
 {{- $tlsCrt = required "Required when env_injector.certificate.custom.enabled is false" .Values.env_injector.certificate.custom.server.tls.crt }}
 {{- $tlsKey = required "Required when env_injector.certificate.custom.enabled is false" .Values.env_injector.certificate.custom.server.tls.key }}
@@ -26,12 +28,25 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "akv2k8s.labels" . | nindent 4 }}
+type: kubernetes.io/tls
 data:
   tls.crt: {{ $tlsCrt }}
   tls.key: {{ $tlsKey }}
   ca.crt:  {{ $caCrt }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ template "envinjector.rootCACertificate" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "akv2k8s.labels" . | nindent 4 }}
+type: kubernetes.io/tls
+data:
+  tls.crt: {{ $caCrt }}
+  tls.key: {{ $caKey }}
+  ca.crt:  {{ $caCrt }}
 {{- end }}
-
 ---
 apiVersion: admissionregistration.k8s.io/v1beta1
 kind: MutatingWebhookConfiguration

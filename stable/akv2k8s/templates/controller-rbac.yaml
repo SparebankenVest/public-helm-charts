@@ -45,28 +45,6 @@ rules:
   - create
   - update
   - patch
-# CA Bundle
-{{- if and .Values.env_injector.enabled .Values.keyVault.useAuthService }}
-- apiGroups:
-  - ""
-  resources:
-  - configmaps
-  verbs:
-  - create
-  - update
-  - delete
-  - get
-  - watch
-  - list
-- apiGroups:
-  - ""
-  resources:
-  - namespaces
-  verbs:
-  - get
-  - watch
-  - list
-{{- end }}
 
 ---
 {{- if .Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1/ClusterRole" }}
@@ -126,44 +104,4 @@ roleRef:
   kind: ClusterRole
   name: {{ template "akv2k8s.controller.fullname" . }}-reader
   apiGroup: rbac.authorization.k8s.io
-
-{{- if and .Values.env_injector.enabled .Values.keyVault.useAuthService }}
----
-# Role giving access to local secret containing CA Bundle for akv2k8s and write access to Events
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: Role
-metadata:
-  name: {{ template "akv2k8s.controller.fullname" . }}-ca-bundle
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- include "akv2k8s.labels" . | nindent 4 }}
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - get
-  - watch
-  - list
-
----
-# Link controller ServiceAccount to Role
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: RoleBinding
-metadata:
-  name: {{ template "akv2k8s.controller.fullname" . }}-ca-bundle
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- include "akv2k8s.labels" . | nindent 4 }}
-subjects:
-- kind: ServiceAccount
-  namespace: {{ .Release.Namespace }}
-  name: {{ template "akv2k8s.controller.fullname" . }}
-roleRef:
-  kind: Role
-  name: {{ template "akv2k8s.controller.fullname" . }}-ca-bundle
-  apiGroup: rbac.authorization.k8s.io
-{{- end }}
-
 {{- end}}
