@@ -1,31 +1,37 @@
-{{- if .Values.controller.enabled -}}
 {{- $dot := . }}
+{{- $customAuth := .Values.keyVault.customAuth }}
+{{- $useAuthService := .Values.keyVault.useAuthService }}
+
+{{- if .Values.controller.keyVaultOverride.enabled }}
+{{- $customAuth = .Values.controller.keyVaultOverride.customAuth }}
+{{- end -}}
+
+{{- if .Values.controller.keyVaultOverride.enabled }}
+{{- $useAuthService = .Values.controller.keyVaultOverride.useAuthService }}
+{{- end -}}
+
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "akv2k8s.controller.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ template "akv2k8s.controller.name" . }}
-    helm.sh/chart: {{ template "akv2k8s.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/component: akv2k8s-controller
+    {{- include "akv2k8s.labels" . | nindent 4 }}
     {{- if .Values.controller.labels }}
-    {{ toYaml .Values.controller.labels | nindent 4 }}
+    {{ toYaml .Values.controller.labels | indent 4 }}
     {{- end}}
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ template "akv2k8s.controller.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "akv2k8s.selectors" . | nindent 6 }}
+      {{- include "akv2k8s.components.controller" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ template "akv2k8s.controller.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- include "akv2k8s.selectors" . | nindent 8 }}
+        {{- include "akv2k8s.components.controller" . | nindent 8 }}
         {{- if .Values.controller.podLabels }}
-        {{ toYaml .Values.controller.podLabels | nindent 8 }}
+        {{ toYaml .Values.controller.podLabels | indent 8 }}
         {{- end}}
     spec:
       serviceAccountName: {{ template "controller.serviceAccountName" . }}
@@ -37,7 +43,7 @@ spec:
         - name: RUNNING_INSIDE_AZURE_AKS
           value: {{ .Values.runningInsideAzureAks | quote }}
         - name: CUSTOM_AUTH
-          value: {{ .Values.keyVault.customAuth | quote }}
+          value: {{ $customAuth | quote }}
         - name: LOG_LEVEL
           value: "{{ .Values.controller.logLevel }}"
         - name: LOG_FORMAT
@@ -67,19 +73,19 @@ spec:
         {{- end }}
         {{- end }}
         {{- if and .Values.env_injector.enabled .Values.keyVault.useAuthService }}
-        - name: AKV_LABEL_NAME
-          value: {{ .Values.env_injector.namespaceEnableLabel.name }}
-        - name: AKV_LABEL_VALUE
-          value: {{ .Values.env_injector.namespaceEnableLabel.value }}
-        - name: AKV_NAMESPACE
+        - name: NAMESPACE_LABEL_SELECTOR_NAME
+          value: {{ .Values.env_injector.namespaceLabelSelector.name }}
+        - name: NAMESPACE_LABEL_SELECTOR_VALUE
+          value: {{ .Values.env_injector.namespaceLabelSelector.value }}
+        - name: AKV_CA_NAMESPACE
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        - name: AKV_SECRET_NAME
+        - name: AKV_CA_SECRET_NAME
           value: {{ template "envinjector.servingCertificate" . }}
         - name: CA_FILE
           value: /var/ca-cert/ca.crt
-        - name: CA_CONFIG_MAP_NAME
+        - name: AKV_CA_CONFIG_MAP_NAME
           value: {{ .Values.env_injector.caBundleConfigMapName }}
         {{- end }}
         args:
@@ -89,25 +95,25 @@ spec:
         resources:
           {{ toYaml .Values.controller.resources | nindent 10 }}
         {{- end }}
-  {{- if or (not .Values.keyVault.customAuth) (and .Values.env_injector.enabled .Values.keyVault.useAuthService) }}
+  {{- if or (not $customAuth) (and .Values.env_injector.enabled $useAuthService) }}
         volumeMounts:
-          {{- if not .Values.keyVault.customAuth }}
+          {{- if not $customAuth }}
           - name: azure-config
             mountPath: "{{ .Values.cloudConfig }}"
             readOnly: true
           {{- end }}
-          {{- if and .Values.env_injector.enabled .Values.keyVault.useAuthService }}
+          {{- if and .Values.env_injector.enabled $useAuthService }}
           - mountPath: /var/ca-cert
             name: ca-cert
           {{- end }}
       volumes:
-      {{- if not .Values.keyVault.customAuth }}
+      {{- if not $customAuth }}
       - name: azure-config
         hostPath:
           path: "{{ .Values.cloudConfig }}"
           type: File
       {{- end }}
-      {{- if and .Values.env_injector.enabled .Values.keyVault.useAuthService }}
+      {{- if and .Values.env_injector.enabled $useAuthService }}
       - name: ca-cert
         secret:
           defaultMode: 420

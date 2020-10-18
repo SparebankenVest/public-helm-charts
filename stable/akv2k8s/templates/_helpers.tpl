@@ -111,11 +111,15 @@ Create the name of the service account to use
 {{- end -}}
 
 {{- define "envinjector.servingCertificate" -}}
-{{- if .Values.env_injector.webhook.certificate.useCertManager -}}
+{{- if .Values.env_injector.certificate.useCertManager -}}
 {{ printf "%s-webhook-tls-cm" (include "akv2k8s.envinjector.fullname" .) }}
 {{- else -}}
 {{ printf "%s-webhook-tls" (include "akv2k8s.envinjector.fullname" .) }}
 {{- end -}}
+{{- end -}}
+
+{{- define "envinjector.namespaceSelector" -}}
+{{ printf "%s: %s" .Values.env_injector.namespaceLabelSelector.label.name .Values.env_injector.namespaceLabelSelector.label.value }}
 {{- end -}}
 
 {{/*
@@ -126,35 +130,32 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
-Common Controller selectors.
-*/}}
-{{- define "controller.selectors" -}}
-app.kubernetes.io/name: {{ template "akv2k8s.controller.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end -}}
-
-{{/*
-Common Controller labels.
-*/}}
-{{- define "controller.labels" -}}
-{{- include "controller.selectors" . }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-helm.sh/chart: {{ template "akv2k8s.chart" . }}
-{{- end -}}
-
-{{/*
 Common EnvInjector selectors.
 */}}
-{{- define "envinjector.selectors" -}}
-app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+{{- define "akv2k8s.selectors" -}}
+app.kubernetes.io/name: {{ template "akv2k8s.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{/*
 Common EnvInjector labels.
 */}}
-{{- define "envinjector.labels" -}}
-{{- include "envinjector.selectors" . }}
+{{- define "akv2k8s.labels" -}}
+{{- include "akv2k8s.selectors" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 helm.sh/chart: {{ template "akv2k8s.chart" . }}
+{{- end -}}
+
+{{/*
+EnvInjector webhook component
+*/}}
+{{- define "akv2k8s.components.webhook" -}}
+app.kubernetes.io/component: {{ template "akv2k8s.fullname" . }}-webhook
+{{- end -}}
+
+{{/*
+Controller component
+*/}}
+{{- define "akv2k8s.components.controller" -}}
+app.kubernetes.io/component: {{ template "akv2k8s.fullname" . }}-controller
 {{- end -}}

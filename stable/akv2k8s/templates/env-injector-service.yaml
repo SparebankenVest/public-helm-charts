@@ -4,10 +4,7 @@ kind: Service
 metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
-    helm.sh/chart: {{ template "akv2k8s.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "akv2k8s.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.env_injector.service.type }}
   ports:
@@ -24,7 +21,6 @@ spec:
       targetPort: {{ .Values.env_injector.service.externalAuthServiceMutualTlsPort }}
       protocol: TCP
   selector:
-    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/component: webhook
+    {{- include "akv2k8s.selectors" . | nindent 4 }}
+    {{- include "akv2k8s.components.webhook" . | nindent 4 }}
 {{- end}}
