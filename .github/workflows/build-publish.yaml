@@ -23,13 +23,13 @@ jobs:
         path: publish
 
     - name: Install Helm
-      uses: ./.github/actions/install-helm
+      uses: ./master/.github/actions/install-helm
 
     - name: Build Helm Charts
-      uses: ./.github/actions/build
+      uses: ./master/.github/actions/build
 
     - name: Release Helm Charts
-      uses: ./.github/actions/release
+      uses: ./master/.github/actions/release
 
     # - name: checkout master
     #   uses: actions/checkout@v2
