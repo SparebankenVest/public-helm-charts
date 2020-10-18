@@ -5,6 +5,9 @@ inputs:
     description: 'Helm repository to build for'
     required: false
     default: 'charts.spvapi.no'
+  chart-name:
+    description: 'Name of chart to build'
+    required: true
   
 runs:
   using: "composite"
@@ -16,26 +19,42 @@ runs:
       run: |
         cd publish
         helm repo add spv-pub-charts https://${{ inputs.helm-repository }}
-        
-        echo '>> Building charts...'
-        find "$GITHUB_WORKSPACE/master/stable" -mindepth 1 -maxdepth 1 -type d | while read chart; do
-          echo ">>> helm lint $chart"
-          helm lint "$chart"
-          chart_name="`basename "$chart"`"
-          echo ">>> helm update dependencies $chart"
-          helm dependency update "$chart"
-          echo ">>> helm package -d $chart_name $chart"
-          mkdir -p "$chart_name"
-          helm package -d "$chart_name" "$chart"
-        done
-        
-        find "." -mindepth 1 -maxdepth 1 -type d | while read existingFolder; do
-          folder="$(basename $existingFolder)"
-          if [ "$folder" != ".git" ] && [ ! -d $GITHUB_WORKSPACE/master/stable/$folder ]; then
-            echo ">>> Removing deleted folder $existingFolder"
-            rm -rf "$existingFolder"
-          fi
-        done
-        
+
+        chart=$GITHUB_WORKSPACE/master/stable/${{ inputs.chart-name }}
+        echo '>> Building chart $chart...'
+
+        echo ">>> helm lint $chart"
+        helm lint "$chart"
+
+        chart_name="${{ inputs.chart-name }}"
+        echo ">>> helm update dependencies $chart"
+        helm dependency update "$chart"
+        echo ">>> helm package -d $chart_name $chart"
+        mkdir -p "$chart_name"
+        helm package -d "$chart_name" "$chart"
+
         echo '>>> helm repo index'
         helm repo index .
+
+        # echo '>> Building charts...'
+        # find "$GITHUB_WORKSPACE/master/stable" -mindepth 1 -maxdepth 1 -type d | while read chart; do
+        #   echo ">>> helm lint $chart"
+        #   helm lint "$chart"
+        #   chart_name="`basename "$chart"`"
+        #   echo ">>> helm update dependencies $chart"
+        #   helm dependency update "$chart"
+        #   echo ">>> helm package -d $chart_name $chart"
+        #   mkdir -p "$chart_name"
+        #   helm package -d "$chart_name" "$chart"
+        # done
+        
+        # find "." -mindepth 1 -maxdepth 1 -type d | while read existingFolder; do
+        #   folder="$(basename $existingFolder)"
+        #   if [ "$folder" != ".git" ] && [ ! -d $GITHUB_WORKSPACE/master/stable/$folder ]; then
+        #     echo ">>> Removing deleted folder $existingFolder"
+        #     rm -rf "$existingFolder"
+        #   fi
+        # done
+        
+        # echo '>>> helm repo index'
+        # helm repo index .

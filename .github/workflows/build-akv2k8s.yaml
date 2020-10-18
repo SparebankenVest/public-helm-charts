@@ -5,6 +5,9 @@ on:
     branches:
     - master
     - '*-beta'
+    paths:
+    - '.github/workflows/build-akv2k8s.yaml'
+    - 'stable/akv2k8s/**'
 
 jobs:
   build-and-publish:
@@ -27,6 +30,8 @@ jobs:
 
     - name: Build Helm Charts
       uses: ./master/.github/actions/build
+      with:
+        chart-name: akv2k8s
 
     - name: Release Helm Charts
       uses: ./master/.github/actions/release
