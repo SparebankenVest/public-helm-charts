@@ -20,6 +20,10 @@ spec:
       port: {{ .Values.env_injector.service.internalAuthServiceMutualTlsPort }}
       targetPort: {{ .Values.env_injector.service.externalAuthServiceMutualTlsPort }}
       protocol: TCP
+    - name: {{ .Values.env_injector.service.name }}-auth
+      port: {{ .Values.env_injector.service.externalAuthPort }}
+      targetPort: {{ .Values.env_injector.service.internallAuthPort }}
+      protocol: TCP
   selector:
     {{- include "akv2k8s.selectors" . | nindent 4 }}
     {{- include "akv2k8s.components.webhook" . | nindent 4 }}

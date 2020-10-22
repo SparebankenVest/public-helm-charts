@@ -52,7 +52,7 @@ spec:
         {{- end }}
         args:
           - "--cloudconfig={{ .Values.cloudConfig }}"
-          # - "--version={{ .Values.controller.image.tag }}"
+          - "--version={{ .Values.controller.image.tag }}"
         {{- if .Values.controller.resources }}
         resources:
           {{ toYaml .Values.controller.resources | nindent 10 }}

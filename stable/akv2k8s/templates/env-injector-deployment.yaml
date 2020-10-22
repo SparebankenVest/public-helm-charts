@@ -32,8 +32,9 @@ spec:
           image: "{{ .Values.env_injector.image.repository }}:{{ .Values.env_injector.image.tag }}"
           imagePullPolicy: {{ .Values.env_injector.image.pullPolicy }}
           args:
+            - "--cloudconfig={{ .Values.cloudConfig }}"
             - "--version={{ .Values.env_injector.image.tag }}"
-            - "--versionEnvIage={{ .Values.env_injector.envImage.tag }}"
+            - "--versionenvimage={{ .Values.env_injector.envImage.tag }}"
           env:
           - name: PORT
             value: {{ .Values.env_injector.service.internalTlsPort | quote }}
@@ -45,6 +46,8 @@ spec:
             value: /var/serving-cert
           - name: CA_CERT_DIR
             value: /var/ca-cert
+          - name: ENV_INJECTOR_EXEC_DIR
+            value: /azure-keyvault/
           - name: WEBHOOK_AUTH_SERVICE
             value: {{ template "akv2k8s.envinjector.fullname" . }}
           - name: WEBHOOK_AUTH_SERVICE_PORT
@@ -57,8 +60,6 @@ spec:
             value: {{ .Values.env_injector.authService | quote }}
           - name: AZUREKEYVAULT_ENV_IMAGE
             value: {{ .Values.env_injector.envImage.repository }}:{{ .Values.env_injector.envImage.tag }}
-          - name: CLOUD_CONFIG_HOST_PATH
-            value: {{ .Values.cloudConfig }}
           - name: DOCKER_IMAGE_INSPECTION_TIMEOUT
             value: {{ .Values.env_injector.dockerImageInspection.timeout | quote }}
           - name: DOCKER_IMAGE_INSPECTION_USE_ACS_CREDENTIALS

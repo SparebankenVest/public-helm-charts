@@ -22,8 +22,14 @@ rules:
 - apiGroups:
   - ""
   resources:
-  - secrets # in order to inspect docker image with ImagePullSecrets
-  - namespaces # needed to authorize injector requests
+  - secrets # in order to create secret for client cert
+  verbs:
+  - create
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - namespaces # in order to authorize incoming auth requests
   verbs:
   - get
 ---
@@ -60,7 +66,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   namespace: {{ .Release.Namespace }}
-  name: {{ template "akv2k8s.envinjector.fullname" . }}
+  name: {{ template "envinjector.serviceAccountName" . }}
 roleRef:
   kind: ClusterRole
   apiGroup: rbac.authorization.k8s.io
