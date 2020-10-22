@@ -6,6 +6,9 @@ rbac:
   podSecurityPolicies:
     {}
 
+global: # values to be applied globally
+  env: {} # env vars to be used with all enabled pods, eg. for akv credentials
+
 runningInsideAzureAks: true
 addAzurePodIdentityException: false
 cloudConfig: /etc/kubernetes/azure.json
@@ -17,7 +20,6 @@ controller:
     repository: spvest/azure-keyvault-controller
     tag: 1.1.0
     pullPolicy: IfNotPresent
-    #pullSecret: secretName
 
   keyVault:
     # Set to true to use custom auth - see https://akv2k8s.io/security/authentication/#custom-authentication-for-the-controller
@@ -31,14 +33,6 @@ controller:
 
   logLevel: info
   logFormat: fmt # fmt or json
-
-  
-
-  # Uncomment to use client-id / secret - see https://akv2k8s.io/security/authentication/#custom-authentication-options
-  # env:
-  #   AZURE_TENANT_ID: <tenantId>
-  #   AZURE_CLIENT_ID: <clientId>
-  #   AZURE_CLIENT_SECRET: <clientSecret>
   
   serviceAccount:
     create: true

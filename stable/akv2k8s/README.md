@@ -29,6 +29,7 @@ kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vau
 | rbac.create                                       | create rbac resources|true|
 | rbac.podSecurityPolicies                          | any pod security policies|{}|
 | runningInsideAzureAks                             | if running inside azure aks - set to false if running outside aks |true |
+| global.env                                        | env vars to be used with all enabled pods, eg. for akv credentials | {} |
 
 ### Controller
 

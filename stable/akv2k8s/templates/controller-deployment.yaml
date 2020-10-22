@@ -48,6 +48,13 @@ spec:
           value: "{{ .Values.controller.logLevel }}"
         - name: LOG_FORMAT
           value: "{{ .Values.controller.logFormat }}"
+        {{- range $key, $value := .Values.global.env }}
+        - name: {{ $key }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "akv2k8s.fullname" $dot }}-env
+              key: {{ $key }}
+        {{- end }}
         {{- range $key, $value := .Values.controller.env }}
         - name: {{ $key }}
           valueFrom:
