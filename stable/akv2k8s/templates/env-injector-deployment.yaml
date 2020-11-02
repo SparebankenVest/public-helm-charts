@@ -77,13 +77,14 @@ spec:
                 name: {{ template "akv2k8s.fullname" $dot }}-env
                 key: {{ $key }}
           {{- end }}
-          {{- range $key, $value := .Values.env_injector.webhook.env }}
+          {{- range $key, $value := .Values.env_injector.env }}
           - name: {{ $key }}
             valueFrom:
               secretKeyRef:
                 name: {{ template "akv2k8s.envinjector.fullname" $dot }}-webhook-env
                 key: {{ $key }}
           {{- end }}
+          imagePullPolicy: {{ .Values.env_injector.image.pullPolicy }}
           ports:
           - name: webhook-tls
             containerPort: {{ .Values.env_injector.service.internalTlsPort }}

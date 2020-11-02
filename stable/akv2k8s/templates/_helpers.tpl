@@ -90,6 +90,20 @@ Create the name of the service account to use
 {{/*
 Create the name of the service account to use
 */}}
+{{- define "controller.logLevel" -}}
+{{- $logLevel := default "info" .Values.controller.logLevel | lower -}}
+{{- if eq $logLevel "debug" -}}
+{{- "4" }}
+{{- else if eq $logLevel "trace" -}}
+{{- "6" }}
+{{- else -}}
+{{- "2" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Create the name of the service account to use
+*/}}
 {{- define "envinjector.serviceAccountName" -}}
 {{- if .Values.env_injector.serviceAccount.create -}}
 {{ default (include "akv2k8s.envinjector.fullname" .) .Values.env_injector.serviceAccount.name }}

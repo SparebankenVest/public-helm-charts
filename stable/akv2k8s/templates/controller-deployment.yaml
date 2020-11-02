@@ -49,10 +49,11 @@ spec:
               name: {{ template "akv2k8s.controller.fullname" $dot }}-env
               key: {{ $key }}
         {{- end }}
-        {{- end }}
         args:
           - "--cloudconfig={{ .Values.cloudConfig }}"
           - "--version={{ .Values.controller.image.tag }}"
+          - "--v={{ template "controller.logLevel" . }}"
+          - "--logging-format={{ .Values.controller.logFormat }}"
         {{- if .Values.controller.resources }}
         resources:
           {{ toYaml .Values.controller.resources | nindent 10 }}
