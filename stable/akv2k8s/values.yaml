@@ -12,6 +12,12 @@ global: # values to be applied globally
 runningInsideAzureAks: true
 addAzurePodIdentityException: false
 cloudConfig: /etc/kubernetes/azure.json
+# Azure Key Vault certificate authentication
+azureCertificate:
+  enabled: false
+  secret: akv2k8s-certificate
+  key: akv2k8s-certificate.p12
+  path: /etc/azure/
 
 controller:
   enabled: true

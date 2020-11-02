@@ -107,3 +107,11 @@ kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vau
 |env_injector.webhook.podLabels                               |Labels to add to the webhook pod           |{} |
 |env_injector.webhook.securityContext.runAsUser               |Which user to run processes                  |65534|
 
+## Azure Key Vault Certificate authentication
+
+|               Parameter                           |                Description                   |                  Default                 |
+| ------------------------------------------------- | -------------------------------------------- | -----------------------------------------|
+|azureCertificate.enabled                           | if azure certificate authentication enabled  | false                                    |
+|azureCertificate.secret                            | name of the secret with akv certificate      | akv2k8s-certificate  |
+|azureCertificate.key                               | name of the key witin a secret with akv certificate (in p12 format), also used as certificate file name | akv2k8s-certificate.p12 |
+|azureCertificate.path                              | path where certificate is mounted | /etc/azure/ |

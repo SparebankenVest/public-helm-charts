@@ -166,6 +166,10 @@ spec:
             value: {{ .Values.env_injector.webhook.logFormat | quote }}
           - name: METRICS_ENABLED
             value: {{ .Values.env_injector.metrics.enabled | quote }}
+      {{- if .Values.azureCertificate.enabled }}
+          - name: AZURE_CERTIFICATE_PATH
+            value: "{{ print .Values.azureCertificate.path  .Values.azureCertificate.key }}"
+        {{- end }}
           {{- range $key, $value := .Values.global.env }}
           - name: {{ $key }}
             valueFrom:
@@ -199,6 +203,11 @@ spec:
             name: azureconf
             readOnly: true
           {{- end }}
+    {{- if .Values.azureCertificate.enabled }}
+          - name: akv2k8s-certificate
+            mountPath: "{{ .Values.azureCertificate.path }}"
+            readOnly: true
+      {{- end }}
           securityContext:
             {{- if .Values.env_injector.webhook.securityContext }}
 {{ toYaml .Values.env_injector.webhook.securityContext | indent 12 }}
@@ -215,6 +224,14 @@ spec:
         hostPath:
           path: "{{ .Values.cloudConfig }}"
           type: File
+      {{- end }}
+    {{- if .Values.azureCertificate.enabled }}
+      - name: akv2k8s-certificate
+        secret:
+          secretName: "{{ .Values.azureCertificate.secret }}"
+          items:
+          - key: "{{ .Values.azureCertificate.key }}"
+            path: "{{ .Values.azureCertificate.key }}"
       {{- end }}
     {{- if .Values.env_injector.nodeSelector }}
       nodeSelector:

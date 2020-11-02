@@ -48,6 +48,10 @@ spec:
           value: "{{ .Values.controller.logLevel }}"
         - name: LOG_FORMAT
           value: "{{ .Values.controller.logFormat }}"
+    {{- if .Values.azureCertificate.enabled }}
+        - name: AZURE_CERTIFICATE_PATH
+          value: "{{ print .Values.azureCertificate.path  .Values.azureCertificate.key }}"
+      {{- end }}
         {{- range $key, $value := .Values.global.env }}
         - name: {{ $key }}
           valueFrom:
@@ -66,15 +70,32 @@ spec:
         args:
           - "--cloudconfig={{ .Values.cloudConfig }}"
           # - "--version={{ .Values.controller.image.tag }}"
+      {{- end }}
         volumeMounts:
+    {{- if not .Values.controller.keyVault.customAuth.enabled }}
           - name: azure-config
             mountPath: "{{ .Values.cloudConfig }}"
             readOnly: true
+      {{- end }}
+    {{- if .Values.azureCertificate.enabled }}
+          - name: akv2k8s-certificate
+            mountPath: "{{ .Values.azureCertificate.path }}"
+            readOnly: true
+      {{- end }}
       volumes:
+    {{- if not .Values.controller.keyVault.customAuth.enabled }}
       - name: azure-config
         hostPath:
           path: "{{ .Values.cloudConfig }}"
           type: File
+      {{- end }}
+    {{- if .Values.azureCertificate.enabled }}
+      - name: akv2k8s-certificate
+        secret:
+          secretName: "{{ .Values.azureCertificate.secret }}"
+          items:
+          - key: "{{ .Values.azureCertificate.key }}"
+            path: "{{ .Values.azureCertificate.key }}"
       {{- end }}
       {{- if .Values.controller.image.pullSecret }}
       imagePullSecrets:
