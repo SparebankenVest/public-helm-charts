@@ -10,7 +10,7 @@ global:
 
 image:
   repository: camunda/zeebe
-  tag: 0.24.4
+  tag: 0.25.1
   pullPolicy: IfNotPresent
 
 clusterSize: "3"
@@ -31,6 +31,7 @@ gateway:
     enabled: false
     minAvailable: 1
     maxUnavailable:
+  resources:  {}
 
 elasticsearch:
   enabled: true

@@ -17,6 +17,9 @@ spec:
     metadata:
       labels:
         {{- include "zeebe-cluster.labels.gateway" . | nindent 8 }}
+        {{- if .Values.gateway.podLabels }}
+        {{- toYaml .Values.gateway.podLabels | nindent 8 }}
+        {{- end }}
       annotations:
         {{- range $key, $value := .Values.gateway.podAnnotations }}
         {{ $key }}: {{ $value | quote }}
@@ -78,8 +81,24 @@ spec:
               port: {{ default "gateway" .Values.serviceGatewayName  }}
             initialDelaySeconds: 20
             periodSeconds: 5
+          {{- if .Values.gateway.resources}}
+          resources:
+            {{- toYaml .Values.gateway.resources | nindent 12 }}
+          {{- end }}
       volumes:
         - name: config
           configMap:
             name: {{ include "zeebe-cluster.fullname" . }}
             defaultMode: 0744
+{{- with .Values.gateway.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.gateway.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.gateway.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+{{- end }}

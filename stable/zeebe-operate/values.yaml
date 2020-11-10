@@ -15,7 +15,7 @@ service:
   port: 80
 image:
   repository: camunda/operate
-  tag: 0.24.3
+  tag: 0.25.0
 
 resources: 
   requests:
@@ -33,4 +33,3 @@ ingress:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"    
   path: /
   host:
-  

@@ -22,6 +22,9 @@ spec:
     metadata:
       labels:
         {{- include "zeebe-cluster.labels.broker" . | nindent 8 }}
+        {{- if .Values.podLabels }}
+        {{- toYaml .Values.podLabels | nindent 8 }}
+        {{- end }}
       annotations:
         {{- range $key, $value := .Values.podAnnotations }}
         {{ $key }}: {{ $value | quote }}
@@ -39,7 +42,7 @@ spec:
         - name: ZEEBE_BROKER_CLUSTER_CLUSTERNAME
           value: {{ tpl .Values.global.zeebe . }}
         - name: ZEEBE_LOG_LEVEL
-          value: {{ .Values.global.logLevel | quote }}
+          value: {{ .Values.logLevel | quote }}
         - name: ZEEBE_BROKER_CLUSTER_PARTITIONSCOUNT
           value: {{ .Values.partitionCount | quote }}
         - name: ZEEBE_BROKER_CLUSTER_CLUSTERSIZE
@@ -52,10 +55,12 @@ spec:
           value: {{ .Values.ioThreadCount  | quote }}
         - name: ZEEBE_BROKER_GATEWAY_ENABLE
           value: "false"
+        {{- if not .Values.global.elasticsearch.disableExporter }}
         - name: ZEEBE_BROKER_EXPORTERS_ELASTICSEARCH_CLASSNAME
           value: "io.zeebe.exporter.ElasticsearchExporter"
         - name: ZEEBE_BROKER_EXPORTERS_ELASTICSEARCH_ARGS_URL
           value: "http://{{ .Values.global.elasticsearch.host }}:{{ .Values.global.elasticsearch.port }}"
+        {{- end }}
         - name: ZEEBE_BROKER_NETWORK_COMMANDAPI_PORT
           value: {{ .Values.serviceCommandPort  | quote }}
         - name: ZEEBE_BROKER_NETWORK_INTERNALAPI_PORT
