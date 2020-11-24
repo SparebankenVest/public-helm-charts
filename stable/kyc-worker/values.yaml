@@ -15,6 +15,10 @@ deployment:
 azure:
   keyvault: "azure-key-vault-with-secrets"
 
+image:
+  repository: repsitory/image
+  tag:  version
+
 environment: []
 #  - name: DOTNET_ENVIRONMENT
 #    value: utvikling

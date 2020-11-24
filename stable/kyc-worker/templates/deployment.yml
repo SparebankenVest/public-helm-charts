@@ -6,9 +6,9 @@ metadata:
   namespace: {{ include "kyc-worker.name" . }}
   labels:
     app: {{ include "kyc-worker.fullname" . }}
-  annotations:
-    flux.weave.works/tag.{{ include "kyc-worker.fullname" . }}: {{ .Values.deployment.regex }}
-    fluxcd.io/automated: 'true'
+#  annotations:
+#    flux.weave.works/tag.{{ include "kyc-worker.fullname" . }}: {{ .Values.deployment.regex }}
+#    fluxcd.io/automated: 'true'
 spec:
   selector:
     matchLabels:
@@ -20,7 +20,8 @@ spec:
     spec:
       containers:
       - name: {{ include "kyc-worker.fullname" . }}
-        image: dokken.azurecr.io/{{ include "kyc-worker.fullname" . }}:{{ .Values.deployment.version }}
+#        image: dokken.azurecr.io/{{ include "kyc-worker.fullname" . }}:{{ .Values.image.tag }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         env:
           {{- range $variable := .Values.environment }}
           - name: {{ $variable.name }}
