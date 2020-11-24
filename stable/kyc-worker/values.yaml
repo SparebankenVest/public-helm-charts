@@ -1,0 +1,32 @@
+# Default values for kyc-worker helmchart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+imagePullSecrets: []
+nameOverride: "kyc-worker-namespace"
+fullnameOverride: "kyc-worker-application-name"
+
+deployment:
+  regex: "regex-used-to-pick-the-right-image-versjon"
+  version: "image-version-to-release"
+
+azure:
+  keyvault: "azure-key-vault-with-secrets"
+
+environment: []
+#  - name: DOTNET_ENVIRONMENT
+#    value: utvikling
+#  - name: APPINSIGHTS_INSTRUMENTATIONKEY
+#    value: xxxx
+#  ... you know the dril ...
+#
+
+
+secrets: []
+#  - name: descriptive-name-not-used-1
+#    value: secret-value-1
+#  - name: descriptive-name-not-used-1
+#    value: secret-value-2
+# ...
