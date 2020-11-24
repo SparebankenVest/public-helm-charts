@@ -41,26 +41,4 @@ spec:
             - ./livenessprobe.sh
           initialDelaySeconds: 15
           periodSeconds: 15
----
-apiVersion: autoscaling/v2beta1
-kind: HorizontalPodAutoscaler
-metadata:
-  name: {{ include "kyc-worker.fullname" . }}
-  namespace: {{ include "kyc-worker.name" . }}
-spec:
-  scaleTargetRef:
-    apiVersion: extensions/v1beta1
-    kind: Deployment
-    name: {{ include "kyc-worker.name" . }}
-  minReplicas: 1
-  maxReplicas: {{ .Values.replicaCount }}
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      targetAverageUtilization: 50
-  - type: Resource
-    resource:
-      name: memory
-      targetAverageValue: 256Mi
 
