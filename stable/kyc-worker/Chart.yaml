@@ -2,4 +2,4 @@ apiVersion: v1
 appVersion: "1.0"
 description: Helm Chart for Know Your Customer workers deployment
 name: kyc-worker
-version: 0.1.1
+version: 0.1.2
