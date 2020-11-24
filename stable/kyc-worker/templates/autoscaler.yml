@@ -5,7 +5,7 @@ metadata:
   namespace: {{ include "kyc-worker.name" . }}
 spec:
   scaleTargetRef:
-    apiVersion: apiVersion: apps/v1
+    apiVersion: apps/v1
     kind: Deployment
     name: {{ include "kyc-worker.name" . }}
   minReplicas: 1
