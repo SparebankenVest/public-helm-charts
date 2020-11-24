@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ include "kyc-worker.fullname" . }}
+  namespace: {{ include "kyc-worker.name" . }}
+  labels:
+    prometheus: api-monitor
+spec:
+  selector:
+    app: {{ include "kyc-worker.fullname" . }}
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+    name: api    

@@ -1,0 +1,66 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "kyc-worker.fullname" . }}
+  namespace: {{ include "kyc-worker.name" . }}
+  labels:
+    app: {{ include "kyc-worker.fullname" . }}
+  annotations:
+    flux.weave.works/tag.{{ include "kyc-worker.fullname" . }}: {{ .Values.deployment.regex }}
+    fluxcd.io/automated: 'true'
+spec:
+  selector:
+    matchLabels:
+      app: {{ include "kyc-worker.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "kyc-worker.fullname" . }}
+    spec:
+      containers:
+      - name: {{ include "kyc-worker.fullname" . }}
+        image: dokken.azurecr.io/{{ include "kyc-worker.fullname" . }}:{{ .Values.deployment.version }}
+        env:
+          {{- range $variable := .Values.environment }}
+          - name: {{ $variable.name }}
+            value: {{ $variable.value | quote }}
+          {{- end }}
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          exec:
+            command:
+            - ./livenessprobe.sh
+          initialDelaySeconds: 15
+          periodSeconds: 15
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "kyc-worker.fullname" . }}
+  namespace: {{ include "kyc-worker.name" . }}
+spec:
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: {{ include "kyc-worker.name" . }}
+  minReplicas: 1
+  maxReplicas: {{ .Values.replicaCount }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 50
+  - type: Resource
+    resource:
+      name: memory
+      targetAverageValue: 256Mi
+
