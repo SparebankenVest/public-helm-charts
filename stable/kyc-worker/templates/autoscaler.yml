@@ -7,7 +7,7 @@ spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "kyc-worker.name" . }}
+    name: {{ include "kyc-worker.fullname" . }}
   minReplicas: 1
   maxReplicas: {{ .Values.replicaCount }}
   metrics:
