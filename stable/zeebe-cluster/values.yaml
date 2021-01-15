@@ -37,12 +37,7 @@ elasticsearch:
   enabled: true
   imageTag: 6.8.5
 
-kibana:
-  enabled: false
-  imageTag: 6.8.5
-
 prometheus:
-  enabled: true
   servicemonitor:
     enabled: true
 
