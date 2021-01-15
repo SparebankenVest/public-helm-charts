@@ -42,9 +42,9 @@ kibana:
   imageTag: 6.8.5
 
 prometheus:
-  enabled: false
+  enabled: true
   servicemonitor:
-    enabled: false
+    enabled: true
 
 JavaOpts: >-
   -XX:MaxRAMPercentage=25.0
