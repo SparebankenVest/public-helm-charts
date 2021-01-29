@@ -1,5 +1,9 @@
 # Create a akv2k8s reader cluster role
+{{- if .Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1/ClusterRole" }}
+apiVersion: rbac.authorization.k8s.io/v1
+{{- else }}
 apiVersion: rbac.authorization.k8s.io/v1beta1
+{{- end }}
 kind: ClusterRole
 metadata:
   name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}
@@ -26,7 +30,11 @@ rules:
 ---
 
 # Create a akv2k8s reader cluster role
+{{- if .Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1/ClusterRole" }}
+apiVersion: rbac.authorization.k8s.io/v1
+{{- else }}
 apiVersion: rbac.authorization.k8s.io/v1beta1
+{{- end }}
 kind: ClusterRole
 metadata:
   name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}-reader
@@ -46,7 +54,11 @@ rules:
   - watch
 ---
 
+{{- if .Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1/ClusterRole" }}
+apiVersion: rbac.authorization.k8s.io/v1
+{{- else }}
 apiVersion: rbac.authorization.k8s.io/v1beta1
+{{- end }}
 kind: ClusterRole
 metadata:
   name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}-ca-bundle
@@ -85,7 +97,11 @@ rules:
   - patch
 ---
 
+{{- if .Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1/Role" }}
+apiVersion: rbac.authorization.k8s.io/v1
+{{- else }}
 apiVersion: rbac.authorization.k8s.io/v1beta1
+{{- end }}
 kind: Role
 metadata:
   name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}-ca-bundle
@@ -106,8 +122,12 @@ rules:
   - list
 ---
 
-kind: ClusterRoleBinding
+{{- if .Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1/ClusterRoleBinding" }}
+apiVersion: rbac.authorization.k8s.io/v1
+{{- else }}
 apiVersion: rbac.authorization.k8s.io/v1beta1
+{{- end }}
+kind: ClusterRoleBinding
 metadata:
   name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}-ca-bundle
   labels:
@@ -125,7 +145,11 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 ---
 
+{{- if .Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1/RoleBinding" }}
+apiVersion: rbac.authorization.k8s.io/v1
+{{- else }}
 apiVersion: rbac.authorization.k8s.io/v1beta1
+{{- end }}
 kind: RoleBinding
 metadata:
   name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}-ca-bundle
@@ -145,7 +169,11 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 ---
 
+{{- if .Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1/ClusterRoleBinding" }}
 apiVersion: rbac.authorization.k8s.io/v1
+{{- else }}
+apiVersion: rbac.authorization.k8s.io/v1beta1
+{{- end }}
 kind: ClusterRoleBinding
 metadata:
   name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}-sa
@@ -165,8 +193,12 @@ roleRef:
 ---
 
 # Give all service accounts read access to akvs
-kind: ClusterRoleBinding
+{{- if .Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1/ClusterRoleBinding" }}
+apiVersion: rbac.authorization.k8s.io/v1
+{{- else }}
 apiVersion: rbac.authorization.k8s.io/v1beta1
+{{- end }}
+kind: ClusterRoleBinding
 metadata:
   name: {{ template "azure-key-vault-to-kubernetes.fullname" . }}-reader
   labels:
