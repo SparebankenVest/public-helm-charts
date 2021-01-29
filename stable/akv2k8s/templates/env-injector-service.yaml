@@ -13,11 +13,11 @@ spec:
   ports:
     - name: {{ .Values.env_injector.service.name }}
       port: {{ .Values.env_injector.service.externalTlsPort }}
-      targetPort: {{ .Values.env_injector.service.internallTlsPort }}
+      targetPort: {{ .Values.env_injector.service.internalTlsPort }}
       protocol: TCP
     - name: {{ .Values.env_injector.service.name }}-http
       port: {{ .Values.env_injector.service.externalHttpPort }}
-      targetPort: {{ .Values.env_injector.service.internallHttpPort }}
+      targetPort: {{ .Values.env_injector.service.internalHttpPort }}
       protocol: TCP
   selector:
     app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}

@@ -13,11 +13,11 @@ spec:
   ports:
     - name: {{ .Values.service.name }}
       port: {{ .Values.service.externalTlsPort }}
-      targetPort: {{ .Values.service.internallTlsPort }}
+      targetPort: {{ .Values.service.internalTlsPort }}
       protocol: TCP
     - name: {{ .Values.service.name }}-http
       port: {{ .Values.service.externalHttpPort }}
-      targetPort: {{ .Values.service.internallHttpPort }}
+      targetPort: {{ .Values.service.internalHttpPort }}
       protocol: TCP
   selector:
     app: {{ template "azure-key-vault-to-kubernetes.name" . }}
