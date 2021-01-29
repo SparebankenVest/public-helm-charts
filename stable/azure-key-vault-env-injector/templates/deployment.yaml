@@ -10,9 +10,9 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     component: ca-bundle
-{{- if .Values.caBundleController.labels }}
-{{ toYaml .Values.caBundleController.labels | indent 4 }}
-{{- end}}
+    {{- if .Values.caBundleController.labels }}
+    {{ toYaml .Values.caBundleController.labels | nindent 4 }}
+    {{- end}}
 spec:
   selector:
     matchLabels:
@@ -23,9 +23,9 @@ spec:
       labels:
         app: {{ template "azure-key-vault-to-kubernetes.name" . }}-ca-bundle
         release: {{ .Release.Name }}
-{{- if .Values.caBundleController.podLabels }}
-{{ toYaml .Values.caBundleController.podLabels | indent 8 }}
-{{- end }}
+        {{- if .Values.caBundleController.podLabels }}
+        {{ toYaml .Values.caBundleController.podLabels | nindent 8 }}
+        {{- end }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/apiservice.yaml") . | sha256sum }}
     spec:
@@ -68,23 +68,27 @@ spec:
           - mountPath: /var/ca-cert
             name: ca-cert
           imagePullPolicy: {{ .Values.caBundleController.image.pullPolicy }}
+          {{- if .Values.caBundleController.resources }}
+          resources:
+            {{ toYaml .Values.caBundleController.resources | nindent 12 }}
+          {{- end }}
       volumes:
       - name: ca-cert
         secret:
           defaultMode: 420
           secretName: {{ template "azure-key-vault-to-kubernetes.servingCertificate" . }}
-    {{- if .Values.nodeSelector }}
+      {{- if .Values.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.nodeSelector | indent 8 }}
-    {{- end }}
-  {{- if .Values.tolerations }}
+        {{ toYaml .Values.nodeSelector | nindent 8 }}
+      {{- end }}
+      {{- if .Values.tolerations }}
       tolerations:
-{{ toYaml .Values.tolerations | indent 8 }}
-  {{- end }}
-  {{- if .Values.affinity }}
+        {{ toYaml .Values.tolerations | nindent 8 }}
+      {{- end }}
+      {{- if .Values.affinity }}
       affinity:
-{{ toYaml .Values.affinity | indent 8 }}
-  {{- end }}
+        {{ toYaml .Values.affinity | nindent 8 }}
+      {{- end }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -96,9 +100,9 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     component: webhook
-{{- if .Values.webhook.labels }}
-{{ toYaml .Values.webhook.labels | indent 4 }}
-{{- end}}
+    {{- if .Values.webhook.labels }}
+    {{ toYaml .Values.webhook.labels | nindent 4 }}
+    {{- end}}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -112,9 +116,9 @@ spec:
         app: {{ template "azure-key-vault-to-kubernetes.name" . }}
         release: {{ .Release.Name }}
         component: webhook
-{{- if .Values.webhook.podLabels }}
-{{ toYaml .Values.webhook.podLabels | indent 8 }}
-{{- end }}
+        {{- if .Values.webhook.podLabels }}
+        {{ toYaml .Values.webhook.podLabels | nindent 8 }}
+        {{- end }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/apiservice.yaml") . | sha256sum }}
     spec:
@@ -186,12 +190,14 @@ spec:
             name: azureconf
             readOnly: true
           {{- end }}
+          {{- if .Values.webhook.securityContext }}
           securityContext:
-            {{- if .Values.webhook.securityContext }}
-{{ toYaml .Values.webhook.securityContext | indent 12 }}
-            {{- end }}
+            {{ toYaml .Values.webhook.securityContext | nindent 12 }}
+          {{- end }}
+          {{- if .Values.resources }}
           resources:
-{{ toYaml .Values.resources | indent 12 }}
+            {{ toYaml .Values.resources | nindent 12 }}
+          {{- end }}
       volumes:
       - name: serving-cert
         secret:
@@ -203,15 +209,15 @@ spec:
           path: /etc/kubernetes/azure.json
           type: File
       {{- end }}
-    {{- if .Values.nodeSelector }}
+      {{- if .Values.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.nodeSelector | indent 8 }}
-    {{- end }}
-  {{- if .Values.tolerations }}
+        {{ toYaml .Values.nodeSelector | nindent 8 }}
+      {{- end }}
+      {{- if .Values.tolerations }}
       tolerations:
-{{ toYaml .Values.tolerations | indent 8 }}
-  {{- end }}
-  {{- if .Values.affinity }}
+        {{ toYaml .Values.tolerations | nindent 8 }}
+      {{- end }}
+      {{- if .Values.affinity }}
       affinity:
-{{ toYaml .Values.affinity | indent 8 }}
-  {{- end }}
+        {{ toYaml .Values.affinity | nindent 8 }}
+      {{- end }}

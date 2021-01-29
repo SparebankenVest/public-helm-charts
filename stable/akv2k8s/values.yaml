@@ -1,4 +1,4 @@
-# Default values 
+# Default values
 
 rbac:
   # Specifies whether RBAC resources should be created
@@ -33,7 +33,7 @@ controller:
 
   logLevel: info
   logFormat: fmt # fmt or json
-  
+
   serviceAccount:
     create: true
     ## The name of the ServiceAccount to use.
@@ -66,7 +66,7 @@ env_injector:
 
   keyVault:
     # Set to true to use custom auth - see https://github.com/SparebankenVest/azure-key-vault-to-kubernetes/blob/master/README.md#authentication
-    customAuth: 
+    customAuth:
       enabled: false
       useAuthService: true # set to false to use Azure Key Vault credentials from own pod
 
@@ -86,6 +86,7 @@ env_injector:
     logFormat: fmt # fmt or json
     akvLabelName: azure-key-vault-env-injection
     configMapName: akv2k8s-ca
+    resources: {}
 
   service:
     name: azure-keyvault-secrets-webhook

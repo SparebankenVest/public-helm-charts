@@ -1,4 +1,4 @@
-# Default values 
+# Default values
 
 replicaCount: 2
 
@@ -38,6 +38,7 @@ caBundleController:
   logFormat: fmt # fmt or json
   akvLabelName: azure-key-vault-env-injection
   configMapName: akv2k8s-ca
+  resources: {}
 
 service:
   name: azure-keyvault-secrets-webhook
@@ -62,7 +63,7 @@ webhook:
   labels: {}
   podLabels: {}
 
-  dockerImageInspectionTimeout: 20 # will timeout after 20 seconds 
+  dockerImageInspectionTimeout: 20 # will timeout after 20 seconds
 
   certificate:
     useCertManager: false

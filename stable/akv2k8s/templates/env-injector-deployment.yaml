@@ -11,9 +11,9 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/component: akv2k8s-ca-bundle
-{{- if .Values.env_injector.caBundleController.labels }}
-{{ toYaml .Values.env_injector.caBundleController.labels | indent 4 }}
-{{- end}}
+    {{- if .Values.env_injector.caBundleController.labels }}
+    {{ toYaml .Values.env_injector.caBundleController.labels | nindent 4 }}
+    {{- end}}
 spec:
   selector:
     matchLabels:
@@ -26,9 +26,9 @@ spec:
         app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
         app.kubernetes.io/component: akv2k8s-ca-bundle
-{{- if .Values.env_injector.caBundleController.podLabels }}
-{{ toYaml .Values.env_injector.caBundleController.podLabels | indent 8 }}
-{{- end }}
+        {{- if .Values.env_injector.caBundleController.podLabels }}
+        {{ toYaml .Values.env_injector.caBundleController.podLabels | nindent 8 }}
+        {{- end }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/env-injector-apiservice.yaml") . | sha256sum }}
     spec:
@@ -36,6 +36,7 @@ spec:
       containers:
         - name: ca-bundle-controller
           image: "{{ .Values.env_injector.caBundleController.image.repository }}:{{ .Values.env_injector.caBundleController.image.tag }}"
+          imagePullPolicy: {{ .Values.env_injector.caBundleController.image.pullPolicy }}
           args:
             - "--cloudconfig={{ .Values.cloudConfig }}"
             # - "--version={{ .Values.env_injector.caBundleController.image.tag }}"
@@ -73,24 +74,27 @@ spec:
           volumeMounts:
           - mountPath: /var/ca-cert
             name: ca-cert
-          imagePullPolicy: {{ .Values.env_injector.caBundleController.image.pullPolicy }}
+          {{- if .Values.controller.resources }}
+          resources:
+            {{ toYaml .Values.env_injector.caBundleController.resources | nindent 12 }}
+          {{- end }}
       volumes:
       - name: ca-cert
         secret:
           defaultMode: 420
           secretName: {{ template "envinjector.servingCertificate" . }}
-    {{- if .Values.env_injector.nodeSelector }}
+      {{- if .Values.env_injector.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.env_injector.nodeSelector | indent 8 }}
-    {{- end }}
-  {{- if .Values.env_injector.tolerations }}
+        {{ toYaml .Values.env_injector.nodeSelector | nindent 8 }}
+      {{- end }}
+      {{- if .Values.env_injector.tolerations }}
       tolerations:
-{{ toYaml .Values.env_injector.tolerations | indent 8 }}
-  {{- end }}
-  {{- if .Values.env_injector.affinity }}
+        {{ toYaml .Values.env_injector.tolerations | nindent 8 }}
+      {{- end }}
+      {{- if .Values.env_injector.affinity }}
       affinity:
-{{ toYaml .Values.env_injector.affinity | indent 8 }}
-  {{- end }}
+        {{ toYaml .Values.env_injector.affinity | nindent 8 }}
+      {{- end }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -102,9 +106,9 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/component: {{ template "envinjector.webhook.component" . }}
-{{- if .Values.env_injector.webhook.labels }}
-{{ toYaml .Values.env_injector.webhook.labels | indent 4 }}
-{{- end}}
+    {{- if .Values.env_injector.webhook.labels }}
+    {{ toYaml .Values.env_injector.webhook.labels | nindent 4 }}
+    {{- end}}
 spec:
   replicas: {{ .Values.env_injector.replicaCount }}
   selector:
@@ -118,9 +122,9 @@ spec:
         app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
         app.kubernetes.io/component: {{ template "envinjector.webhook.component" . }}
-{{- if .Values.env_injector.webhook.podLabels }}
-{{ toYaml .Values.env_injector.webhook.podLabels | indent 8 }}
-{{- end }}
+        {{- if .Values.env_injector.webhook.podLabels }}
+        {{ toYaml .Values.env_injector.webhook.podLabels | nindent 8 }}
+        {{- end }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/env-injector-apiservice.yaml") . | sha256sum }}
     spec:
@@ -128,6 +132,7 @@ spec:
       containers:
         - name: webhook
           image: "{{ .Values.env_injector.image.repository }}:{{ .Values.env_injector.image.tag }}"
+          imagePullPolicy: {{ .Values.env_injector.image.pullPolicy }}
           args:
             - "--version={{ .Values.env_injector.image.tag }}"
             - "--versionEnvIage={{ .Values.env_injector.envImage.tag }}"
@@ -180,7 +185,6 @@ spec:
                 name: {{ template "akv2k8s.envinjector.fullname" $dot }}-webhook-env
                 key: {{ $key }}
           {{- end }}
-          imagePullPolicy: {{ .Values.env_injector.image.pullPolicy }}
           ports:
           - name: webhook
             containerPort: {{ .Values.env_injector.service.internalTlsPort }}
@@ -201,10 +205,12 @@ spec:
           {{- end }}
           securityContext:
             {{- if .Values.env_injector.webhook.securityContext }}
-{{ toYaml .Values.env_injector.webhook.securityContext | indent 12 }}
+            {{ toYaml .Values.env_injector.webhook.securityContext | nindent 12 }}
             {{- end }}
+          {{- if .Values.env_injector.resources }}
           resources:
-{{ toYaml .Values.env_injector.resources | indent 12 }}
+            {{ toYaml .Values.env_injector.resources | nindent 12 }}
+          {{- end }}
       volumes:
       - name: serving-cert
         secret:
@@ -216,16 +222,16 @@ spec:
           path: "{{ .Values.cloudConfig }}"
           type: File
       {{- end }}
-    {{- if .Values.env_injector.nodeSelector }}
+      {{- if .Values.env_injector.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.env_injector.nodeSelector | indent 8 }}
-    {{- end }}
-  {{- if .Values.env_injector.tolerations }}
+        {{ toYaml .Values.env_injector.nodeSelector | nindent 8 }}
+      {{- end }}
+      {{- if .Values.env_injector.tolerations }}
       tolerations:
-{{ toYaml .Values.env_injector.tolerations | indent 8 }}
-  {{- end }}
-  {{- if .Values.env_injector.affinity }}
+        {{ toYaml .Values.env_injector.tolerations | nindent 8 }}
+      {{- end }}
+      {{- if .Values.env_injector.affinity }}
       affinity:
-{{ toYaml .Values.env_injector.affinity | indent 8 }}
-  {{- end }}
+        {{ toYaml .Values.env_injector.affinity | nindent 8 }}
+      {{- end }}
 {{- end }}
