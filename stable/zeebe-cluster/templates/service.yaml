@@ -6,7 +6,7 @@ metadata:
     {{- include "zeebe-cluster.labels.broker" . | nindent 4 }}
     {{- toYaml  .Values.labels | nindent 4 }}
   annotations:
-    {{- toYaml  .Values.annotations | nindent 4 }}    
+    {{- toYaml  .Values.annotations | nindent 4 }}
 spec:
   clusterIP: None
   publishNotReadyAddresses: true
@@ -14,7 +14,7 @@ spec:
   ports:
     - port: {{ .Values.serviceHttpPort }}
       protocol: TCP
-      name: {{ default "http" .Values.serviceHttpName  }}  
+      name: {{ default "http" .Values.serviceHttpName  }}
     - port: {{ .Values.serviceInternalPort }}
       protocol: TCP
       name: {{ default "internal" .Values.serviceInternalName  }}

@@ -2,10 +2,10 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-global: 
+global:
   elasticsearch:
     host: "elasticsearch-master"
-    port: 9200 
+    port: 9200
   zeebe: "{{ .Release.Name }}-zeebe"
 
 image:
@@ -49,16 +49,16 @@ JavaOpts: >-
   -XX:+ExitOnOutOfMemoryError
 zeebeCfg:
   network:
-    maxMessageSize: 128KB     
+    maxMessageSize: 128KB
 
 labels:
-  app: zeebe    
+  app: zeebe
 serviceType: ClusterIP
 serviceHttpPort: 9600
-serviceGatewayPort: 26500    
-serviceCommandPort: 26501     
-serviceInternalPort: 26502  
-resources: 
+serviceGatewayPort: 26500
+serviceCommandPort: 26501
+serviceInternalPort: 26502
+resources:
   requests:
     cpu: 500m
     memory: 2Gi
