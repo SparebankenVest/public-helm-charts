@@ -11,13 +11,17 @@ metadata:
 spec:
   type: {{ .Values.env_injector.service.type }}
   ports:
-    - name: {{ .Values.env_injector.service.name }}
+    - name: webhook-tls
       port: {{ .Values.env_injector.service.externalTlsPort }}
       targetPort: {{ .Values.env_injector.service.internalTlsPort }}
       protocol: TCP
-    - name: {{ .Values.env_injector.service.name }}-http
+    - name: http
       port: {{ .Values.env_injector.service.externalHttpPort }}
       targetPort: {{ .Values.env_injector.service.internalHttpPort }}
+      protocol: TCP
+    - name: auth-service-mutual-tls
+      port: {{ .Values.env_injector.service.internalAuthServiceMutualTlsPort }}
+      targetPort: {{ .Values.env_injector.service.externalAuthServiceMutualTlsPort }}
       protocol: TCP
   selector:
     app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}

@@ -139,6 +139,8 @@ spec:
           env:
           - name: PORT
             value: {{ .Values.env_injector.service.internalTlsPort | quote }}
+          - name: PORT_HTTP
+            value: {{ .Values.env_injector.service.internalHttpPort | quote }}
           - name: RUNNING_INSIDE_AZURE_AKS
             value: {{ .Values.runningInsideAzureAks | quote }}
           - name: TLS_CERT_FILE
@@ -150,7 +152,9 @@ spec:
           - name: WEBHOOK_AUTH_SERVICE
             value: {{ template "akv2k8s.envinjector.fullname" . }}
           - name: WEBHOOK_AUTH_SERVICE_PORT
-            value: {{ .Values.env_injector.service.externalTlsPort | quote }}
+            value: {{ .Values.env_injector.service.externalAuthServiceMutualTlsPort | quote }}
+          - name: WEBHOOK_AUTH_SERVICE_PORT_INTERNAL
+            value: {{ .Values.env_injector.service.internalAuthServiceMutualTlsPort | quote }}
           - name: CA_CONFIG_MAP_NAME
             value: {{ .Values.env_injector.caBundleController.configMapName }}
           - name: CUSTOM_AUTH
@@ -186,10 +190,12 @@ spec:
                 key: {{ $key }}
           {{- end }}
           ports:
-          - name: webhook
+          - name: webhook-tls
             containerPort: {{ .Values.env_injector.service.internalTlsPort }}
           - name: http
             containerPort: {{ .Values.env_injector.service.internalHttpPort }}
+          - name: auth-service-mutual-tls
+            containerPort: {{ .Values.env_injector.service.internalAuthServiceMutualTlsPort }}
           readinessProbe:
             httpGet:
               scheme: HTTPS
