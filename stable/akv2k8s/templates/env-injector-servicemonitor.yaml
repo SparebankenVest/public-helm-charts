@@ -1,0 +1,24 @@
+{{- if .Values.env_injector.metrics.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ template "akv2k8s.envinjector.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+    helm.sh/chart: {{ template "akv2k8s.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- if .Values.env_injector.metrics.serviceMonitor.additionalLabels }}
+    {{ toYaml .Values.env_injector.metrics.serviceMonitor.additionalLabels | nindent 4 }}
+    {{- end}}
+spec:
+  endpoints:
+    - path: /metrics
+      port: http
+      scheme: http
+      interval: {{ .Values.env_injector.metrics.serviceMonitor.interval }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

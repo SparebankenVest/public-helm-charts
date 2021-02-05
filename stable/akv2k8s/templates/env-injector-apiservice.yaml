@@ -57,6 +57,7 @@ webhooks:
       namespace: {{ .Release.Namespace }}
       name: {{ template "akv2k8s.envinjector.fullname" . }}
       path: /pods
+      port: {{ .Values.env_injector.service.externalTlsPort }}
     caBundle: {{ $caCrt }}
   rules:
   - operations:

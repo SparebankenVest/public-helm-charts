@@ -91,19 +91,18 @@ env_injector:
   service:
     name: azure-keyvault-secrets-webhook
     type: ClusterIP
-    externalTlsPort: 443
-    internalTlsPort: 443
-    externalHttpPort: 80
-    internalHttpPort: 80
+    externalTlsPort: 443    # External webhook and health tls port
+    internalTlsPort: 8443   # Internal webhook and health tls port (set to larger than 1024 when running without privileges)
+    externalHttpPort: 80    # External metrics and health port
+    internalHttpPort: 8080  # Internal metrics and health port (set to larger than 1024 when running without privileges)
+    externalAuthServiceMutualTlsPort: 9443 # External auth service mtls port
+    internalAuthServiceMutualTlsPort: 9443 # Internal auth service mtls port (set to larger than 1024 when running without privileges)
 
   metrics:
     enabled: false
-    port: 8443
     serviceMonitor:
       enabled: false
-      scheme: https
-      tlsConfig:
-        insecureSkipVerify: true
+      interval: 30s
       additionalLabels: {}
 
   webhook:
