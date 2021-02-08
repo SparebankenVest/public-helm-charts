@@ -13,9 +13,9 @@
 {{- $tlsKey = b64enc $server.Key }}
 {{- $caCrt =  b64enc $ca.Cert }}
 {{- else if .Values.env_injector.webhook.certificate.custom.enabled }}
-{{- $tlsCrt = required "Required when env_injector.webhook.certificate.generate is false" .Values.env_injector.webhook.certificate.custom.server.tls.crt }}
-{{- $tlsKey = required "Required when env_injector.webhook.certificate.generate is false" .Values.env_injector.webhook.certificate.custom.server.tls.key }}
-{{- $caCrt = required "Required when env_injector.webhook.certificate.generate is false" .Values.env_injector.webhook.certificate.custom.ca.crt }}
+{{- $tlsCrt = required "Required when env_injector.webhook.certificate.custom.enabled is true" .Values.env_injector.webhook.certificate.custom.server.tls.crt }}
+{{- $tlsKey = required "Required when env_injector.webhook.certificate.custom.enabled is true" .Values.env_injector.webhook.certificate.custom.server.tls.key }}
+{{- $caCrt = required "Required when env_injector.webhook.certificate.custom.enabled is true" .Values.env_injector.webhook.certificate.custom.ca.crt }}
 {{- end }}
 
 {{- if not .Values.env_injector.webhook.certificate.useCertManager }}

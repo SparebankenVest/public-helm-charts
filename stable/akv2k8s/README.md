@@ -1,5 +1,9 @@
 # akv2k8s Helm Chart (Helm 3)
 
+A Helm chart that deploys akv2k8s Controller and Env-Injector to Kubernetes
+
+![Version: 1.1.29-beta.2](https://img.shields.io/badge/Version-1.1.29--beta.2-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
+
 This chart will install:
   * a Controller for syncing AKV secrets to Kubernetes secrets
   * a Env-Injector enabling transparent environment injection of AKV secrets into container programs
@@ -8,102 +12,105 @@ For more information and installation instructions see the official documentatio
 
 ## The AzureKeyVaultSecret CRD
 
-We have removed the CRD from the Helm Chart and this must be manually installed/updated prior to installing the chart:
+Helm 3 doesn't upgrade the CRD, only applies on the first install.
 
-```
-kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vault-to-kubernetes/crd-{{ version }}/crds/AzureKeyVaultSecret.yaml
-```
-
-To use the latest CRD, run:
+To ensure correct version of the AzureKeyVaultSecret CRD when upgrading, run the following command:
 
 ```
 kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vault-to-kubernetes/crd-1.1.0/crds/AzureKeyVaultSecret.yaml
 ```
 
+To install the chart with the release name `akv2k8s`:
+
+```
+helm repo add spv-charts http://charts.spvapi.no
+helm install akv2k8s spv-charts/akv2k8s --version 1.1.29-beta.2
+```
+
 ## Configuration
 
-### General
-
-|               Parameter                           |                Description                   |                  Default                 |
-| ------------------------------------------------- | -------------------------------------------- | -----------------------------------------|
-| rbac.create                                       | create rbac resources|true|
-| rbac.podSecurityPolicies                          | any pod security policies|{}|
-| runningInsideAzureAks                             | if running inside azure aks - set to false if running outside aks |true |
-| global.env                                        | env vars to be used with all enabled pods, eg. for akv credentials | {} |
-
-### Controller
-
-|               Parameter                           |                Description                   |                  Default                 |
-| ------------------------------------------------- | -------------------------------------------- | -----------------------------------------|
-|controller.enabled                                 | if controller will be installed | true |
-|controller.env                                     |aditional env vars to send to pod             | {}                                       |
-|controller.image.repository                        |image repo that contains the controller image | spvest/azure-keyvault-controller         |
-|controller.image.tag                               |image tag                                     |1.1.0|
-|controller.image.pullPolicy                        |pull policy                                   | IfNotPresent |
-|controller.keyVault.customAuth.enabled             |if custom auth is enabled                     | false |
-|controller.keyVault.polling.normalInterval         |interval to wait before polling azure key vault for secret updates | 1m |
-|controller.keyVault.polling.failureInterval        |interval to wait when polling has failed `failureAttempts` before polling azure key vault for secret updates | 5m |
-|controller.keyVault.polling.failureAttempts        |number of times to allow secret updates to fail before applying `failureInterval` | 5 |
-|controller.logFormat                               |log format - fmt or json | fmt                   |
-|controller.logLevel                                |log level | info |
-|controller.labels                                  |any additional labels | {}
-|controller.podLabels                               |any additional labels | {}
-
-### Env-Injector
-
-|               Parameter                                     |                Description                  |                  Default                 |
-| ----------------------------------------------------------- | ------------------------------------------- | -----------------------------------------|
-|env_injector.enabled                                         | if the env-injector will be installed | true |
-|env_injector.affinity                                        |affinities to use                            |{}                                        |
-|env_injector.caBundleController.akvLabelName                 |akv label used in namespaces|azure-key-vault-env-injection|
-|env_injector.caBundleController.configMapName                |configmap name to store ca cert|akv2k8s-ca|
-|env_injector.caBundleController.env                          |Env vars to add to the ca-bundle pod         |{} |
-|env_injector.caBundleController.image.pullPolicy             |pull policy for ca bundler|IfNotPresent|
-|env_injector.caBundleController.image.repository             |image repository for ca bundler|spvest/ca-bundle-controller|
-|env_injector.caBundleController.image.tag                    |image tag for ca bundler                     |1.1.0|
-|env_injector.caBundleController.labels                       |Labels to add to the ca-bundle deployment    |{} |
-|env_injector.caBundleController.logLevel                     |log level - Trace, Debug, Info, Warning, Error, Fatal or Panic|Info|
-|env_injector.caBundleController.logFormat                    |log format - fmt or json|fmt|
-|env_injector.caBundleController.podLabels                    |Labels to add to the ca-bundle pod           |{} |
-|env_injector.cloudConfigHostPath                             |path to azure cloud config                   |/etc/kubernetes/azure.json                |
-|env_injector.dockerImageInspection.timeout                   |timeout in seconds                           |20                                        |
-|env_injector.dockerImageInspection.useAksCredentialsWithACS  |                                             |true|
-|env_injector.env                                             |aditional env vars to send to pod            |{}                                        |
-|env_injector.envImage.repository                             |image repo that contains the env image       |spvest/azure-keyvault-env                 |
-|env_injector.envImage.tag                                    |image tag                                    |1.1.1                                    |
-|env_injector.image.pullPolicy                                |image pull policy                            |IfNotPresent                              |
-|env_injector.image.repository                                |image repo that contains the controller      |spvest/azure-keyvault-webhook             |
-|env_injector.image.tag                                       |image tag                                    |1.1.10                                    |
-|env_injector.keyVault.customAuth.enabled                     |if custom authentication with azure key vault is enabled |false                         |
-|env_injector.keyVault.customAuth.useAuthService              |if authService is to be used with custom auth |true                         |
-|env_injector.metrics.enabled                                 |if prometheus metrics is enabled             |false                                     |
-|env_injector.name                                            ||env-injector|
-|env_injector.nodeSelector                                    |node selector to use                         |{}                                        |
-|env_injector.replicaCount                                    |number of replicas                           |2                                         |
-|env_injector.resources                                       |resources to request                         |{}                                        |
-|env_injector.service.name                                    |webhook service name                         |azure-keyvault-secrets-webhook            |
-|env_injector.service.type                                    |webhook service type                         |ClusterIP                                 |
-|env_injector.service.externalTlsPort                         |service tls port                     |443           |
-|env_injector.service.internalTlsPort                         |pod tls port                         |443               |
-|env_injector.service.externalHttpPort                        |service http port for metrics and healthz|443           |
-|env_injector.service.internalHttpPort                        |pod http port for metrics and healthz|443               |
-|env_injector.serviceAccount.create                           |create service account?                      |true|
-|env_injector.serviceAccount.name                             |name of service account                      |generated|
-|env_injector.tolerations                                     |tolerations to add                           |[]                                        |
-|env_injector.webhook.certificate.useCertManager              |use cert manager to handle webhook certificates| false|
-|env_injector.webhook.certificate.custom.enabled              |use custom certs for webhook|false|
-|env_injector.webhook.certificate.custom.server.tls.crt       |custom tls cert|""|
-|env_injector.webhook.certificate.custom.server.tls.key       |custom tls key|""|
-|env_injector.webhook.certificate.custom.ca.crt               |custom ca cert|""|
-|env_injector.webhook.dockerImageInspectionTimeout            |max time to inspect docker image and find exec cmd|20 sec|
-|env_injector.webhook.failurePolicy                           |if env-injection/webhook fails, fail pod or ignore? |Fail|
-|env_injector.webhook.logLevel                                |log level - Trace, Debug, Info, Warning, Error, Fatal or Panic | Info                   |
-|env_injector.webhook.logFormat                               |log format - fmt or json | fmt                   |
-|env_injector.webhook.podDisruptionBudget.enabled             |if pod disruption budget is enabled          |true                                      |
-|env_injector.webhook.podDisruptionBudget.maxUnavailable      |pod disruption maximum unavailable           |nil                                       |
-|env_injector.webhook.podDisruptionBudget.minAvailable        |pod disruption minimum available             |1                                         |
-|env_injector.webhook.env                                     |Env vars to add to the webhook pod         |{} |
-|env_injector.webhook.labels                                  |Labels to add to the webhook deployment    |{} |
-|env_injector.webhook.podLabels                               |Labels to add to the webhook pod           |{} |
-|env_injector.webhook.securityContext.runAsUser               |Which user to run processes                  |65534|
-
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| global.env | object | `{}` | Env vars to be used with all enabled pods, eg. for akv credentials |
+| rbac.create | bool | `true` | Specifies whether RBAC resources should be created |
+| rbac.podSecurityPolicies | object | `{}` |  |
+| runningInsideAzureAks | bool | `true` | If running inside azure aks - set to false if running outside aks |
+| addAzurePodIdentityException | bool | `false` | Add Azure Pod Identity Exception |
+| cloudConfig | string | `"/etc/kubernetes/azure.json"` | Path to cloud config on node (host path) |
+| controller.enabled | bool | `true` | If controller will be installed |
+| controller.name | string | `"controller"` |  |
+| controller.image.repository | string | `"spvest/azure-keyvault-controller"` | Image repository that contains the controller image |
+| controller.image.tag | string | `"1.1.0"` | Image tag |
+| controller.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for controller |
+| controller.keyVault.customAuth.enabled | bool | `false` | Set to true to use custom auth - see https://akv2k8s.io/security/authentication/#custom-authentication-for-the-controller |
+| controller.keyVault.polling.normalInterval | string | `"1m"` | Interval to wait before polling azure key vault for secret updates |
+| controller.keyVault.polling.failureInterval | string | `"10m"` | Interval to wait when polling has failed `failureAttempts` before polling azure key vault for secret updates |
+| controller.keyVault.polling.failureAttempts | int | `5` | Number of times to allow secret updates to fail before applying `failureInterval` |
+| controller.logLevel | string | `"info"` | Controller log level |
+| controller.logFormat | string | `"fmt"` | Controller log format fmt or json |
+| controller.serviceAccount.create | bool | `true` | Create service account for controller |
+| controller.serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
+| controller.env | object | `{}` | Controller envs |
+| controller.labels | object | `{}` | Controller labels |
+| controller.podLabels | object | `{}` | Controller pod labels |
+| controller.resources | object | `{}` | Controller resources |
+| controller.nodeSelector | object | `{}` | Node selector for controller |
+| controller.tolerations | list | `[]` | Tolerations for controller |
+| controller.affinity | object | `{}` | Affinities for controller |
+| env_injector.enabled | bool | `true` | If the env-injector will be installed |
+| env_injector.name | string | `"env-injector"` |  |
+| env_injector.replicaCount | int | `2` | Number of env-injector replicas |
+| env_injector.image.repository | string | `"spvest/azure-keyvault-webhook"` | Image repository that contains the env-injector image |
+| env_injector.image.tag | string | `"1.1.10"` | Image tag |
+| env_injector.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for env-injector |
+| env_injector.envImage.repository | string | `"spvest/azure-keyvault-env"` | Image repository that contains the env image |
+| env_injector.envImage.tag | string | `"1.1.1"` | Image tag |
+| env_injector.keyVault.customAuth.enabled | bool | `false` | Set to true to use custom auth - see https://github.com/SparebankenVest/azure-key-vault-to-kubernetes/blob/master/README.md#authentication |
+| env_injector.keyVault.customAuth.useAuthService | bool | `true` | Set to false to use Azure Key Vault credentials from own pod |
+| env_injector.dockerImageInspection.timeout | int | `20` | Timeout in seconds |
+| env_injector.dockerImageInspection.useAksCredentialsWithACS | bool | `true` | Only applicable if `runningInsideAzureAks` is also `true` |
+| env_injector.caBundleController.image.repository | string | `"spvest/ca-bundle-controller"` | Image repository that contains the ca-bundle image |
+| env_injector.caBundleController.image.tag | string | `"1.1.0"` | Image tag |
+| env_injector.caBundleController.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for ca bundler |
+| env_injector.caBundleController.env | object | `{}` | Additional env vars to add to the ca-bundle pod |
+| env_injector.caBundleController.labels | object | `{}` | Additional labels |
+| env_injector.caBundleController.podLabels | object | `{}` | Additional pod labels |
+| env_injector.caBundleController.logLevel | string | `"Info"` | Log level ca-bundle pod |
+| env_injector.caBundleController.logFormat | string | `"fmt"` | fmt or json |
+| env_injector.caBundleController.akvLabelName | string | `"azure-key-vault-env-injection"` | AKV label used in namespaces for injection |
+| env_injector.caBundleController.configMapName | string | `"akv2k8s-ca"` | Configmap name to store ca cert |
+| env_injector.caBundleController.resources | object | `{}` | Resources for ca-bundle pod |
+| env_injector.service.name | string | `"azure-keyvault-secrets-webhook"` | Webhook service name |
+| env_injector.service.type | string | `"ClusterIP"` |  |
+| env_injector.service.externalTlsPort | int | `443` | External webhook and health tls port |
+| env_injector.service.internalTlsPort | int | `8443` | Internal webhook and health tls port (set to larger than 1024 when running without privileges) |
+| env_injector.service.externalHttpPort | int | `80` | External metrics and health port |
+| env_injector.service.internalHttpPort | int | `8080` | Internal metrics and health port (set to larger than 1024 when running without privileges) |
+| env_injector.service.externalAuthServiceMutualTlsPort | int | `9443` | External auth service mtls port |
+| env_injector.service.internalAuthServiceMutualTlsPort | int | `9443` | Internal auth service mtls port (set to larger than 1024 when running without privileges) |
+| env_injector.metrics.enabled | bool | `false` | Enable prometheus metrics for env-injector |
+| env_injector.metrics.serviceMonitor.enabled | bool | `false` | Enable service-monitor for env-injector |
+| env_injector.metrics.serviceMonitor.interval | string | `"30s"` | Scrape interval for service-monitor |
+| env_injector.metrics.serviceMonitor.additionalLabels | object | `{}` | Additional labels for service-monitor |
+| env_injector.webhook.logLevel | string | `"Info"` | Webhook log level |
+| env_injector.webhook.logFormat | string | `"fmt"` | ftm or json |
+| env_injector.webhook.securityContext.allowPrivilegeEscalation | bool | `true` | must be true if using aks identity |
+| env_injector.webhook.env | object | `{}` | Additional env vars to send to webhook pod |
+| env_injector.webhook.labels | object | `{}` | Additional labels |
+| env_injector.webhook.podLabels | object | `{}` | Additional pods labels |
+| env_injector.webhook.certificate.useCertManager | bool | `false` | Use cert-manager to handle webhook certificates, if `false` and `env_injector.webhook.certificate.custom.enabled=false` certificates and CA is generated by Helm |
+| env_injector.webhook.certificate.custom.enabled | bool | `false` | Use custom cert to handle webhook certificates, if `false` and `env_injector.webhook.certificate.useCertManager=false` certificates and CA is generated by Helm. |
+| env_injector.webhook.certificate.custom.server.tls.crt | string | `nil` | Custom TLS certificate, required when `env_injector.webhook.certificate.custom.enabled=true` |
+| env_injector.webhook.certificate.custom.server.tls.key | string | `nil` | Custom TLS key, required when `env_injector.webhook.certificate.custom.enabled=true` |
+| env_injector.webhook.certificate.custom.ca.crt | string | `nil` | Custom CA certificate, required when `env_injector.webhook.certificate.custom.enabled=true` |
+| env_injector.webhook.podDisruptionBudget | object | `{"enabled":true,"minAvailable":1}` | See `kubectl explain poddisruptionbudget.spec` for more ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/ |
+| env_injector.webhook.failurePolicy | string | `"Fail"` | What will happen if the webhook fails? Ignore (continue) or Fail (prevent Pod from starting)? |
+| env_injector.webhook.namespaceSelector | object | `{"matchExpressions":[{"key":"name","operator":"NotIn","values":["kube-system"]}],"matchLabels":{"azure-key-vault-env-injection":"enabled"}}` | https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-namespaceselector |
+| env_injector.webhook.namespaceSelector.matchLabels.azure-key-vault-env-injection | string | `"enabled"` | The webhook will only trigger i namespaces with this label |
+| env_injector.webhook.namespaceSelector.matchExpressions[0] | object | `{"key":"name","operator":"NotIn","values":["kube-system"]}` | Prevent env injection for pods in kube-system as recomended: https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#avoiding-operating-on-the-kube-system-namespace |
+| env_injector.serviceAccount.create | bool | `true` | Create service account for env-injector |
+| env_injector.serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
+| env_injector.resources | object | `{}` | Resources for env injector |
+| env_injector.nodeSelector | object | `{}` | Node selector for env injector and ca-bundle |
+| env_injector.tolerations | list | `[]` | Tolerations for env injector and ca-bundle |
+| env_injector.affinity | object | `{}` | Affinities for env injector and ca-bundle |

@@ -1,162 +1,237 @@
 # Default values
 
+global:
+  # -- Env vars to be used with all enabled pods, eg. for akv credentials
+  env: {}
+
 rbac:
-  # Specifies whether RBAC resources should be created
+  # -- Specifies whether RBAC resources should be created
   create: true
-  podSecurityPolicies:
-    {}
+  podSecurityPolicies: {}
 
-global: # values to be applied globally
-  env: {} # env vars to be used with all enabled pods, eg. for akv credentials
-
+# -- If running inside azure aks - set to false if running outside aks
 runningInsideAzureAks: true
+
+# -- Add Azure Pod Identity Exception
 addAzurePodIdentityException: false
+
+# -- Path to cloud config on node (host path)
 cloudConfig: /etc/kubernetes/azure.json
 
 controller:
+  # -- If controller will be installed
   enabled: true
   name: controller
   image:
+    # -- Image repository that contains the controller image
     repository: spvest/azure-keyvault-controller
+    # -- Image tag
     tag: 1.1.0
+    # -- Image pull policy for controller
     pullPolicy: IfNotPresent
 
   keyVault:
-    # Set to true to use custom auth - see https://akv2k8s.io/security/authentication/#custom-authentication-for-the-controller
     customAuth:
+      # -- Set to true to use custom auth - see https://akv2k8s.io/security/authentication/#custom-authentication-for-the-controller
       enabled: false
 
     polling:
+      # -- Interval to wait before polling azure key vault for secret updates
       normalInterval: 1m
+      # -- Interval to wait when polling has failed `failureAttempts` before polling azure key vault for secret updates
       failureInterval: 10m
+      # -- Number of times to allow secret updates to fail before applying `failureInterval`
       failureAttempts: 5
 
+  # -- Controller log level
   logLevel: info
-  logFormat: fmt # fmt or json
+  # -- Controller log format fmt or json
+  logFormat: fmt
 
   serviceAccount:
+    # -- Create service account for controller
     create: true
-    ## The name of the ServiceAccount to use.
-    ## If not set and create is true, a name is generated using the fullname template
+    # -- The name of the ServiceAccount to use.
+    # If not set and create is true, a name is generated using the fullname template
     name:
 
+  # -- Controller envs
   env: {}
+  # -- Controller labels
   labels: {}
+  # -- Controller pod labels
   podLabels: {}
 
+  # -- Controller resources
   resources: {}
+  # -- Node selector for controller
   nodeSelector: {}
+  # -- Tolerations for controller
   tolerations: []
+  # -- Affinities for controller
   affinity: {}
 
 env_injector:
+  # -- If the env-injector will be installed
   enabled: true
   name: env-injector
 
+  # -- Number of env-injector replicas
   replicaCount: 2
 
   image:
+    # -- Image repository that contains the env-injector image
     repository: spvest/azure-keyvault-webhook
+    # -- Image tag
     tag: 1.1.10
+    # -- Image pull policy for env-injector
     pullPolicy: IfNotPresent
 
   envImage:
+    # -- Image repository that contains the env image
     repository: spvest/azure-keyvault-env
+    # -- Image tag
     tag: 1.1.1
 
   keyVault:
-    # Set to true to use custom auth - see https://github.com/SparebankenVest/azure-key-vault-to-kubernetes/blob/master/README.md#authentication
     customAuth:
+      # -- Set to true to use custom auth - see https://github.com/SparebankenVest/azure-key-vault-to-kubernetes/blob/master/README.md#authentication
       enabled: false
-      useAuthService: true # set to false to use Azure Key Vault credentials from own pod
+      # -- Set to false to use Azure Key Vault credentials from own pod
+      useAuthService: true
 
   dockerImageInspection:
-    timeout: 20 # Timeout in seconds
-    useAksCredentialsWithACS: true # Only applicable if runningInsideAzureAks is also true
+    # -- Timeout in seconds
+    timeout: 20
+    # -- Only applicable if `runningInsideAzureAks` is also `true`
+    useAksCredentialsWithACS: true
 
   caBundleController:
     image:
+      # -- Image repository that contains the ca-bundle image
       repository: spvest/ca-bundle-controller
+      # -- Image tag
       tag: 1.1.0
+      # -- Image pull policy for ca bundler
       pullPolicy: IfNotPresent
+    # -- Additional env vars to add to the ca-bundle pod
     env: {}
+    # -- Additional labels
     labels: {}
+    # -- Additional pod labels
     podLabels: {}
+    # -- Log level ca-bundle pod
     logLevel: Info
-    logFormat: fmt # fmt or json
+    # -- fmt or json
+    logFormat: fmt
+    # -- AKV label used in namespaces for injection
     akvLabelName: azure-key-vault-env-injection
+    # -- Configmap name to store ca cert
     configMapName: akv2k8s-ca
+    # -- Resources for ca-bundle pod
     resources: {}
 
   service:
+    # -- Webhook service name
     name: azure-keyvault-secrets-webhook
     type: ClusterIP
-    externalTlsPort: 443    # External webhook and health tls port
-    internalTlsPort: 8443   # Internal webhook and health tls port (set to larger than 1024 when running without privileges)
-    externalHttpPort: 80    # External metrics and health port
-    internalHttpPort: 8080  # Internal metrics and health port (set to larger than 1024 when running without privileges)
-    externalAuthServiceMutualTlsPort: 9443 # External auth service mtls port
-    internalAuthServiceMutualTlsPort: 9443 # Internal auth service mtls port (set to larger than 1024 when running without privileges)
+    # -- External webhook and health tls port
+    externalTlsPort: 443
+    # -- Internal webhook and health tls port (set to larger than 1024 when running without privileges)
+    internalTlsPort: 8443
+    # -- External metrics and health port
+    externalHttpPort: 80
+    # -- Internal metrics and health port (set to larger than 1024 when running without privileges)
+    internalHttpPort: 8080
+    # -- External auth service mtls port
+    externalAuthServiceMutualTlsPort: 9443
+    # -- Internal auth service mtls port (set to larger than 1024 when running without privileges)
+    internalAuthServiceMutualTlsPort: 9443
 
   metrics:
+    # -- Enable prometheus metrics for env-injector
     enabled: false
     serviceMonitor:
+      # -- Enable service-monitor for env-injector
       enabled: false
+      # -- Scrape interval for service-monitor
       interval: 30s
+      # -- Additional labels for service-monitor
       additionalLabels: {}
 
   webhook:
+    # -- Webhook log level
     logLevel: Info
-    logFormat: fmt # ftm or json
+    # -- ftm or json
+    logFormat: fmt
 
     securityContext:
-      allowPrivilegeEscalation: true # must be true if using aks identity
+      # -- must be true if using aks identity
+      allowPrivilegeEscalation: true
     #   runAsUser: 65534
 
+    # -- Additional env vars to send to webhook pod
     env: {}
+    # -- Additional labels
     labels: {}
+    # -- Additional pods labels
     podLabels: {}
 
     certificate:
+      # -- Use cert-manager to handle webhook certificates,
+      # if `false` and `env_injector.webhook.certificate.custom.enabled=false`
+      # certificates and CA is generated by Helm
       useCertManager: false
       custom:
+        # -- Use custom cert to handle webhook certificates,
+        # if `false` and `env_injector.webhook.certificate.useCertManager=false`
+        # certificates and CA is generated by Helm.
         enabled: false
         server:
           tls:
+            # -- Custom TLS certificate, required when `env_injector.webhook.certificate.custom.enabled=true`
             crt:
+            # -- Custom TLS key, required when `env_injector.webhook.certificate.custom.enabled=true`
             key:
         ca:
+          # -- Custom CA certificate, required when `env_injector.webhook.certificate.custom.enabled=true`
           crt:
 
-    ## See `kubectl explain poddisruptionbudget.spec` for more
-    ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+    # -- See `kubectl explain poddisruptionbudget.spec` for more
+    # ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
     podDisruptionBudget:
       enabled: true
       minAvailable: 1
     #  maxUnavailable: 1
 
-    # What will happen if the webhook fails? Ignore (continue) or Fail (prevent Pod from starting)?
+    # -- What will happen if the webhook fails? Ignore (continue) or Fail (prevent Pod from starting)?
     failurePolicy: Fail
 
-    # https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-namespaceselector
+    # -- https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-namespaceselector
     namespaceSelector:
       matchLabels:
-        azure-key-vault-env-injection: enabled # The webhook will only trigger i namespaces with this label
+        # -- The webhook will only trigger i namespaces with this label
+        azure-key-vault-env-injection: enabled
 
-      # Prevent env injection for pods in kube-system as recomended: https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#avoiding-operating-on-the-kube-system-namespace
       matchExpressions:
+      # -- Prevent env injection for pods in kube-system as recomended: https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#avoiding-operating-on-the-kube-system-namespace
       - key: name
         operator: NotIn
         values:
         - kube-system
 
   serviceAccount:
+    # -- Create service account for env-injector
     create: true
-    ## The name of the ServiceAccount to use.
-    ## If not set and create is true, a name is generated using the fullname template
+    # -- The name of the ServiceAccount to use.
+    # If not set and create is true, a name is generated using the fullname template
     name:
 
+  # -- Resources for env injector
   resources: {}
+  # -- Node selector for env injector and ca-bundle
   nodeSelector: {}
+  # -- Tolerations for env injector and ca-bundle
   tolerations: []
+  # -- Affinities for env injector and ca-bundle
   affinity: {}

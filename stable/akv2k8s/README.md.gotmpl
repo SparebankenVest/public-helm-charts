@@ -1,0 +1,32 @@
+# {{ template "chart.name" . }} Helm Chart (Helm 3)
+
+{{ template "chart.description" . }}
+
+{{ template "chart.badgesSection" . }}
+
+This chart will install:
+  * a Controller for syncing AKV secrets to Kubernetes secrets
+  * a Env-Injector enabling transparent environment injection of AKV secrets into container programs
+
+For more information and installation instructions see the official documentation at https://akv2k8s.io
+
+## The AzureKeyVaultSecret CRD
+
+Helm 3 doesn't upgrade the CRD, only applies on the first install.
+
+To ensure correct version of the AzureKeyVaultSecret CRD when upgrading, run the following command:
+
+```
+kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vault-to-kubernetes/crd-{{ template "chart.appVersion" . }}/crds/AzureKeyVaultSecret.yaml
+```
+
+To install the chart with the release name `{{ template "chart.name" . }}`:
+
+```
+helm repo add spv-charts http://charts.spvapi.no
+helm install {{ template "chart.name" . }} spv-charts/{{ template "chart.name" . }} --version {{ template "chart.version" . }}
+```
+
+## Configuration
+
+{{ template "chart.valuesTable" . }}
