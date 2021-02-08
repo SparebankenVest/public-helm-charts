@@ -20,7 +20,14 @@ To ensure correct version of the AzureKeyVaultSecret CRD when upgrading, run the
 kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vault-to-kubernetes/crd-{{ template "chart.appVersion" . }}/crds/AzureKeyVaultSecret.yaml
 ```
 
-To install the chart with the release name `{{ template "chart.name" . }}`:
+To install the latest stable chart with the release name `{{ template "chart.name" . }}`:
+
+```
+helm repo add spv-charts http://charts.spvapi.no
+helm install {{ template "chart.name" . }} spv-charts/{{ template "chart.name" . }}
+```
+
+For the latest release:
 
 ```
 helm repo add spv-charts http://charts.spvapi.no
