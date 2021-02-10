@@ -87,11 +87,19 @@ Create the name of the service account to use
 {{- end -}}
 {{- end -}}
 
-{{/*
-Create the name of the service account to use
-*/}}
 {{- define "controller.logLevel" -}}
 {{- $logLevel := default "info" .Values.controller.logLevel | lower -}}
+{{- if eq $logLevel "debug" -}}
+{{- "4" }}
+{{- else if eq $logLevel "trace" -}}
+{{- "6" }}
+{{- else -}}
+{{- "2" -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "envinjector.logLevel" -}}
+{{- $logLevel := default "info" .Values.env_injector.logLevel | lower -}}
 {{- if eq $logLevel "debug" -}}
 {{- "4" }}
 {{- else if eq $logLevel "trace" -}}
