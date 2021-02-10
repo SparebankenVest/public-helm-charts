@@ -89,6 +89,5 @@ webhooks:
       operator: NotIn
       values:
       - {{ .Release.Namespace }}
-  admissionReviewVersions: ["v1", "v1beta1"]
   sideEffects: NoneOnDryRun
 {{- end }}
