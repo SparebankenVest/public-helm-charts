@@ -1,10 +1,6 @@
 {{- if and .Values.env_injector.enabled .Values.rbac.create -}}
 # Create a akv2k8s reader cluster role
-{{- if .Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1/ClusterRole" }}
 apiVersion: rbac.authorization.k8s.io/v1
-{{- else }}
-apiVersion: rbac.authorization.k8s.io/v1beta1
-{{- end }}
 kind: ClusterRole
 metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}
@@ -34,11 +30,7 @@ rules:
   - get
 ---
 # Create a akv2k8s reader cluster role
-{{- if .Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1/ClusterRole" }}
 apiVersion: rbac.authorization.k8s.io/v1
-{{- else }}
-apiVersion: rbac.authorization.k8s.io/v1beta1
-{{- end }}
 kind: ClusterRole
 metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}-reader
@@ -54,11 +46,7 @@ rules:
   - list
   - watch
 ---
-{{- if .Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1/ClusterRoleBinding" }}
 apiVersion: rbac.authorization.k8s.io/v1
-{{- else }}
-apiVersion: rbac.authorization.k8s.io/v1beta1
-{{- end }}
 kind: ClusterRoleBinding
 metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}-sa
@@ -74,11 +62,7 @@ roleRef:
   name: {{ template "akv2k8s.envinjector.fullname" . }}
 ---
 # Give all service accounts read access to akvs
-{{- if .Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1/ClusterRoleBinding" }}
 apiVersion: rbac.authorization.k8s.io/v1
-{{- else }}
-apiVersion: rbac.authorization.k8s.io/v1beta1
-{{- end }}
 kind: ClusterRoleBinding
 metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}-reader

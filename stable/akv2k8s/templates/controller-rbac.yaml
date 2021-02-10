@@ -1,9 +1,5 @@
 {{- if .Values.rbac.create -}}
-{{- if .Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1/ClusterRole" }}
 apiVersion: rbac.authorization.k8s.io/v1
-{{- else }}
-apiVersion: rbac.authorization.k8s.io/v1beta1
-{{- end }}
 kind: ClusterRole
 metadata:
   name: {{ template "akv2k8s.controller.fullname" . }}
@@ -48,11 +44,7 @@ rules:
   - patch
 
 ---
-{{- if .Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1/ClusterRole" }}
 apiVersion: rbac.authorization.k8s.io/v1
-{{- else }}
-apiVersion: rbac.authorization.k8s.io/v1beta1
-{{- end }}
 kind: ClusterRole
 metadata:
   name: {{ template "akv2k8s.controller.fullname" . }}-reader
@@ -68,11 +60,7 @@ rules:
   - list
   - watch
 ---
-{{- if .Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1/ClusterRoleBinding" }}
 apiVersion: rbac.authorization.k8s.io/v1
-{{- else }}
-apiVersion: rbac.authorization.k8s.io/v1beta1
-{{- end }}
 kind: ClusterRoleBinding
 metadata:
   name: {{ template "akv2k8s.controller.fullname" . }}
@@ -87,11 +75,7 @@ roleRef:
   name: {{ template "akv2k8s.controller.fullname" . }}
   apiGroup: rbac.authorization.k8s.io
 ---
-{{- if .Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1/ClusterRoleBinding" }}
 apiVersion: rbac.authorization.k8s.io/v1
-{{- else }}
-apiVersion: rbac.authorization.k8s.io/v1beta1
-{{- end }}
 kind: ClusterRoleBinding
 metadata:
   name: {{ template "akv2k8s.controller.fullname" . }}-reader
