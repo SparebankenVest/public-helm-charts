@@ -1,4 +1,4 @@
-{{- if and .Values.env_injector.enabled .Values.env_injector.webhook.certificate.useCertManager }}
+{{- if and .Values.env_injector.enabled .Values.env_injector.certificate.useCertManager }}
 ---
 # Create a selfsigned Issuer, in order to create a root CA certificate for
 # signing webhook serving certificates
@@ -8,10 +8,7 @@ metadata:
   name: {{ include "envinjector.selfSignedIssuer" . }}
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
-    helm.sh/chart: {{ template "akv2k8s.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "akv2k8s.labels" . | nindent 4 }}
 spec:
   selfSigned: {}
 
@@ -24,10 +21,7 @@ metadata:
   name: {{ include "envinjector.rootCACertificate" . }}
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
-    helm.sh/chart: {{ template "akv2k8s.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "akv2k8s.labels" . | nindent 4 }}
 spec:
   secretName: {{ include "envinjector.rootCACertificate" . }}
   duration: 43800h # 5y
@@ -45,10 +39,7 @@ metadata:
   name: {{ include "envinjector.rootCAIssuer" . }}
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
-    helm.sh/chart: {{ template "akv2k8s.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "akv2k8s.labels" . | nindent 4 }}
 spec:
   ca:
     secretName: {{ include "envinjector.rootCACertificate" . }}
@@ -62,10 +53,7 @@ metadata:
   name: {{ include "envinjector.servingCertificate" . }}
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
-    helm.sh/chart: {{ template "akv2k8s.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "akv2k8s.labels" . | nindent 4 }}
 spec:
   secretName: {{ include "envinjector.servingCertificate" . }}
   duration: 8760h # 1y

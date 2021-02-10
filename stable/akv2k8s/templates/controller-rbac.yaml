@@ -1,18 +1,10 @@
-{{- if .Values.controller.enabled -}}
 {{- if .Values.rbac.create -}}
-{{- if .Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1/ClusterRole" }}
 apiVersion: rbac.authorization.k8s.io/v1
-{{- else }}
-apiVersion: rbac.authorization.k8s.io/v1beta1
-{{- end }}
 kind: ClusterRole
 metadata:
   name: {{ template "akv2k8s.controller.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ template "akv2k8s.controller.name" . }}
-    helm.sh/chart: {{ template "akv2k8s.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "akv2k8s.labels" . | nindent 4 }}
 rules:
 - apiGroups:
   - spv.no
@@ -34,6 +26,7 @@ rules:
   - ""
   resources:
   - secrets
+  - configmaps
   verbs:
   - create
   - update
@@ -49,20 +42,14 @@ rules:
   - create
   - update
   - patch
+
 ---
-{{- if .Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1/ClusterRole" }}
 apiVersion: rbac.authorization.k8s.io/v1
-{{- else }}
-apiVersion: rbac.authorization.k8s.io/v1beta1
-{{- end }}
 kind: ClusterRole
 metadata:
   name: {{ template "akv2k8s.controller.fullname" . }}-reader
   labels:
-    app.kubernetes.io/name: {{ template "akv2k8s.controller.name" . }}
-    helm.sh/chart: {{ template "akv2k8s.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "akv2k8s.labels" . | nindent 4 }}
 rules:
 - apiGroups:
   - spv.no
@@ -73,19 +60,12 @@ rules:
   - list
   - watch
 ---
-{{- if .Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1/ClusterRoleBinding" }}
 apiVersion: rbac.authorization.k8s.io/v1
-{{- else }}
-apiVersion: rbac.authorization.k8s.io/v1beta1
-{{- end }}
 kind: ClusterRoleBinding
 metadata:
   name: {{ template "akv2k8s.controller.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ template "akv2k8s.controller.name" . }}
-    helm.sh/chart: {{ template "akv2k8s.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "akv2k8s.labels" . | nindent 4 }}
 subjects:
 - kind: ServiceAccount
   name: {{ template "akv2k8s.controller.fullname" . }}
@@ -95,19 +75,12 @@ roleRef:
   name: {{ template "akv2k8s.controller.fullname" . }}
   apiGroup: rbac.authorization.k8s.io
 ---
-{{- if .Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1/ClusterRoleBinding" }}
 apiVersion: rbac.authorization.k8s.io/v1
-{{- else }}
-apiVersion: rbac.authorization.k8s.io/v1beta1
-{{- end }}
 kind: ClusterRoleBinding
 metadata:
   name: {{ template "akv2k8s.controller.fullname" . }}-reader
   labels:
-    app.kubernetes.io/name: {{ template "akv2k8s.controller.name" . }}
-    helm.sh/chart: {{ template "akv2k8s.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "akv2k8s.labels" . | nindent 4 }}
 subjects:
 - kind: Group
   name: system:serviceaccounts
@@ -116,5 +89,4 @@ roleRef:
   kind: ClusterRole
   name: {{ template "akv2k8s.controller.fullname" . }}-reader
   apiGroup: rbac.authorization.k8s.io
-{{- end}}
 {{- end}}

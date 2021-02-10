@@ -1,4 +1,3 @@
-{{- if .Values.controller.enabled -}}
 {{- $dot := . }}
 ---
 apiVersion: apps/v1
@@ -6,27 +5,23 @@ kind: Deployment
 metadata:
   name: {{ template "akv2k8s.controller.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ template "akv2k8s.controller.name" . }}
-    helm.sh/chart: {{ template "akv2k8s.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/component: akv2k8s-controller
+    {{- include "akv2k8s.labels" . | nindent 4 }}
     {{- if .Values.controller.labels }}
-    {{ toYaml .Values.controller.labels | nindent 4 }}
-    {{- end}}
+    {{ toYaml .Values.controller.labels | indent 4 }}
+    {{- end }}
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ template "akv2k8s.controller.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "akv2k8s.selectors" . | nindent 6 }}
+      {{- include "akv2k8s.components.controller" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ template "akv2k8s.controller.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- include "akv2k8s.selectors" . | nindent 8 }}
+        {{- include "akv2k8s.components.controller" . | nindent 8 }}
         {{- if .Values.controller.podLabels }}
-        {{ toYaml .Values.controller.podLabels | nindent 8 }}
-        {{- end}}
+        {{ toYaml .Values.controller.podLabels | indent 8 }}
+        {{- end }}
     spec:
       serviceAccountName: {{ template "controller.serviceAccountName" . }}
       containers:
@@ -34,16 +29,8 @@ spec:
         image: "{{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag }}"
         imagePullPolicy: {{ .Values.controller.image.pullPolicy }}
         env:
-        - name: AZURE_VAULT_NORMAL_POLL_INTERVALS
-          value: "{{ .Values.controller.keyVault.polling.normalInterval }}"
-        - name: AZURE_VAULT_EXCEPTION_POLL_INTERVALS
-          value: "{{ .Values.controller.keyVault.polling.failureInterval }}"
-        - name: AZURE_VAULT_MAX_FAILURE_ATTEMPTS
-          value: "{{ .Values.controller.keyVault.polling.failureAttempts }}"
-        - name: RUNNING_INSIDE_AZURE_AKS
-          value: {{ .Values.runningInsideAzureAks | quote }}
-        - name: CUSTOM_AUTH
-          value: {{ .Values.controller.keyVault.customAuth.enabled | quote }}
+        - name: AUTH_TYPE
+          value: {{ .Values.controller.keyVaultAuth | quote }}
         - name: LOG_LEVEL
           value: "{{ .Values.controller.logLevel }}"
         - name: LOG_FORMAT
@@ -62,24 +49,26 @@ spec:
               name: {{ template "akv2k8s.controller.fullname" $dot }}-env
               key: {{ $key }}
         {{- end }}
-    {{- if not .Values.controller.keyVault.customAuth.enabled }}
         args:
           - "--cloudconfig={{ .Values.cloudConfig }}"
-          # - "--version={{ .Values.controller.image.tag }}"
-        volumeMounts:
-          - name: azure-config
-            mountPath: "{{ .Values.cloudConfig }}"
-            readOnly: true
+          - "--version={{ .Values.controller.image.tag }}"
+          - "--v={{ template "controller.logLevel" . }}"
+          - "--logging-format={{ .Values.controller.logFormat }}"
         {{- if .Values.controller.resources }}
         resources:
           {{ toYaml .Values.controller.resources | nindent 10 }}
         {{- end }}
+  {{- if eq .Values.controller.keyVaultAuth "azureCloudConfig" }}
+        volumeMounts:
+          - name: azure-config
+            mountPath: "{{ .Values.cloudConfig }}"
+            readOnly: true
       volumes:
       - name: azure-config
         hostPath:
           path: "{{ .Values.cloudConfig }}"
           type: File
-      {{- end }}
+  {{- end }}
       {{- if .Values.controller.image.pullSecret }}
       imagePullSecrets:
       - name: "{{ .Values.controller.image.pullSecret }}"
@@ -96,4 +85,3 @@ spec:
       affinity:
         {{ toYaml .Values.controller.affinity | nindent 8 }}
       {{- end }}
-{{- end }}

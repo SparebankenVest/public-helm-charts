@@ -1,0 +1,40 @@
+name: 'Build'
+description: 'Build helm chart'
+inputs:
+  publish-repository:  
+    description: 'Helm repository to publish to'
+    required: false
+    default: 'sparebankenvest/helm-charts'
+  publish-token:  
+    description: 'Github token for publishing'
+    required: true
+  
+runs:
+  using: "composite"
+  steps: 
+    - name: Commit files
+      shell: bash  
+      run: |
+        cd publish
+        git config user.name "${GITHUB_ACTOR}"
+        git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+        git add .
+        git commit -m "Published by GitHubActions"
+
+    - name: Configure git key
+      shell: bash  
+      run: |
+        SSH_DIR="${HOME}/.ssh"
+        mkdir "${SSH_DIR}"
+        ssh-keyscan -t rsa github.com > "${SSH_DIR}/known_hosts"
+        echo "${{ inputs.publish-token }}" > "${SSH_DIR}/id_rsa"
+        chmod 400 "${SSH_DIR}/id_rsa"
+
+    - name: Push Helm charts
+      shell: bash  
+      run: |
+        cd publish
+
+        git remote rm origin || true
+        git remote add origin "git@github.com:${{ inputs.publish-repository }}.git"
+        git push origin gh-pages

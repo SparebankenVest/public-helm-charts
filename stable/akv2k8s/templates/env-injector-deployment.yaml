@@ -1,129 +1,27 @@
 {{- if .Values.env_injector.enabled -}}
 {{- $dot := . }}
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{ template "akv2k8s.envinjector.fullname" . }}-ca-bundle
-  labels:
-    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
-    helm.sh/chart: {{ template "akv2k8s.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/component: akv2k8s-ca-bundle
-    {{- if .Values.env_injector.caBundleController.labels }}
-    {{ toYaml .Values.env_injector.caBundleController.labels | nindent 4 }}
-    {{- end}}
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
-      app.kubernetes.io/component: akv2k8s-ca-bundle
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/component: akv2k8s-ca-bundle
-        {{- if .Values.env_injector.caBundleController.podLabels }}
-        {{ toYaml .Values.env_injector.caBundleController.podLabels | nindent 8 }}
-        {{- end }}
-      annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/env-injector-apiservice.yaml") . | sha256sum }}
-    spec:
-      serviceAccountName: {{ template "envinjector.serviceAccountName" . }}
-      containers:
-        - name: ca-bundle-controller
-          image: "{{ .Values.env_injector.caBundleController.image.repository }}:{{ .Values.env_injector.caBundleController.image.tag }}"
-          imagePullPolicy: {{ .Values.env_injector.caBundleController.image.pullPolicy }}
-          args:
-            - "--cloudconfig={{ .Values.cloudConfig }}"
-            # - "--version={{ .Values.env_injector.caBundleController.image.tag }}"
-          env:
-          - name: AKV_LABEL_NAME
-            value: {{ .Values.env_injector.caBundleController.akvLabelName }}
-          - name: AKV_NAMESPACE
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.namespace
-          - name: AKV_SECRET_NAME
-            value: {{ template "envinjector.servingCertificate" . }}
-          - name: CA_FILE
-            value: /var/ca-cert/ca.crt
-          - name: CA_CONFIG_MAP_NAME
-            value: {{ .Values.env_injector.caBundleController.configMapName }}
-          - name: LOG_LEVEL
-            value: {{ .Values.env_injector.caBundleController.logLevel | quote }}
-          - name: LOG_FORMAT
-            value: {{ .Values.env_injector.caBundleController.logFormat | quote }}
-          {{- range $key, $value := .Values.global.env }}
-          - name: {{ $key }}
-            valueFrom:
-              secretKeyRef:
-                name: {{ template "akv2k8s.fullname" $dot }}-env
-                key: {{ $key }}
-          {{- end }}
-          {{- range $key, $value := .Values.env_injector.caBundleController.env }}
-          - name: {{ $key }}
-            valueFrom:
-              secretKeyRef:
-                name: {{ template "akv2k8s.envinjector.fullname" $dot }}-cabundlecontroller-env
-                key: {{ $key }}
-          {{- end }}
-          volumeMounts:
-          - mountPath: /var/ca-cert
-            name: ca-cert
-          {{- if .Values.controller.resources }}
-          resources:
-            {{ toYaml .Values.env_injector.caBundleController.resources | nindent 12 }}
-          {{- end }}
-      volumes:
-      - name: ca-cert
-        secret:
-          defaultMode: 420
-          secretName: {{ template "envinjector.servingCertificate" . }}
-      {{- if .Values.env_injector.nodeSelector }}
-      nodeSelector:
-        {{ toYaml .Values.env_injector.nodeSelector | nindent 8 }}
-      {{- end }}
-      {{- if .Values.env_injector.tolerations }}
-      tolerations:
-        {{ toYaml .Values.env_injector.tolerations | nindent 8 }}
-      {{- end }}
-      {{- if .Values.env_injector.affinity }}
-      affinity:
-        {{ toYaml .Values.env_injector.affinity | nindent 8 }}
-      {{- end }}
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
-    helm.sh/chart: {{ template "akv2k8s.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/component: {{ template "envinjector.webhook.component" . }}
-    {{- if .Values.env_injector.webhook.labels }}
-    {{ toYaml .Values.env_injector.webhook.labels | nindent 4 }}
-    {{- end}}
+    {{- include "akv2k8s.labels" . | nindent 4 }}
+    {{- if .Values.env_injector.labels }}
+    {{ toYaml .Values.env_injector.labels | nindent 4 }}
+    {{- end }}
 spec:
   replicas: {{ .Values.env_injector.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
-      app.kubernetes.io/component: {{ template "envinjector.webhook.component" . }}
+      {{- include "akv2k8s.selectors" . | nindent 6 }}
+      {{- include "akv2k8s.components.webhook" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/component: {{ template "envinjector.webhook.component" . }}
-        {{- if .Values.env_injector.webhook.podLabels }}
-        {{ toYaml .Values.env_injector.webhook.podLabels | nindent 8 }}
+        {{- include "akv2k8s.selectors" . | nindent 8 }}
+        {{- include "akv2k8s.components.webhook" . | nindent 8 }}
+        {{- if .Values.env_injector.podLabels }}
+        {{ toYaml .Values.env_injector.podLabels | nindent 8 }}
         {{- end }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/env-injector-apiservice.yaml") . | sha256sum }}
@@ -134,8 +32,10 @@ spec:
           image: "{{ .Values.env_injector.image.repository }}:{{ .Values.env_injector.image.tag }}"
           imagePullPolicy: {{ .Values.env_injector.image.pullPolicy }}
           args:
+            - "--cloudconfig={{ .Values.cloudConfig }}"
             - "--version={{ .Values.env_injector.image.tag }}"
-            - "--versionEnvIage={{ .Values.env_injector.envImage.tag }}"
+            - "--versionenvimage={{ .Values.env_injector.envImage.tag }}"
+            - "--v={{ template "envinjector.logLevel" . }}"
           env:
           - name: PORT
             value: {{ .Values.env_injector.service.internalTlsPort | quote }}
@@ -143,36 +43,32 @@ spec:
             value: {{ .Values.env_injector.service.internalHttpPort | quote }}
           - name: RUNNING_INSIDE_AZURE_AKS
             value: {{ .Values.runningInsideAzureAks | quote }}
-          - name: TLS_CERT_FILE
-            value: /var/serving-cert/tls.crt
-          - name: TLS_PRIVATE_KEY_FILE
-            value: /var/serving-cert/tls.key
-          - name: TLS_CA_FILE
-            value: /var/serving-cert/ca.crt
+          - name: TLS_CERT_DIR
+            value: /var/serving-cert
+          - name: CA_CERT_DIR
+            value: /var/ca-cert
+          - name: ENV_INJECTOR_EXEC_DIR
+            value: /azure-keyvault/
           - name: WEBHOOK_AUTH_SERVICE
             value: {{ template "akv2k8s.envinjector.fullname" . }}
           - name: WEBHOOK_AUTH_SERVICE_PORT
             value: {{ .Values.env_injector.service.externalAuthServiceMutualTlsPort | quote }}
           - name: WEBHOOK_AUTH_SERVICE_PORT_INTERNAL
             value: {{ .Values.env_injector.service.internalAuthServiceMutualTlsPort | quote }}
-          - name: CA_CONFIG_MAP_NAME
-            value: {{ .Values.env_injector.caBundleController.configMapName }}
-          - name: CUSTOM_AUTH
-            value: {{ .Values.env_injector.keyVault.customAuth.enabled | quote }}
+          - name: AUTH_TYPE
+            value: {{ .Values.env_injector.keyVaultAuth | quote }}
           - name: USE_AUTH_SERVICE
-            value: {{ include "envinjector.useAuthService" . | quote }}
+            value: {{ .Values.env_injector.authService | quote }}
           - name: AZUREKEYVAULT_ENV_IMAGE
             value: {{ .Values.env_injector.envImage.repository }}:{{ .Values.env_injector.envImage.tag }}
-          - name: CLOUD_CONFIG_HOST_PATH
-            value: {{ .Values.cloudConfig }}
           - name: DOCKER_IMAGE_INSPECTION_TIMEOUT
             value: {{ .Values.env_injector.dockerImageInspection.timeout | quote }}
           - name: DOCKER_IMAGE_INSPECTION_USE_ACS_CREDENTIALS
             value: {{ .Values.env_injector.dockerImageInspection.useAksCredentialsWithACS | quote }}
           - name: LOG_LEVEL
-            value: {{ .Values.env_injector.webhook.logLevel | quote }}
+            value: {{ .Values.env_injector.logLevel | quote }}
           - name: LOG_FORMAT
-            value: {{ .Values.env_injector.webhook.logFormat | quote }}
+            value: {{ .Values.env_injector.logFormat | quote }}
           - name: METRICS_ENABLED
             value: {{ .Values.env_injector.metrics.enabled | quote }}
           {{- range $key, $value := .Values.global.env }}
@@ -182,7 +78,7 @@ spec:
                 name: {{ template "akv2k8s.fullname" $dot }}-env
                 key: {{ $key }}
           {{- end }}
-          {{- range $key, $value := .Values.env_injector.webhook.env }}
+          {{- range $key, $value := .Values.env_injector.env }}
           - name: {{ $key }}
             valueFrom:
               secretKeyRef:
@@ -194,7 +90,7 @@ spec:
             containerPort: {{ .Values.env_injector.service.internalTlsPort }}
           - name: http
             containerPort: {{ .Values.env_injector.service.internalHttpPort }}
-          - name: auth-service-mutual-tls
+          - name: auth-tls
             containerPort: {{ .Values.env_injector.service.internalAuthServiceMutualTlsPort }}
           readinessProbe:
             httpGet:
@@ -204,14 +100,16 @@ spec:
           volumeMounts:
           - mountPath: /var/serving-cert
             name: serving-cert
-          {{- if .Values.runningInsideAzureAks }}
+          - mountPath: /var/ca-cert
+            name: ca-cert
+          {{- if eq .Values.env_injector.keyVaultAuth "cloudConfig" }}
           - mountPath: "{{ .Values.cloudConfig }}"
             name: azureconf
             readOnly: true
           {{- end }}
           securityContext:
-            {{- if .Values.env_injector.webhook.securityContext }}
-            {{ toYaml .Values.env_injector.webhook.securityContext | nindent 12 }}
+            {{- if .Values.env_injector.securityContext }}
+            {{ toYaml .Values.env_injector.securityContext | nindent 12 }}
             {{- end }}
           {{- if .Values.env_injector.resources }}
           resources:
@@ -222,7 +120,13 @@ spec:
         secret:
           defaultMode: 420
           secretName: {{ template "envinjector.servingCertificate" . }}
-      {{- if .Values.runningInsideAzureAks }}
+      {{- if .Values.env_injector.authService }}
+      - name: ca-cert
+        secret:
+          defaultMode: 420
+          secretName: {{ template "envinjector.rootCACertificate" . }}
+      {{- end }}
+      {{- if eq .Values.env_injector.keyVaultAuth "cloudConfig" }}
       - name: azureconf
         hostPath:
           path: "{{ .Values.cloudConfig }}"

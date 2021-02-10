@@ -1,4 +1,4 @@
-{{- if and .Values.controller.enabled .Values.addAzurePodIdentityException }}
+{{- if .Values.addAzurePodIdentityException }}
 apiVersion: "aadpodidentity.k8s.io/v1"
 kind: AzurePodIdentityException
 metadata:
@@ -6,6 +6,6 @@ metadata:
   namespace: akv2k8s # change if akv2k8s is installed in a different ns
 spec:
   podLabels:
-    app.kubernetes.io/name: {{ template "akv2k8s.controller.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "akv2k8s.selectors" . | nindent 4 }}
+    {{- include "akv2k8s.components.controller" . | nindent 4 }}
 {{- end }}

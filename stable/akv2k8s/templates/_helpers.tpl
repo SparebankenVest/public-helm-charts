@@ -1,6 +1,13 @@
 {{/* vim: set filetype=mustache: */}}
 
 {{/*
+The akv2k8s name
+*/}}
+{{- define "akv2k8s.name" -}}
+{{- default .Values.name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
 The controller name
 */}}
 {{- define "akv2k8s.controller.name" -}}
@@ -68,12 +75,6 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 {{- end -}}
 
-{{/*
-Create the name of the component label to use
-*/}}
-{{- define "envinjector.webhook.component" -}}
-{{ printf "%s-webhook" (include "akv2k8s.envinjector.name" .) }}
-{{- end -}}
 
 {{/*
 Create the name of the service account to use
@@ -86,6 +87,28 @@ Create the name of the service account to use
 {{- end -}}
 {{- end -}}
 
+{{- define "controller.logLevel" -}}
+{{- $logLevel := default "info" .Values.controller.logLevel | lower -}}
+{{- if eq $logLevel "debug" -}}
+{{- "4" }}
+{{- else if eq $logLevel "trace" -}}
+{{- "6" }}
+{{- else -}}
+{{- "2" -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "envinjector.logLevel" -}}
+{{- $logLevel := default "info" .Values.env_injector.logLevel | lower -}}
+{{- if eq $logLevel "debug" -}}
+{{- "4" }}
+{{- else if eq $logLevel "trace" -}}
+{{- "6" }}
+{{- else -}}
+{{- "2" -}}
+{{- end -}}
+{{- end -}}
+
 {{/*
 Create the name of the service account to use
 */}}
@@ -94,14 +117,6 @@ Create the name of the service account to use
 {{ default (include "akv2k8s.envinjector.fullname" .) .Values.env_injector.serviceAccount.name }}
 {{- else -}}
 {{ default "default" .Values.env_injector.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
-{{- define "envinjector.useAuthService" -}}
-{{- if and (.Values.env_injector.keyVault.customAuth.enabled) (not .Values.env_injector.keyVault.customAuth.useAuthService) -}}
-{{ default "false" }}
-{{- else -}}
-{{ default "true" }}
 {{- end -}}
 {{- end -}}
 
@@ -118,11 +133,11 @@ Create the name of the service account to use
 {{- end -}}
 
 {{- define "envinjector.servingCertificate" -}}
-{{- if .Values.env_injector.webhook.certificate.useCertManager -}}
-{{ printf "%s-webhook-tls-cm" (include "akv2k8s.envinjector.fullname" .) }}
-{{- else -}}
-{{ printf "%s-webhook-tls" (include "akv2k8s.envinjector.fullname" .) }}
+{{ printf "%s-tls" (include "akv2k8s.envinjector.fullname" .) }}
 {{- end -}}
+
+{{- define "envinjector.namespaceSelector" -}}
+{{ printf "%s: %s" .Values.env_injector.namespaceLabelSelector.label.name .Values.env_injector.namespaceLabelSelector.label.value }}
 {{- end -}}
 
 {{/*
@@ -130,4 +145,35 @@ Create chart name and version as used by the chart label.
 */}}
 {{- define "akv2k8s.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Common EnvInjector selectors.
+*/}}
+{{- define "akv2k8s.selectors" -}}
+app.kubernetes.io/name: {{ template "akv2k8s.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end -}}
+
+{{/*
+Common EnvInjector labels.
+*/}}
+{{- define "akv2k8s.labels" -}}
+{{- include "akv2k8s.selectors" . }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+helm.sh/chart: {{ template "akv2k8s.chart" . }}
+{{- end -}}
+
+{{/*
+EnvInjector webhook component
+*/}}
+{{- define "akv2k8s.components.webhook" -}}
+app.kubernetes.io/component: {{ template "akv2k8s.fullname" . }}-webhook
+{{- end -}}
+
+{{/*
+Controller component
+*/}}
+{{- define "akv2k8s.components.controller" -}}
+app.kubernetes.io/component: {{ template "akv2k8s.fullname" . }}-controller
 {{- end -}}
