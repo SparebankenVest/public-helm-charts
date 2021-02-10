@@ -35,7 +35,7 @@ spec:
             - "--cloudconfig={{ .Values.cloudConfig }}"
             - "--version={{ .Values.env_injector.image.tag }}"
             - "--versionenvimage={{ .Values.env_injector.envImage.tag }}"
-            - "-v {{ .Values.env_injector.logLevel }}"
+            - "--v={{ .Values.env_injector.logLevel }}"
           env:
           - name: PORT
             value: {{ .Values.env_injector.service.internalTlsPort | quote }}
