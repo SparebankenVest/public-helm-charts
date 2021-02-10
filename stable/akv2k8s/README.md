@@ -2,7 +2,7 @@
 
 A Helm chart that deploys akv2k8s Controller and Env-Injector to Kubernetes
 
-![Version: 2.0.0-beta.34](https://img.shields.io/badge/Version-2.0.0--beta.34-informational?style=flat-square) ![AppVersion: 1.2.0-beta.41](https://img.shields.io/badge/AppVersion-1.2.0--beta.41-informational?style=flat-square)
+![Version: 2.0.0-beta.35](https://img.shields.io/badge/Version-2.0.0--beta.35-informational?style=flat-square) ![AppVersion: 1.2.0-beta.41](https://img.shields.io/badge/AppVersion-1.2.0--beta.41-informational?style=flat-square)
 
 This chart will install:
   * a Controller for syncing AKV secrets to Kubernetes secrets
@@ -31,7 +31,7 @@ For the latest release:
 
 ```
 helm repo add spv-charts http://charts.spvapi.no
-helm install akv2k8s spv-charts/akv2k8s --version 2.0.0-beta.34
+helm install akv2k8s spv-charts/akv2k8s --version 2.0.0-beta.35
 ```
 
 ## Configuration

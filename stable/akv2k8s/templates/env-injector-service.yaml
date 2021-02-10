@@ -16,7 +16,7 @@ spec:
       port: {{ .Values.env_injector.service.externalHttpPort }}
       targetPort: {{ .Values.env_injector.service.internalHttpPort }}
       protocol: TCP
-    - name: auth-service-mutual-tls
+    - name: auth-tls
       port: {{ .Values.env_injector.service.internalAuthServiceMutualTlsPort }}
       targetPort: {{ .Values.env_injector.service.externalAuthServiceMutualTlsPort }}
       protocol: TCP

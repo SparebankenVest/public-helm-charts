@@ -90,7 +90,7 @@ spec:
             containerPort: {{ .Values.env_injector.service.internalTlsPort }}
           - name: http
             containerPort: {{ .Values.env_injector.service.internalHttpPort }}
-          - name: auth-service-mutual-tls
+          - name: auth-tls
             containerPort: {{ .Values.env_injector.service.internalAuthServiceMutualTlsPort }}
           readinessProbe:
             httpGet:
