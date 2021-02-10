@@ -74,7 +74,7 @@ env_injector:
     # -- Image tag
     tag: 1.2.0-beta.10
 
-  logLevel: Info
+  logLevel: "4"
   logFormat: fmt # ftm or json
 
   certificate:
