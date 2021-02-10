@@ -61,6 +61,7 @@ metadata:
 {{- end }}
 webhooks:
 - name: pods.{{ template "akv2k8s.envinjector.name" . }}.admission.spv.no
+  admissionReviewVersions: ["v2beta1", "v2alpha1", "v1", "v1beta1"]
   clientConfig:
     service:
       namespace: {{ .Release.Namespace }}
