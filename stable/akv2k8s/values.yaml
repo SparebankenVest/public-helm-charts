@@ -18,7 +18,7 @@ controller:
   image:
     # -- Image repository that contains the controller image
     repository: spvest/azure-keyvault-controller
-    tag: 1.2.0-beta.40
+    tag: 1.2.0-beta.41
     pullPolicy: IfNotPresent
 
   logLevel: info # info=2, debug=4, trace=6
@@ -63,7 +63,7 @@ env_injector:
   image:
     # -- Image repository that contains the env-injector image
     repository: spvest/azure-keyvault-webhook
-    tag: 1.2.0-beta.21
+    tag: 1.2.0-beta.26
     pullPolicy: IfNotPresent
 
   replicaCount: 2
@@ -72,7 +72,7 @@ env_injector:
     # -- Image repository that contains the env image
     repository: spvest/azure-keyvault-env
     # -- Image tag
-    tag: 1.2.0-beta.10
+    tag: 1.2.0-beta.14
 
   logLevel: "4"
   logFormat: fmt # ftm or json
