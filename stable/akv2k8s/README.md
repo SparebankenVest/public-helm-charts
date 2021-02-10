@@ -2,7 +2,7 @@
 
 A Helm chart that deploys akv2k8s Controller and Env-Injector to Kubernetes
 
-![Version: 2.0.0-beta.32](https://img.shields.io/badge/Version-2.0.0--beta.32-informational?style=flat-square) ![AppVersion: 1.2.0-beta.1](https://img.shields.io/badge/AppVersion-1.2.0--beta.1-informational?style=flat-square)
+![Version: 2.0.0-beta.34](https://img.shields.io/badge/Version-2.0.0--beta.34-informational?style=flat-square) ![AppVersion: 1.2.0-beta.41](https://img.shields.io/badge/AppVersion-1.2.0--beta.41-informational?style=flat-square)
 
 This chart will install:
   * a Controller for syncing AKV secrets to Kubernetes secrets
@@ -17,7 +17,7 @@ Helm 3 doesn't upgrade the CRD, only applies on the first install.
 To ensure correct version of the AzureKeyVaultSecret CRD when upgrading, run the following command:
 
 ```
-kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vault-to-kubernetes/crd-1.2.0-beta.1/crds/AzureKeyVaultSecret.yaml
+kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vault-to-kubernetes/controller-1.2.0-beta.41/crds/AzureKeyVaultSecret.yaml
 ```
 
 To install the latest stable chart with the release name `akv2k8s`:
@@ -31,7 +31,7 @@ For the latest release:
 
 ```
 helm repo add spv-charts http://charts.spvapi.no
-helm install akv2k8s spv-charts/akv2k8s --version 2.0.0-beta.32
+helm install akv2k8s spv-charts/akv2k8s --version 2.0.0-beta.34
 ```
 
 ## Configuration
@@ -65,7 +65,7 @@ helm install akv2k8s spv-charts/akv2k8s --version 2.0.0-beta.32
 | env_injector.keyVaultAuth | string | `"cloudConfig"` | Key Vault Auth: azureCloudConfig (aks credentials), environment (custom) |
 | env_injector.authService | bool | `true` | Set to false to provide azure key vault credentials locally (through e.g. env vars) in each pod |
 | env_injector.image.repository | string | `"spvest/azure-keyvault-webhook"` | Image repository that contains the env-injector image |
-| env_injector.image.tag | string | `"1.2.0-beta.26"` | Image tag |
+| env_injector.image.tag | string | `"1.2.0-beta.27"` | Image tag |
 | env_injector.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for env-injector |
 | env_injector.replicaCount | int | `2` | Number of env-injector replicas |
 | env_injector.envImage.repository | string | `"spvest/azure-keyvault-env"` | Image repository that contains the env image |

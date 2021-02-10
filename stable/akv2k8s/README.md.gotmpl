@@ -17,7 +17,7 @@ Helm 3 doesn't upgrade the CRD, only applies on the first install.
 To ensure correct version of the AzureKeyVaultSecret CRD when upgrading, run the following command:
 
 ```
-kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vault-to-kubernetes/crd-{{ template "chart.appVersion" . }}/crds/AzureKeyVaultSecret.yaml
+kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vault-to-kubernetes/controller-{{ template "chart.appVersion" . }}/crds/AzureKeyVaultSecret.yaml
 ```
 
 To install the latest stable chart with the release name `{{ template "chart.name" . }}`:
