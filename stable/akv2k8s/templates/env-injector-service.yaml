@@ -27,4 +27,4 @@ spec:
   selector:
     {{- include "akv2k8s.selectors" . | nindent 4 }}
     {{- include "akv2k8s.components.webhook" . | nindent 4 }}
-{{- end}}
+{{- end }}

@@ -8,7 +8,7 @@ metadata:
     {{- include "akv2k8s.labels" . | nindent 4 }}
     {{- if .Values.env_injector.labels }}
     {{ toYaml .Values.env_injector.labels | nindent 4 }}
-    {{- end}}
+    {{- end }}
 spec:
   replicas: {{ .Values.env_injector.replicaCount }}
   selector:
@@ -85,7 +85,6 @@ spec:
                 name: {{ template "akv2k8s.envinjector.fullname" $dot }}-webhook-env
                 key: {{ $key }}
           {{- end }}
-          imagePullPolicy: {{ .Values.env_injector.image.pullPolicy }}
           ports:
           - name: webhook-tls
             containerPort: {{ .Values.env_injector.service.internalTlsPort }}
@@ -109,8 +108,8 @@ spec:
             readOnly: true
           {{- end }}
           securityContext:
-            {{- if .Values.env_injector.webhook.securityContext }}
-            {{ toYaml .Values.env_injector.webhook.securityContext | nindent 12 }}
+            {{- if .Values.env_injector.securityContext }}
+            {{ toYaml .Values.env_injector.securityContext | nindent 12 }}
             {{- end }}
           {{- if .Values.env_injector.resources }}
           resources:

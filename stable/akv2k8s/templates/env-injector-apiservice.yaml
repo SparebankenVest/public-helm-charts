@@ -83,11 +83,10 @@ webhooks:
       {{ template "envinjector.namespaceSelector" . }}
     matchExpressions:
     {{- if .Values.env_injector.namespaceSelector.matchExpressions }}
-{{ toYaml .Values.env_injector.namespaceSelector.matchExpressions | indent 4 }}
+      {{ toYaml .Values.env_injector.namespaceSelector.matchExpressions | nindent 4 }}
     {{- end }}
     - key: name
       operator: NotIn
       values:
       - {{ .Release.Namespace }}
-
 {{- end }}

@@ -8,7 +8,7 @@ metadata:
     {{- include "akv2k8s.labels" . | nindent 4 }}
     {{- if .Values.controller.labels }}
     {{ toYaml .Values.controller.labels | indent 4 }}
-    {{- end}}
+    {{- end }}
 spec:
   selector:
     matchLabels:
@@ -21,7 +21,7 @@ spec:
         {{- include "akv2k8s.components.controller" . | nindent 8 }}
         {{- if .Values.controller.podLabels }}
         {{ toYaml .Values.controller.podLabels | indent 8 }}
-        {{- end}}
+        {{- end }}
     spec:
       serviceAccountName: {{ template "controller.serviceAccountName" . }}
       containers:
@@ -85,4 +85,3 @@ spec:
       affinity:
         {{ toYaml .Values.controller.affinity | nindent 8 }}
       {{- end }}
-{{- end }}
