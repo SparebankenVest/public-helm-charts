@@ -58,17 +58,29 @@ spec:
         resources:
           {{ toYaml .Values.controller.resources | nindent 10 }}
         {{- end }}
-  {{- if eq .Values.controller.keyVaultAuth "azureCloudConfig" }}
+        {{- if or (eq .Values.controller.keyVaultAuth "azureCloudConfig") .Values.controller.extraVolumeMounts }}
         volumeMounts:
+          {{- if eq .Values.controller.keyVaultAuth "azureCloudConfig" }}
           - name: azure-config
             mountPath: "{{ .Values.cloudConfig }}"
             readOnly: true
+          {{- end }}
+          {{- if .Values.controller.extraVolumeMounts }}
+          {{- toYaml .Values.controller.extraVolumeMounts | nindent 10 }}
+          {{- end }}
+        {{- end }}
+      {{- if or (eq .Values.controller.keyVaultAuth "azureCloudConfig") .Values.controller.extraVolumeMounts .Values.controller.extraVolumes }}
       volumes:
+      {{- if eq .Values.controller.keyVaultAuth "azureCloudConfig" }}
       - name: azure-config
         hostPath:
           path: "{{ .Values.cloudConfig }}"
           type: File
-  {{- end }}
+      {{- end }}
+      {{- if .Values.controller.extraVolumes }}
+      {{ toYaml .Values.controller.extraVolumes | nindent 6 }}
+      {{- end }}
+      {{- end }}
       {{- if .Values.controller.image.pullSecret }}
       imagePullSecrets:
       - name: "{{ .Values.controller.image.pullSecret }}"

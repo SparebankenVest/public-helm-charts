@@ -63,6 +63,18 @@ controller:
   # -- Affinities for controller
   affinity: {}
 
+  # -- Additional volumeMounts to the controller main container
+  extraVolumeMounts: []
+    # - name: akv2k8s-certificate
+    #   mountPath: /etc/azure
+
+  # -- Additional volumes to the controller pod
+  extraVolumes: []
+    # - name: akv2k8s-certificate
+    #   secret:
+    #     defaultMode: 420
+    #     secretName: akv2k8s-certificate
+
 env_injector:
   # -- If the env-injector will be installed
   enabled: true
@@ -212,3 +224,15 @@ env_injector:
   tolerations: []
   # -- Affinities for env injector and ca-bundle
   affinity: {}
+
+  # -- Additional volumeMounts to the env-injector main container
+  extraVolumeMounts: []
+    # - name: akv2k8s-certificate
+    #   mountPath: /etc/azure
+
+  # -- Additional volumes to the env-injector pod
+  extraVolumes: []
+    # - name: akv2k8s-certificate
+    #   secret:
+    #     defaultMode: 420
+    #     secretName: akv2k8s-certificate

@@ -2,7 +2,7 @@
 
 A Helm chart that deploys akv2k8s Controller and Env-Injector to Kubernetes
 
-![Version: 2.0.0-beta.36](https://img.shields.io/badge/Version-2.0.0--beta.36-informational?style=flat-square) ![AppVersion: 1.2.0-beta.41](https://img.shields.io/badge/AppVersion-1.2.0--beta.41-informational?style=flat-square)
+![Version: 2.0.0-beta.41](https://img.shields.io/badge/Version-2.0.0--beta.41-informational?style=flat-square) ![AppVersion: 1.2.0-beta.41](https://img.shields.io/badge/AppVersion-1.2.0--beta.41-informational?style=flat-square)
 
 This chart will install:
   * a Controller for syncing AKV secrets to Kubernetes secrets
@@ -31,7 +31,7 @@ For the latest release:
 
 ```
 helm repo add spv-charts http://charts.spvapi.no
-helm install akv2k8s spv-charts/akv2k8s --version 2.0.0-beta.36
+helm install akv2k8s spv-charts/akv2k8s --version 2.0.0-beta.41
 ```
 
 ## Configuration
@@ -60,6 +60,8 @@ helm install akv2k8s spv-charts/akv2k8s --version 2.0.0-beta.36
 | controller.nodeSelector | object | `{}` | Node selector for controller |
 | controller.tolerations | list | `[]` | Tolerations for controller |
 | controller.affinity | object | `{}` | Affinities for controller |
+| controller.extraVolumeMounts | list | `[]` | Additional volumeMounts to the controller main container |
+| controller.extraVolumes | list | `[]` | Additional volumes to the controller pod |
 | env_injector.enabled | bool | `true` | If the env-injector will be installed |
 | env_injector.name | string | `"env-injector"` |  |
 | env_injector.keyVaultAuth | string | `"cloudConfig"` | Key Vault Auth: azureCloudConfig (aks credentials), environment (custom) |
@@ -108,3 +110,5 @@ helm install akv2k8s spv-charts/akv2k8s --version 2.0.0-beta.36
 | env_injector.nodeSelector | object | `{}` | Node selector for env injector and ca-bundle |
 | env_injector.tolerations | list | `[]` | Tolerations for env injector and ca-bundle |
 | env_injector.affinity | object | `{}` | Affinities for env injector and ca-bundle |
+| env_injector.extraVolumeMounts | list | `[]` | Additional volumeMounts to the env-injector main container |
+| env_injector.extraVolumes | list | `[]` | Additional volumes to the env-injector pod |

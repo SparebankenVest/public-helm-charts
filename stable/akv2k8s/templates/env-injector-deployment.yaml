@@ -107,10 +107,13 @@ spec:
             name: azureconf
             readOnly: true
           {{- end }}
+          {{- if .Values.env_injector.extraVolumeMounts }}
+          {{- toYaml .Values.env_injector.extraVolumeMounts | nindent 10 }}
+          {{- end }}
+          {{- if .Values.env_injector.securityContext }}
           securityContext:
-            {{- if .Values.env_injector.securityContext }}
             {{ toYaml .Values.env_injector.securityContext | nindent 12 }}
-            {{- end }}
+          {{- end }}
           {{- if .Values.env_injector.resources }}
           resources:
             {{ toYaml .Values.env_injector.resources | nindent 12 }}
@@ -131,6 +134,9 @@ spec:
         hostPath:
           path: "{{ .Values.cloudConfig }}"
           type: File
+      {{- end }}
+      {{- if .Values.env_injector.extraVolumes }}
+      {{ toYaml .Values.env_injector.extraVolumes | nindent 6 }}
       {{- end }}
       {{- if .Values.env_injector.nodeSelector }}
       nodeSelector:
