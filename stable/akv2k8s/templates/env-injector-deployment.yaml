@@ -37,10 +37,18 @@ spec:
             - "--versionenvimage={{ .Values.env_injector.envImage.tag }}"
             - "--v={{ template "envinjector.logLevel" . }}"
           env:
-          - name: PORT
-            value: {{ .Values.env_injector.service.internalTlsPort | quote }}
-          - name: PORT_HTTP
+          - name: HTTP_PORT
             value: {{ .Values.env_injector.service.internalHttpPort | quote }}
+          - name: HTTP_PORT_EXTERNAL
+            value: {{ .Values.env_injector.service.externalHttpPort | quote }}
+          - name: TLS_PORT
+            value: {{ .Values.env_injector.service.internalTlsPort | quote }}
+          - name: TLS_PORT_EXTERNAL
+            value: {{ .Values.env_injector.service.externalTlsPort | quote }}
+          - name: MTLS_PORT
+            value: {{ .Values.env_injector.service.internalAuthServiceMutualTlsPort | quote }}
+          - name: MTLS_PORT_EXTERNAL
+            value: {{ .Values.env_injector.service.externalAuthServiceMutualTlsPort | quote }}
           - name: RUNNING_INSIDE_AZURE_AKS
             value: {{ .Values.runningInsideAzureAks | quote }}
           - name: TLS_CERT_DIR
@@ -51,10 +59,6 @@ spec:
             value: /azure-keyvault/
           - name: WEBHOOK_AUTH_SERVICE
             value: {{ template "akv2k8s.envinjector.fullname" . }}
-          - name: WEBHOOK_AUTH_SERVICE_PORT
-            value: {{ .Values.env_injector.service.externalAuthServiceMutualTlsPort | quote }}
-          - name: WEBHOOK_AUTH_SERVICE_PORT_INTERNAL
-            value: {{ .Values.env_injector.service.internalAuthServiceMutualTlsPort | quote }}
           - name: AUTH_TYPE
             value: {{ .Values.env_injector.keyVaultAuth | quote }}
           - name: USE_AUTH_SERVICE
