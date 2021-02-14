@@ -23,6 +23,8 @@ cloudConfig: /etc/kubernetes/azure.json
 controller:
   # -- Name
   name: controller
+  enabled: true
+  
   image:
     # -- Image repository that contains the controller image
     repository: spvest/azure-keyvault-controller
@@ -46,6 +48,19 @@ controller:
     # -- The name of the ServiceAccount to use.
     # If not set and create is true, a name is generated using the fullname template
     name:
+
+  metrics:
+    # -- Enable prometheus metrics 
+    enabled: false
+    internalPort: 9000
+    externalPort: 9000
+    serviceMonitor:
+      # -- Enable service-monitor 
+      enabled: false
+      # -- Scrape interval for service-monitor
+      interval: 30s
+      # -- Additional labels for service-monitor
+      additionalLabels: {}
 
   # -- Controller envs
   env: {}

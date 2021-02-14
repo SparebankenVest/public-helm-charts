@@ -31,6 +31,10 @@ spec:
         env:
         - name: AUTH_TYPE
           value: {{ .Values.controller.keyVaultAuth | quote }}
+        - name: METRICS_ENABLED
+          value: {{ .Values.controller.metrics.enabled | quote }}
+        - name: METRICS_PORT
+          value: {{ .Values.controller.metrics.internalPort | quote }}
         {{- range $key, $value := .Values.global.env }}
         - name: {{ $key }}
           valueFrom:
