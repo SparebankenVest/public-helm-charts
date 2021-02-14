@@ -24,7 +24,7 @@ controller:
   # -- Name
   name: controller
   enabled: true
-  
+
   image:
     # -- Image repository that contains the controller image
     repository: spvest/azure-keyvault-controller
@@ -52,8 +52,7 @@ controller:
   metrics:
     # -- Enable prometheus metrics 
     enabled: false
-    internalPort: 9000
-    externalPort: 9000
+    port: 9000
     serviceMonitor:
       # -- Enable service-monitor 
       enabled: false
