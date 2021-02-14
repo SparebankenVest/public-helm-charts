@@ -29,7 +29,7 @@ controller:
     # -- Image repository that contains the controller image
     repository: spvest/azure-keyvault-controller
     # -- Image tag
-    tag: 1.2.0-beta.41
+    tag: 1.2.0-beta.47
     # -- Image pull policy for controller
     pullPolicy: IfNotPresent
 
@@ -108,7 +108,7 @@ env_injector:
     # -- Image repository that contains the env-injector image
     repository: spvest/azure-keyvault-webhook
     # -- Image tag
-    tag: 1.2.0-beta.27
+    tag: 1.2.0-beta.41
     # -- Image pull policy for env-injector
     pullPolicy: IfNotPresent
 
@@ -119,7 +119,7 @@ env_injector:
     # -- Image repository that contains the env image
     repository: spvest/azure-keyvault-env
     # -- Image tag
-    tag: 1.2.0-beta.14
+    tag: 1.2.0-beta.22
     # -- Image pull policy for env-injector
     pullPolicy: IfNotPresent
 
