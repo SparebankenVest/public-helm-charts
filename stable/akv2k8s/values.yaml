@@ -4,6 +4,10 @@ name: akv2k8s
 global:
   # -- Env vars to be used with all enabled pods, eg. for akv credentials
   env: {}
+  # -- Sets klog log level info=2, debug=4, trace=6
+  logLevel: info
+  # -- Sets klog log format text or json
+  logFormat: text
 
 rbac:
   # -- Specifies whether RBAC resources should be created
@@ -17,6 +21,7 @@ addAzurePodIdentityException: false
 cloudConfig: /etc/kubernetes/azure.json
 
 controller:
+  # -- Name
   name: controller
   image:
     # -- Image repository that contains the controller image
@@ -26,11 +31,11 @@ controller:
     # -- Image pull policy for controller
     pullPolicy: IfNotPresent
 
-  # -- Sets klog log level info=2, debug=4, trace=6
-  logLevel: info # info, debug, trace
+  # -- Override global log level info=2, debug=4, trace=6
+  logLevel: # info, debug, trace
 
-  # -- Controller log format fmt or json
-  logFormat: text
+  # -- Override global log format text or json
+  logFormat: # text or json
 
   # -- Key Vault Auth: azureCloudConfig (aks credentials), environment (custom)
   keyVaultAuth: azureCloudConfig
@@ -104,10 +109,11 @@ env_injector:
     # -- Image pull policy for env-injector
     pullPolicy: IfNotPresent
 
-  # -- Sets klog log level info=2, debug=4, trace=6
-  logLevel: info # info, debug, trace
-  # -- Env-injector log format fmt or json
-  logFormat: fmt
+  # -- Override global log level info=2, debug=4, trace=6
+  logLevel: # info, debug, trace
+  
+  # -- Override global log format text or json
+  logFormat: # text or json
 
   certificate:
     # -- Use cert-manager to handle webhook certificates,
@@ -140,14 +146,9 @@ env_injector:
       name: azure-key-vault-env-injection
       value: enabled
 
-  # -- Configmap name to store ca cert
-  caBundleConfigMapName: akv2k8s-ca
-
   dockerImageInspection:
     # -- Timeout in seconds
     timeout: 20
-    # -- Only applicable if `runningInsideAzureAks` is also `true`
-    useAksCredentialsWithACS: true
 
   service:
     # -- Webhook service name
@@ -162,9 +163,9 @@ env_injector:
     # -- Internal metrics and health port (set to larger than 1024 when running without privileges)
     internalHttpPort: 8080
     # -- External auth service mtls port
-    externalAuthServiceMutualTlsPort: 9443
+    externalMtlsPort: 9443
     # -- Internal auth service mtls port (set to larger than 1024 when running without privileges)
-    internalAuthServiceMutualTlsPort: 9443
+    internalMtlsPort: 9443
 
   metrics:
     # -- Enable prometheus metrics for env-injector
@@ -210,7 +211,6 @@ env_injector:
   # -- https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-namespaceselector
   namespaceSelector:
     matchExpressions:
-    # -- Prevent env injection for pods in kube-system as recomended: https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#avoiding-operating-on-the-kube-system-namespace
     - key: name
       operator: NotIn
       values:

@@ -17,8 +17,8 @@ spec:
       targetPort: {{ .Values.env_injector.service.internalHttpPort }}
       protocol: TCP
     - name: auth-tls
-      port: {{ .Values.env_injector.service.internalAuthServiceMutualTlsPort }}
-      targetPort: {{ .Values.env_injector.service.externalAuthServiceMutualTlsPort }}
+      port: {{ .Values.env_injector.service.internalMtlsPort }}
+      targetPort: {{ .Values.env_injector.service.externalMtlsPort }}
       protocol: TCP
   selector:
     {{- include "akv2k8s.selectors" . | nindent 4 }}

@@ -88,7 +88,7 @@ Create the name of the service account to use
 {{- end -}}
 
 {{- define "controller.logLevel" -}}
-{{- $logLevel := default "info" .Values.controller.logLevel | lower -}}
+{{- $logLevel := default .Values.global.logLevel .Values.controller.logLevel | lower -}}
 {{- if eq $logLevel "debug" -}}
 {{- "4" }}
 {{- else if eq $logLevel "trace" -}}
@@ -98,8 +98,12 @@ Create the name of the service account to use
 {{- end -}}
 {{- end -}}
 
+{{- define "controller.logFormat" -}}
+{{- default .Values.global.logFormat .Values.controller.logFormat | lower -}}
+{{- end -}}
+
 {{- define "envinjector.logLevel" -}}
-{{- $logLevel := default "info" .Values.env_injector.logLevel | lower -}}
+{{- $logLevel := default .Values.global.logLevel .Values.env_injector.logLevel | lower -}}
 {{- if eq $logLevel "debug" -}}
 {{- "4" }}
 {{- else if eq $logLevel "trace" -}}
@@ -107,6 +111,10 @@ Create the name of the service account to use
 {{- else -}}
 {{- "2" -}}
 {{- end -}}
+{{- end -}}
+
+{{- define "envinjector.logFormat" -}}
+{{- default .Values.global.logFormat .Values.env_injector.logFormat | lower -}}
 {{- end -}}
 
 {{/*

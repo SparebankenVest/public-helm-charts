@@ -31,10 +31,6 @@ spec:
         env:
         - name: AUTH_TYPE
           value: {{ .Values.controller.keyVaultAuth | quote }}
-        - name: LOG_LEVEL
-          value: "{{ .Values.controller.logLevel }}"
-        - name: LOG_FORMAT
-          value: "{{ .Values.controller.logFormat }}"
         {{- range $key, $value := .Values.global.env }}
         - name: {{ $key }}
           valueFrom:
@@ -53,7 +49,7 @@ spec:
           - "--cloudconfig={{ .Values.cloudConfig }}"
           - "--version={{ .Values.controller.image.tag }}"
           - "--v={{ template "controller.logLevel" . }}"
-          - "--logging-format={{ .Values.controller.logFormat }}"
+          - "--logging-format={{ template "controller.logFormat" . }}"
         {{- if .Values.controller.resources }}
         resources:
           {{ toYaml .Values.controller.resources | nindent 10 }}

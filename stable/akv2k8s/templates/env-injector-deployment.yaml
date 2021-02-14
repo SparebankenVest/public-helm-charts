@@ -36,6 +36,7 @@ spec:
             - "--version={{ .Values.env_injector.image.tag }}"
             - "--versionenvimage={{ .Values.env_injector.envImage.tag }}"
             - "--v={{ template "envinjector.logLevel" . }}"
+            - "--logging-format={{ template "envinjector.logFormat" . }}"
           env:
           - name: HTTP_PORT
             value: {{ .Values.env_injector.service.internalHttpPort | quote }}
@@ -46,9 +47,9 @@ spec:
           - name: TLS_PORT_EXTERNAL
             value: {{ .Values.env_injector.service.externalTlsPort | quote }}
           - name: MTLS_PORT
-            value: {{ .Values.env_injector.service.internalAuthServiceMutualTlsPort | quote }}
+            value: {{ .Values.env_injector.service.internalMtlsPort | quote }}
           - name: MTLS_PORT_EXTERNAL
-            value: {{ .Values.env_injector.service.externalAuthServiceMutualTlsPort | quote }}
+            value: {{ .Values.env_injector.service.externalMtlsPort | quote }}
           - name: RUNNING_INSIDE_AZURE_AKS
             value: {{ .Values.runningInsideAzureAks | quote }}
           - name: TLS_CERT_DIR
@@ -67,12 +68,6 @@ spec:
             value: {{ .Values.env_injector.envImage.repository }}:{{ .Values.env_injector.envImage.tag }}
           - name: DOCKER_IMAGE_INSPECTION_TIMEOUT
             value: {{ .Values.env_injector.dockerImageInspection.timeout | quote }}
-          - name: DOCKER_IMAGE_INSPECTION_USE_ACS_CREDENTIALS
-            value: {{ .Values.env_injector.dockerImageInspection.useAksCredentialsWithACS | quote }}
-          - name: LOG_LEVEL
-            value: {{ .Values.env_injector.logLevel | quote }}
-          - name: LOG_FORMAT
-            value: {{ .Values.env_injector.logFormat | quote }}
           - name: METRICS_ENABLED
             value: {{ .Values.env_injector.metrics.enabled | quote }}
           {{- range $key, $value := .Values.global.env }}
@@ -95,7 +90,7 @@ spec:
           - name: http
             containerPort: {{ .Values.env_injector.service.internalHttpPort }}
           - name: auth-tls
-            containerPort: {{ .Values.env_injector.service.internalAuthServiceMutualTlsPort }}
+            containerPort: {{ .Values.env_injector.service.internalMtlsPort }}
           readinessProbe:
             httpGet:
               scheme: HTTPS
