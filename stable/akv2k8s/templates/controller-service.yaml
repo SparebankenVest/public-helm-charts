@@ -1,0 +1,18 @@
+{{- if .Values.controller.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "akv2k8s.controller.fullname" . }}
+  labels:
+    {{- include "akv2k8s.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.controller.service.type }}
+  ports:
+    - name: http
+      port: {{ .Values.controller.service.externalHttpPort }}
+      targetPort: {{ .Values.controller.service.internalHttpPort }}
+      protocol: TCP
+  selector:
+    {{- include "akv2k8s.selectors" . | nindent 4 }}
+    {{- include "akv2k8s.components.controller" . | nindent 4 }}
+{{- end }}

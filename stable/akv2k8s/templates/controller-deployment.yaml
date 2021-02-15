@@ -34,7 +34,7 @@ spec:
         - name: METRICS_ENABLED
           value: {{ .Values.controller.metrics.enabled | quote }}
         - name: METRICS_PORT
-          value: {{ .Values.controller.metrics.port | quote }}
+          value: {{ .Values.controller.service.internalHttpPort | quote }}
         {{- range $key, $value := .Values.global.env }}
         - name: {{ $key }}
           valueFrom:
@@ -54,6 +54,9 @@ spec:
           - "--version={{ .Values.controller.image.tag }}"
           - "--v={{ template "controller.logLevel" . }}"
           - "--logging-format={{ template "controller.logFormat" . }}"
+        ports:
+          - name: http
+            containerPort: {{ .Values.controller.service.internalHttpPort }}
         {{- if .Values.controller.resources }}
         resources:
           {{ toYaml .Values.controller.resources | nindent 10 }}

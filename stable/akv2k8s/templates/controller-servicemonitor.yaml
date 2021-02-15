@@ -1,0 +1,21 @@
+{{- if and .Values.controller.metrics.enabled .Values.controller.metrics.serviceMonitor.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ template "akv2k8s.controller.fullname" . }}
+  labels:
+    {{- include "akv2k8s.labels" . | nindent 4 }}
+    {{- if .Values.controller.metrics.serviceMonitor.additionalLabels }}
+    {{ toYaml .Values.controller.metrics.serviceMonitor.additionalLabels | nindent 4 }}
+    {{- end }}
+spec:
+  endpoints:
+    - path: /metrics
+      port: http
+      scheme: http
+      interval: {{ .Values.controller.metrics.serviceMonitor.interval }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ template "akv2k8s.controller.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

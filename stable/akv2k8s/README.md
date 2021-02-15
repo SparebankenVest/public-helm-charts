@@ -2,7 +2,7 @@
 
 A Helm chart that deploys akv2k8s Controller and Env-Injector to Kubernetes
 
-![Version: 2.0.0-beta.47](https://img.shields.io/badge/Version-2.0.0--beta.47-informational?style=flat-square) ![AppVersion: 1.2.0-beta.42](https://img.shields.io/badge/AppVersion-1.2.0--beta.42-informational?style=flat-square)
+![Version: 2.0.0-beta.48](https://img.shields.io/badge/Version-2.0.0--beta.48-informational?style=flat-square) ![AppVersion: 1.2.0-beta.42](https://img.shields.io/badge/AppVersion-1.2.0--beta.42-informational?style=flat-square)
 
 This chart will install:
   * a Controller for syncing AKV secrets to Kubernetes secrets
@@ -31,7 +31,7 @@ For the latest release:
 
 ```
 helm repo add spv-charts http://charts.spvapi.no
-helm install akv2k8s spv-charts/akv2k8s --version 2.0.0-beta.47
+helm install akv2k8s spv-charts/akv2k8s --version 2.0.0-beta.48
 ```
 
 ## Configuration
@@ -56,9 +56,12 @@ helm install akv2k8s spv-charts/akv2k8s --version 2.0.0-beta.47
 | controller.keyVaultAuth | string | `"azureCloudConfig"` | Key Vault Auth: azureCloudConfig (aks credentials), environment (custom) |
 | controller.serviceAccount.create | bool | `true` | Create service account for controller |
 | controller.serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
-| controller.metrics.enabled | bool | `false` | Enable prometheus metrics  |
+| controller.service.type | string | `"ClusterIP"` |  |
+| controller.service.externalHttpPort | int | `9000` | External metrics port |
+| controller.service.internalHttpPort | int | `9000` | Internal metrics port (set to larger than 1024 when running without privileges) |
+| controller.metrics.enabled | bool | `false` | Enable prometheus metrics |
 | controller.metrics.port | int | `9000` |  |
-| controller.metrics.serviceMonitor.enabled | bool | `false` | Enable service-monitor  |
+| controller.metrics.serviceMonitor.enabled | bool | `false` | Enable service-monitor |
 | controller.metrics.serviceMonitor.interval | string | `"30s"` | Scrape interval for service-monitor |
 | controller.metrics.serviceMonitor.additionalLabels | object | `{}` | Additional labels for service-monitor |
 | controller.env | object | `{}` | Controller envs |
@@ -91,7 +94,6 @@ helm install akv2k8s spv-charts/akv2k8s --version 2.0.0-beta.47
 | env_injector.securityContext.allowPrivilegeEscalation | bool | `true` | Must be `true` if using aks identity |
 | env_injector.namespaceLabelSelector.label | object | `{"name":"azure-key-vault-env-injection","value":"enabled"}` | The webhook will only trigger i namespaces with this label |
 | env_injector.dockerImageInspection.timeout | int | `20` | Timeout in seconds |
-| env_injector.service.name | string | `"azure-keyvault-secrets-webhook"` | Webhook service name |
 | env_injector.service.type | string | `"ClusterIP"` |  |
 | env_injector.service.externalTlsPort | int | `443` | External webhook and health tls port |
 | env_injector.service.internalTlsPort | int | `8443` | Internal webhook and health tls port (set to larger than 1024 when running without privileges) |
