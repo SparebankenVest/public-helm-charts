@@ -1,4 +1,4 @@
-{{- if .Values.addAzurePodIdentityException }}
+{{- if and .Values.controller.enabled .Values.addAzurePodIdentityException }}
 apiVersion: "aadpodidentity.k8s.io/v1"
 kind: AzurePodIdentityException
 metadata:

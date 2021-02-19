@@ -9,6 +9,20 @@ global:
   # -- Sets klog log format text or json
   logFormat: text
 
+  # -- azureCloudConfig (aks credentials) or environment (custom)
+  keyVaultAuth: azureCloudConfig
+  
+  metrics:
+    # -- Enable prometheus metrics
+    enabled: false
+    serviceMonitor:
+      # -- Enable service-monitor
+      enabled: false
+      # -- Scrape interval for service-monitor
+      interval: 30s
+      # -- Additional labels for service-monitor
+      additionalLabels: {}
+
 rbac:
   # -- Specifies whether RBAC resources should be created
   create: true
@@ -39,8 +53,8 @@ controller:
   # -- Override global log format text or json
   logFormat: # text or json
 
-  # -- Key Vault Auth: azureCloudConfig (aks credentials), environment (custom)
-  keyVaultAuth: azureCloudConfig
+  # -- Override global - azureCloudConfig (aks credentials), environment (custom)
+  keyVaultAuth: 
 
   serviceAccount:
     # -- Create service account for controller
@@ -56,17 +70,17 @@ controller:
     # -- Internal metrics port (set to larger than 1024 when running without privileges)
     internalHttpPort: 9000
 
+  # -- Override metrics settings from global.metrics
   metrics:
     # -- Enable prometheus metrics
-    enabled: false
-    port: 9000
+    enabled: # true/false
     serviceMonitor:
       # -- Enable service-monitor
-      enabled: false
+      enabled: # true/false
       # -- Scrape interval for service-monitor
-      interval: 30s
+      interval: # e.g. 30s
       # -- Additional labels for service-monitor
-      additionalLabels: {}
+      additionalLabels: 
 
   # -- Controller envs
   env: {}
@@ -106,8 +120,9 @@ env_injector:
   enabled: true
   name: env-injector
 
-  # -- Key Vault Auth: azureCloudConfig (aks credentials), environment (custom)
-  keyVaultAuth: cloudConfig
+  # -- Override global - azureCloudConfig (aks credentials) or environment (custom)
+  keyVaultAuth: 
+
   # -- Set to false to provide azure key vault credentials locally (through e.g. env vars) in each pod
   authService: true
 
@@ -186,16 +201,17 @@ env_injector:
     # -- Internal auth service mtls port (set to larger than 1024 when running without privileges)
     internalMtlsPort: 9443
 
+  # -- Override metrics settings from global.metrics
   metrics:
-    # -- Enable prometheus metrics for env-injector
-    enabled: false
+    # -- Enable prometheus metrics
+    enabled: # true/false
     serviceMonitor:
-      # -- Enable service-monitor for env-injector
-      enabled: false
+      # -- Enable service-monitor
+      enabled: # true/false
       # -- Scrape interval for service-monitor
-      interval: 30s
+      interval: # e.g. 30s
       # -- Additional labels for service-monitor
-      additionalLabels: {}
+      additionalLabels: 
 
   serviceAccount:
     # -- Create service account for env-injector

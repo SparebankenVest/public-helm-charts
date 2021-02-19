@@ -1,5 +1,8 @@
+{{- if .Values.controller.enabled -}}
 {{- $dot := . }}
----
+{{- $keyVaultAuth := default .Values.global.keyVaultAuth .Values.controller.keyVaultAuth }}
+{{- $useCloudConfig := eq $keyVaultAuth "azureCloudConfig" }}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -30,9 +33,9 @@ spec:
         imagePullPolicy: {{ .Values.controller.image.pullPolicy }}
         env:
         - name: AUTH_TYPE
-          value: {{ .Values.controller.keyVaultAuth | quote }}
+          value: {{ $keyVaultAuth }}
         - name: METRICS_ENABLED
-          value: {{ .Values.controller.metrics.enabled | quote }}
+          value: {{ default .Values.global.metrics.enabled .Values.controller.metrics.enabled | quote }}
         - name: METRICS_PORT
           value: {{ .Values.controller.service.internalHttpPort | quote }}
         {{- range $key, $value := .Values.global.env }}
@@ -61,9 +64,9 @@ spec:
         resources:
           {{ toYaml .Values.controller.resources | nindent 10 }}
         {{- end }}
-        {{- if or (eq .Values.controller.keyVaultAuth "azureCloudConfig") .Values.controller.extraVolumeMounts }}
+        {{- if or $useCloudConfig .Values.controller.extraVolumeMounts }}
         volumeMounts:
-          {{- if eq .Values.controller.keyVaultAuth "azureCloudConfig" }}
+          {{- if $useCloudConfig }}
           - name: azure-config
             mountPath: "{{ .Values.cloudConfig }}"
             readOnly: true
@@ -72,9 +75,9 @@ spec:
           {{- toYaml .Values.controller.extraVolumeMounts | nindent 10 }}
           {{- end }}
         {{- end }}
-      {{- if or (eq .Values.controller.keyVaultAuth "azureCloudConfig") .Values.controller.extraVolumeMounts .Values.controller.extraVolumes }}
+      {{- if or $useCloudConfig .Values.controller.extraVolumes }}
       volumes:
-      {{- if eq .Values.controller.keyVaultAuth "azureCloudConfig" }}
+      {{- if $useCloudConfig }}
       - name: azure-config
         hostPath:
           path: "{{ .Values.cloudConfig }}"
@@ -100,3 +103,4 @@ spec:
       affinity:
         {{ toYaml .Values.controller.affinity | nindent 8 }}
       {{- end }}
+{{- end }}

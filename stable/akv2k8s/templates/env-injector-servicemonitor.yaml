@@ -1,21 +1,28 @@
-{{- if and .Values.env_injector.metrics.enabled .Values.env_injector.metrics.serviceMonitor.enabled -}}
+{{- if .Values.env_injector.enabled -}}
+{{- $metricsEnabled := default .Values.global.metrics.enabled .Values.env_injector.metrics.enabled }}
+{{- $serviceMonEnabled := default .Values.global.metrics.serviceMonitor.enabled .Values.env_injector.metrics.serviceMonitor.enabled }}
+{{- $interval := default .Values.global.metrics.serviceMonitor.interval .Values.env_injector.metrics.serviceMonitor.interval}}
+{{- $labels := default .Values.global.metrics.serviceMonitor.additionalLabels .Values.env_injector.metrics.serviceMonitor.additionalLabels}}
+
+{{- if and $metricsEnabled $serviceMonEnabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}
   labels:
     {{- include "akv2k8s.labels" . | nindent 4 }}
-    {{- if .Values.env_injector.metrics.serviceMonitor.additionalLabels }}
-    {{ toYaml .Values.env_injector.metrics.serviceMonitor.additionalLabels | nindent 4 }}
+    {{- if $labels }}
+    {{ toYaml $labels | nindent 4 }}
     {{- end }}
 spec:
   endpoints:
     - path: /metrics
       port: http
       scheme: http
-      interval: {{ .Values.env_injector.metrics.serviceMonitor.interval }}
+      interval: {{ $interval }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ template "akv2k8s.envinjector.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
 {{- end }}

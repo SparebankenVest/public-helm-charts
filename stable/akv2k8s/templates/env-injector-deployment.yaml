@@ -1,5 +1,8 @@
 {{- if .Values.env_injector.enabled -}}
 {{- $dot := . }}
+{{- $keyVaultAuth := default .Values.global.keyVaultAuth .Values.env_injector.keyVaultAuth }}
+{{- $useCloudConfig := eq $keyVaultAuth "azureCloudConfig" }}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -50,6 +53,8 @@ spec:
             value: {{ .Values.env_injector.service.internalMtlsPort | quote }}
           - name: MTLS_PORT_EXTERNAL
             value: {{ .Values.env_injector.service.externalMtlsPort | quote }}
+          - name: MTLS_PORT
+            value: {{ .Values.env_injector.service.internalMtlsPort | quote }}
           - name: RUNNING_INSIDE_AZURE_AKS
             value: {{ .Values.runningInsideAzureAks | quote }}
           - name: TLS_CERT_DIR
@@ -61,15 +66,15 @@ spec:
           - name: WEBHOOK_AUTH_SERVICE
             value: {{ template "akv2k8s.envinjector.fullname" . }}
           - name: AUTH_TYPE
-            value: {{ .Values.env_injector.keyVaultAuth | quote }}
+            value: {{ $keyVaultAuth }}
           - name: USE_AUTH_SERVICE
-            value: {{ .Values.env_injector.authService | quote }}
+            value: {{ template "envinjector.useAuthService" . }}
           - name: AZUREKEYVAULT_ENV_IMAGE
             value: {{ .Values.env_injector.envImage.repository }}:{{ .Values.env_injector.envImage.tag }}
           - name: DOCKER_IMAGE_INSPECTION_TIMEOUT
             value: {{ .Values.env_injector.dockerImageInspection.timeout | quote }}
           - name: METRICS_ENABLED
-            value: {{ .Values.env_injector.metrics.enabled | quote }}
+            value: {{ default .Values.global.metrics.enabled .Values.env_injector.metrics.enabled | quote }}
           {{- range $key, $value := .Values.global.env }}
           - name: {{ $key }}
             valueFrom:
@@ -101,7 +106,7 @@ spec:
             name: serving-cert
           - mountPath: /var/ca-cert
             name: ca-cert
-          {{- if eq .Values.env_injector.keyVaultAuth "cloudConfig" }}
+          {{- if $useCloudConfig }}
           - mountPath: "{{ .Values.cloudConfig }}"
             name: azureconf
             readOnly: true
@@ -128,7 +133,7 @@ spec:
           defaultMode: 420
           secretName: {{ template "envinjector.rootCACertificate" . }}
       {{- end }}
-      {{- if eq .Values.env_injector.keyVaultAuth "cloudConfig" }}
+      {{- if $useCloudConfig }}
       - name: azureconf
         hostPath:
           path: "{{ .Values.cloudConfig }}"

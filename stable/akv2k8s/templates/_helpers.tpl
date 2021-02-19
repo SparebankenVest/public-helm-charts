@@ -117,6 +117,15 @@ Create the name of the service account to use
 {{- default .Values.global.logFormat .Values.env_injector.logFormat | lower -}}
 {{- end -}}
 
+{{- define "envinjector.useAuthService" -}}
+{{- $auth := default .Values.global.keyVaultAuth .Values.env_injector.keyVaultAuth -}}
+{{- $useCloudConfig := eq $auth "azureCloudConfig" -}}
+{{- if and $useCloudConfig (not .Values.env_injector.authService) -}}
+{{- fail "When env_injector.keyVaultAuth is azureCloudConfig, env_injector.authService must be true" -}}
+{{- end -}}
+{{- .Values.env_injector.authService | quote -}}
+{{- end -}}
+
 {{/*
 Create the name of the service account to use
 */}}
