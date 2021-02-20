@@ -1,4 +1,4 @@
-# Default values
+# -- Name of Helm installation
 name: akv2k8s
 
 global:
@@ -13,10 +13,10 @@ global:
   keyVaultAuth: azureCloudConfig
   
   metrics:
-    # -- Enable prometheus metrics
+    # -- (bool) Enable prometheus metrics
     enabled: false
     serviceMonitor:
-      # -- Enable service-monitor
+      # -- (bool) Enable service-monitor
       enabled: false
       # -- Scrape interval for service-monitor
       interval: 30s
@@ -37,6 +37,7 @@ cloudConfig: /etc/kubernetes/azure.json
 controller:
   # -- Name
   name: controller
+  # -- Whether to install the controller
   enabled: true
 
   image:
@@ -70,16 +71,16 @@ controller:
     # -- Internal metrics port (set to larger than 1024 when running without privileges)
     internalHttpPort: 9000
 
-  # -- Override metrics settings from global.metrics
+  # Override metrics settings from global.metrics
   metrics:
-    # -- Enable prometheus metrics
+    # -- (bool) Override global.metrics.enabled
     enabled: # true/false
     serviceMonitor:
-      # -- Enable service-monitor
+      # -- (bool) Override global.metrics.serviceMonitor.enabled
       enabled: # true/false
-      # -- Scrape interval for service-monitor
+      # -- (string) Override global.metrics.serviceMonitor.interval
       interval: # e.g. 30s
-      # -- Additional labels for service-monitor
+      # -- (object) Override global.metrics.serviceMonitor.additionalLabels
       additionalLabels: 
 
   # -- Controller envs
@@ -116,8 +117,9 @@ controller:
     #     secretName: akv2k8s-certificate
 
 env_injector:
-  # -- If the env-injector will be installed
+  # -- Whether to install the env-injector
   enabled: true
+  # -- Name
   name: env-injector
 
   # -- Override global - azureCloudConfig (aks credentials) or environment (custom)
@@ -177,9 +179,10 @@ env_injector:
   #   runAsUser: 65534
 
   namespaceLabelSelector:
-    # -- The webhook will only trigger i namespaces with this label
     label:
+      # -- Webhook will only trigger i namespaces with this label
       name: azure-key-vault-env-injection
+      # -- Whether the namespace selector is enabled 
       value: enabled
 
   dockerImageInspection:
@@ -201,16 +204,16 @@ env_injector:
     # -- Internal auth service mtls port (set to larger than 1024 when running without privileges)
     internalMtlsPort: 9443
 
-  # -- Override metrics settings from global.metrics
+  # Override metrics settings from global.metrics
   metrics:
-    # -- Enable prometheus metrics
+    # -- (bool) Override global.metrics.enabled
     enabled: # true/false
     serviceMonitor:
-      # -- Enable service-monitor
+      # -- (bool) Override global.metrics.serviceMonitor.enabled
       enabled: # true/false
-      # -- Scrape interval for service-monitor
+      # -- (string) Override global.metrics.serviceMonitor.interval
       interval: # e.g. 30s
-      # -- Additional labels for service-monitor
+      # -- (object) Override global.metrics.serviceMonitor.additionalLabels
       additionalLabels: 
 
   serviceAccount:
@@ -233,19 +236,24 @@ env_injector:
   # -- Additional pods labels
   podLabels: {}
 
-  # -- See `kubectl explain poddisruptionbudget.spec` for more
+  # See `kubectl explain poddisruptionbudget.spec` for more
   # ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
   podDisruptionBudget:
+    # -- Enable pod disruption budget
     enabled: true
+    # -- Min available pods at any time
     minAvailable: 1
-  #  maxUnavailable: 1
+    # -- Max unavailable pods at any time
+    maxUnavailable:
 
   # -- What will happen if the webhook fails? Ignore (continue) or Fail (prevent Pod from starting)?
   failurePolicy: Fail
 
-  # -- https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-namespaceselector
+  # https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-namespaceselector
   namespaceSelector:
+    # Ignore namespaces 
     matchExpressions:
+    # -- Ignore kube-system namespace
     - key: name
       operator: NotIn
       values:
@@ -253,11 +261,11 @@ env_injector:
 
   # -- Resources for env injector
   resources: {}
-  # -- Node selector for env injector and ca-bundle
+  # -- Node selector 
   nodeSelector: {}
-  # -- Tolerations for env injector and ca-bundle
+  # -- Tolerations 
   tolerations: []
-  # -- Affinities for env injector and ca-bundle
+  # -- Affinities 
   affinity: {}
 
   # -- Additional volumeMounts to the env-injector main container

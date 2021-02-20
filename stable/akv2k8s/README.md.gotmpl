@@ -10,28 +10,38 @@ This chart will install:
 
 For more information and installation instructions see the official documentation at https://akv2k8s.io
 
-## The AzureKeyVaultSecret CRD
+## Helm Chart and akv2k8s Versions
 
-Helm 3 doesn't upgrade the CRD, only applies on the first install.
+| Helm Chart | Controller | Env Injector | CA Bundle Controller | Env Injector Sidecar |
+|-----|------|---------|-------| -------------|
+| `{{ template "chart.version" . }}` | `{{ template ".Values.controller.image.tag" . }}` | `1.2.0-beta.xx` | Removed | `1.2.0-beta.xx` |
+| `1.1.28` | `1.1.0` | `1.1.0` | `1.1.0` | `1.1.1` |
 
-To ensure correct version of the AzureKeyVaultSecret CRD when upgrading, run the following command:
 
-```
-kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vault-to-kubernetes/controller-{{ template "chart.appVersion" . }}/crds/AzureKeyVaultSecret.yaml
-```
+## Installation
 
 To install the latest stable chart with the release name `{{ template "chart.name" . }}`:
 
-```
+```bash
 helm repo add spv-charts http://charts.spvapi.no
 helm install {{ template "chart.name" . }} spv-charts/{{ template "chart.name" . }}
 ```
 
-For the latest release:
+For the latest beta:
 
-```
+```bash
 helm repo add spv-charts http://charts.spvapi.no
 helm install {{ template "chart.name" . }} spv-charts/{{ template "chart.name" . }} --version {{ template "chart.version" . }}
+```
+
+## The AzureKeyVaultSecret CRD
+
+Helm 3 doesn't upgrade CRDs, it only adds on the first install.
+
+To ensure correct version of the AzureKeyVaultSecret CRD when upgrading, apply the CRD manually using the following command:
+
+```bash
+kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vault-to-kubernetes/master/crds/AzureKeyVaultSecret.yaml
 ```
 
 ## Configuration

@@ -2,7 +2,7 @@
 
 A Helm chart that deploys akv2k8s Controller and Env-Injector to Kubernetes
 
-![Version: 2.0.0-beta.48](https://img.shields.io/badge/Version-2.0.0--beta.48-informational?style=flat-square) ![AppVersion: 1.2.0-beta.42](https://img.shields.io/badge/AppVersion-1.2.0--beta.42-informational?style=flat-square)
+![Version: 2.0.0-beta.49](https://img.shields.io/badge/Version-2.0.0--beta.49-informational?style=flat-square) ![AppVersion: 1.2.0-beta.42](https://img.shields.io/badge/AppVersion-1.2.0--beta.42-informational?style=flat-square)
 
 This chart will install:
   * a Controller for syncing AKV secrets to Kubernetes secrets
@@ -10,112 +10,8 @@ This chart will install:
 
 For more information and installation instructions see the official documentation at https://akv2k8s.io
 
-## The AzureKeyVaultSecret CRD
+## Helm Chart and akv2k8s Versions
 
-Helm 3 doesn't upgrade the CRD, only applies on the first install.
-
-To ensure correct version of the AzureKeyVaultSecret CRD when upgrading, run the following command:
-
-```
-kubectl apply -f https://raw.githubusercontent.com/sparebankenvest/azure-key-vault-to-kubernetes/controller-1.2.0-beta.42/crds/AzureKeyVaultSecret.yaml
-```
-
-To install the latest stable chart with the release name `akv2k8s`:
-
-```
-helm repo add spv-charts http://charts.spvapi.no
-helm install akv2k8s spv-charts/akv2k8s
-```
-
-For the latest release:
-
-```
-helm repo add spv-charts http://charts.spvapi.no
-helm install akv2k8s spv-charts/akv2k8s --version 2.0.0-beta.48
-```
-
-## Configuration
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| name | string | `"akv2k8s"` |  |
-| global.env | object | `{}` | Env vars to be used with all enabled pods, eg. for akv credentials |
-| global.logLevel | string | `"info"` | Sets klog log level info=2, debug=4, trace=6 |
-| global.logFormat | string | `"text"` | Sets klog log format text or json |
-| rbac.create | bool | `true` | Specifies whether RBAC resources should be created |
-| rbac.podSecurityPolicies | object | `{}` |  |
-| addAzurePodIdentityException | bool | `false` | See https://github.com/Azure/aad-pod-identity/blob/master/docs/readmes/README.app-exception.md |
-| cloudConfig | string | `"/etc/kubernetes/azure.json"` | Path to cloud config on node (host path) |
-| controller.name | string | `"controller"` | Name |
-| controller.enabled | bool | `true` |  |
-| controller.image.repository | string | `"spvest/azure-keyvault-controller"` | Image repository that contains the controller image |
-| controller.image.tag | string | `"1.2.0-beta.47"` | Image tag |
-| controller.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for controller |
-| controller.logLevel | string | `nil` | Override global log level info=2, debug=4, trace=6 |
-| controller.logFormat | string | `nil` | Override global log format text or json |
-| controller.keyVaultAuth | string | `"azureCloudConfig"` | Key Vault Auth: azureCloudConfig (aks credentials), environment (custom) |
-| controller.serviceAccount.create | bool | `true` | Create service account for controller |
-| controller.serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
-| controller.service.type | string | `"ClusterIP"` |  |
-| controller.service.externalHttpPort | int | `9000` | External metrics port |
-| controller.service.internalHttpPort | int | `9000` | Internal metrics port (set to larger than 1024 when running without privileges) |
-| controller.metrics.enabled | bool | `false` | Enable prometheus metrics |
-| controller.metrics.port | int | `9000` |  |
-| controller.metrics.serviceMonitor.enabled | bool | `false` | Enable service-monitor |
-| controller.metrics.serviceMonitor.interval | string | `"30s"` | Scrape interval for service-monitor |
-| controller.metrics.serviceMonitor.additionalLabels | object | `{}` | Additional labels for service-monitor |
-| controller.env | object | `{}` | Controller envs |
-| controller.labels | object | `{}` | Controller labels |
-| controller.podLabels | object | `{}` | Controller pod labels |
-| controller.resources | object | `{}` | Controller resources |
-| controller.nodeSelector | object | `{}` | Node selector for controller |
-| controller.tolerations | list | `[]` | Tolerations for controller |
-| controller.affinity | object | `{}` | Affinities for controller |
-| controller.extraVolumeMounts | list | `[]` | Additional volumeMounts to the controller main container |
-| controller.extraVolumes | list | `[]` | Additional volumes to the controller pod |
-| env_injector.enabled | bool | `true` | If the env-injector will be installed |
-| env_injector.name | string | `"env-injector"` |  |
-| env_injector.keyVaultAuth | string | `"cloudConfig"` | Key Vault Auth: azureCloudConfig (aks credentials), environment (custom) |
-| env_injector.authService | bool | `true` | Set to false to provide azure key vault credentials locally (through e.g. env vars) in each pod |
-| env_injector.image.repository | string | `"spvest/azure-keyvault-webhook"` | Image repository that contains the env-injector image |
-| env_injector.image.tag | string | `"1.2.0-beta.41"` | Image tag |
-| env_injector.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for env-injector |
-| env_injector.replicaCount | int | `2` | Number of env-injector replicas |
-| env_injector.envImage.repository | string | `"spvest/azure-keyvault-env"` | Image repository that contains the env image |
-| env_injector.envImage.tag | string | `"1.2.0-beta.22"` | Image tag |
-| env_injector.envImage.pullPolicy | string | `"IfNotPresent"` | Image pull policy for env-injector |
-| env_injector.logLevel | string | `nil` | Override global log level info=2, debug=4, trace=6 |
-| env_injector.logFormat | string | `nil` | Override global log format text or json |
-| env_injector.certificate.useCertManager | bool | `false` | Use cert-manager to handle webhook certificates, if `false` and `env_injector.webhook.certificate.custom.enabled=false` certificates and CA is generated by Helm |
-| env_injector.certificate.custom.enabled | bool | `false` | Use custom cert to handle webhook certificates, if `false` and `env_injector.webhook.certificate.useCertManager=false` certificates and CA is generated by Helm. |
-| env_injector.certificate.custom.server.tls.crt | string | `nil` | Custom TLS certificate, required when `env_injector.certificate.custom.enabled=true` |
-| env_injector.certificate.custom.server.tls.key | string | `nil` | Custom TLS key, required when `env_injector.certificate.custom.enabled=true` |
-| env_injector.certificate.custom.ca.crt | string | `nil` | Custom CA certificate, required when `env_injector.certificate.custom.enabled=true` |
-| env_injector.securityContext.allowPrivilegeEscalation | bool | `true` | Must be `true` if using aks identity |
-| env_injector.namespaceLabelSelector.label | object | `{"name":"azure-key-vault-env-injection","value":"enabled"}` | The webhook will only trigger i namespaces with this label |
-| env_injector.dockerImageInspection.timeout | int | `20` | Timeout in seconds |
-| env_injector.service.type | string | `"ClusterIP"` |  |
-| env_injector.service.externalTlsPort | int | `443` | External webhook and health tls port |
-| env_injector.service.internalTlsPort | int | `8443` | Internal webhook and health tls port (set to larger than 1024 when running without privileges) |
-| env_injector.service.externalHttpPort | int | `80` | External metrics and health port |
-| env_injector.service.internalHttpPort | int | `8080` | Internal metrics and health port (set to larger than 1024 when running without privileges) |
-| env_injector.service.externalMtlsPort | int | `9443` | External auth service mtls port |
-| env_injector.service.internalMtlsPort | int | `9443` | Internal auth service mtls port (set to larger than 1024 when running without privileges) |
-| env_injector.metrics.enabled | bool | `false` | Enable prometheus metrics for env-injector |
-| env_injector.metrics.serviceMonitor.enabled | bool | `false` | Enable service-monitor for env-injector |
-| env_injector.metrics.serviceMonitor.interval | string | `"30s"` | Scrape interval for service-monitor |
-| env_injector.metrics.serviceMonitor.additionalLabels | object | `{}` | Additional labels for service-monitor |
-| env_injector.serviceAccount.create | bool | `true` | Create service account for env-injector |
-| env_injector.serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
-| env_injector.env | object | `{}` | Additional env vars to send to env-injector pods |
-| env_injector.labels | object | `{}` | Additional labels |
-| env_injector.podLabels | object | `{}` | Additional pods labels |
-| env_injector.podDisruptionBudget | object | `{"enabled":true,"minAvailable":1}` | See `kubectl explain poddisruptionbudget.spec` for more ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/ |
-| env_injector.failurePolicy | string | `"Fail"` | What will happen if the webhook fails? Ignore (continue) or Fail (prevent Pod from starting)? |
-| env_injector.namespaceSelector | object | `{"matchExpressions":[{"key":"name","operator":"NotIn","values":["kube-system"]}]}` | https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-namespaceselector |
-| env_injector.resources | object | `{}` | Resources for env injector |
-| env_injector.nodeSelector | object | `{}` | Node selector for env injector and ca-bundle |
-| env_injector.tolerations | list | `[]` | Tolerations for env injector and ca-bundle |
-| env_injector.affinity | object | `{}` | Affinities for env injector and ca-bundle |
-| env_injector.extraVolumeMounts | list | `[]` | Additional volumeMounts to the env-injector main container |
-| env_injector.extraVolumes | list | `[]` | Additional volumes to the env-injector pod |
+| Helm Chart | Controller | Env Injector | CA Bundle Controller | Env Injector Sidecar |
+|-----|------|---------|-------| -------------|
+| `2.0.0-beta.49` | `
