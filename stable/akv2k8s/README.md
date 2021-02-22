@@ -2,7 +2,7 @@
 
 A Helm chart that deploys akv2k8s Controller and Env-Injector to Kubernetes
 
-![Version: 2.0.0-beta.52](https://img.shields.io/badge/Version-2.0.0--beta.52-informational?style=flat-square) ![AppVersion: 1.2.0-beta.42](https://img.shields.io/badge/AppVersion-1.2.0--beta.42-informational?style=flat-square)
+![Version: 2.0.0-beta.53](https://img.shields.io/badge/Version-2.0.0--beta.53-informational?style=flat-square) ![AppVersion: 1.2.0-beta.42](https://img.shields.io/badge/AppVersion-1.2.0--beta.42-informational?style=flat-square)
 
 This chart will install:
   * a Controller for syncing AKV secrets to Kubernetes secrets
@@ -14,7 +14,7 @@ For more information and installation instructions see the official documentatio
 
 | Helm Chart | Controller | Env Injector | CA Bundle Controller | Env Injector Sidecar |
 |-----|------|---------|-------| -------------|
-| `2.0.0-beta.52` | `1.2.0-beta.xx` | `1.2.0-beta.xx` | Removed | `1.2.0-beta.xx` |
+| `2.0.0-beta.53` | `1.2.0-beta.xx` | `1.2.0-beta.xx` | Removed | `1.2.0-beta.xx` |
 | `1.1.28` | `1.1.0` | `1.1.0` | `1.1.0` | `1.1.1` |
 
 ## Installation
@@ -30,7 +30,7 @@ For the latest beta:
 
 ```bash
 helm repo add spv-charts http://charts.spvapi.no
-helm install akv2k8s spv-charts/akv2k8s --version 2.0.0-beta.52
+helm install akv2k8s spv-charts/akv2k8s --version 2.0.0-beta.53
 ```
 
 ## The AzureKeyVaultSecret CRD
@@ -63,7 +63,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | controller.name | string | `"controller"` | Name |
 | controller.enabled | bool | `true` | Whether to install the controller |
 | controller.image.repository | string | `"spvest/azure-keyvault-controller"` | Image repository that contains the controller image |
-| controller.image.tag | string | `"1.2.0-beta.49"` | Image tag |
+| controller.image.tag | string | `"1.2.0-beta.47"` | Image tag |
 | controller.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for controller |
 | controller.logLevel | string | `nil` | Override global log level info=2, debug=4, trace=6 |
 | controller.logFormat | string | `nil` | Override global log format text or json |
@@ -91,7 +91,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | env_injector.keyVaultAuth | string | `nil` | Override global - azureCloudConfig (aks credentials) or environment (custom) |
 | env_injector.authService | bool | `true` | Set to false to provide azure key vault credentials locally (through e.g. env vars) in each pod |
 | env_injector.image.repository | string | `"spvest/azure-keyvault-webhook"` | Image repository that contains the env-injector image |
-| env_injector.image.tag | string | `"1.2.0-beta.47"` | Image tag |
+| env_injector.image.tag | string | `"1.2.0-beta.49"` | Image tag |
 | env_injector.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for env-injector |
 | env_injector.replicaCount | int | `2` | Number of env-injector replicas |
 | env_injector.envImage.repository | string | `"spvest/azure-keyvault-env"` | Image repository that contains the env image |
