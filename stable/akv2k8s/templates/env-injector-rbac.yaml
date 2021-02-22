@@ -30,6 +30,12 @@ rules:
   - namespaces # in order to authorize incoming auth requests
   verbs:
   - get
+- apiGroups:
+  - ""
+  resources:
+  - serviceaccounts # in order to read 
+  verbs:
+  - get
 ---
 # Create a akv2k8s reader cluster role
 apiVersion: rbac.authorization.k8s.io/v1
