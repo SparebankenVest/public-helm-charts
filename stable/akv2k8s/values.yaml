@@ -132,7 +132,7 @@ env_injector:
     # -- Image repository that contains the env-injector image
     repository: spvest/azure-keyvault-webhook
     # -- Image tag
-    tag: 1.2.0-beta.49
+    tag: 1.2.0-beta.54
     # -- Image pull policy for env-injector
     pullPolicy: IfNotPresent
 

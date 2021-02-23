@@ -36,7 +36,6 @@ spec:
           imagePullPolicy: {{ .Values.env_injector.image.pullPolicy }}
           args:
             - "--cloudconfig={{ .Values.cloudConfig }}"
-            - "--azure-container-registry-config={{ .Values.cloudConfig }}"
             - "--version={{ .Values.env_injector.image.tag }}"
             - "--versionenvimage={{ .Values.env_injector.envImage.tag }}"
             - "--v={{ template "envinjector.logLevel" . }}"
