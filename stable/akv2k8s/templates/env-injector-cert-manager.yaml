@@ -25,6 +25,11 @@ metadata:
 spec:
   secretName: {{ include "envinjector.rootCACertificate" . }}
   duration: 43800h # 5y
+  usages:  
+  - digital signature
+  - key encipherment
+  - server auth
+  - client auth
   issuerRef:
     name: {{ include "envinjector.selfSignedIssuer" . }}
   commonName: "ca.azure-key-vault-to-kubernetes.cert-manager"
