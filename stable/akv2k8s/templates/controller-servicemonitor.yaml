@@ -11,6 +11,7 @@ metadata:
   name: {{ template "akv2k8s.controller.fullname" . }}
   labels:
     {{- include "akv2k8s.labels" . | nindent 4 }}
+    {{- include "akv2k8s.components.controller" . | nindent 4 }}
     {{- if $labels }}
     {{ toYaml $labels | nindent 4 }}
     {{- end }}
@@ -22,7 +23,7 @@ spec:
       interval: {{ $interval }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ template "akv2k8s.controller.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "akv2k8s.selectors" . | nindent 6 }}
+      {{- include "akv2k8s.components.controller" . | nindent 6 }}
 {{- end }}
 {{- end }}

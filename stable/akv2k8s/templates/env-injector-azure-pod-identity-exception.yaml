@@ -1,9 +1,9 @@
 {{- if and .Values.env_injector.enabled .Values.addAzurePodIdentityException }}
-apiVersion: "aadpodidentity.k8s.io/v1"
+apiVersion: aadpodidentity.k8s.io/v1
 kind: AzurePodIdentityException
 metadata:
   name: akv2k8s-env-injector-exception
-  namespace: akv2k8s # change if akv2k8s is installed in a different ns
+  #namespace: akv2k8s # change if akv2k8s is installed in a different ns
   labels:
     {{- include "akv2k8s.labels" . | nindent 4 }}
 spec:

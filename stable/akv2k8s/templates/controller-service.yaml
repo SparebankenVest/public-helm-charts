@@ -5,6 +5,7 @@ metadata:
   name: {{ template "akv2k8s.controller.fullname" . }}
   labels:
     {{- include "akv2k8s.labels" . | nindent 4 }}
+    {{- include "akv2k8s.components.controller" . | nindent 4 }}
 spec:
   type: {{ .Values.controller.service.type }}
   ports:

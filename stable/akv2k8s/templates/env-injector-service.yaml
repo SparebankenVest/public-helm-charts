@@ -5,6 +5,7 @@ metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}
   labels:
     {{- include "akv2k8s.labels" . | nindent 4 }}
+    {{- include "akv2k8s.components.webhook" . | nindent 4 }}
 spec:
   type: {{ .Values.env_injector.service.type }}
   ports:
