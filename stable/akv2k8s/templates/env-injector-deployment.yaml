@@ -68,7 +68,7 @@ spec:
           - name: AUTH_TYPE
             value: {{ $keyVaultAuth }}
           - name: USE_AUTH_SERVICE
-            value: {{ template "envinjector.useAuthService" . }}
+            value: {{ .Values.env_injector.authService | quote }}
           - name: AZUREKEYVAULT_ENV_IMAGE
             value: {{ .Values.env_injector.envImage.repository }}:{{ .Values.env_injector.envImage.tag }}
           - name: DOCKER_IMAGE_INSPECTION_TIMEOUT
@@ -104,8 +104,10 @@ spec:
           volumeMounts:
           - mountPath: /var/serving-cert
             name: serving-cert
+          {{- if .Values.env_injector.authService }}
           - mountPath: /var/ca-cert
             name: ca-cert
+          {{- end }}
           {{- if $useCloudConfig }}
           - mountPath: "{{ .Values.cloudConfig }}"
             name: azureconf
