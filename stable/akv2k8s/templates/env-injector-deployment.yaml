@@ -108,7 +108,7 @@ spec:
           - mountPath: /var/ca-cert
             name: ca-cert
           {{- end }}
-          {{- if $useCloudConfig }}
+          {{- if and $useCloudConfig .Values.env_injector.authService }}
           - mountPath: "{{ .Values.cloudConfig }}"
             name: azureconf
             readOnly: true
@@ -135,7 +135,7 @@ spec:
           defaultMode: 420
           secretName: {{ template "envinjector.rootCACertificate" . }}
       {{- end }}
-      {{- if $useCloudConfig }}
+      {{- if and $useCloudConfig .Values.env_injector.authService }}
       - name: azureconf
         hostPath:
           path: "{{ .Values.cloudConfig }}"
