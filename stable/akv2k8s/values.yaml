@@ -11,7 +11,7 @@ global:
 
   # -- azureCloudConfig (aks credentials) or environment (custom)
   keyVaultAuth: azureCloudConfig
-  
+
   metrics:
     # -- (bool) Enable prometheus metrics
     enabled: false
@@ -55,7 +55,7 @@ controller:
   logFormat: # text or json
 
   # -- Override global - azureCloudConfig (aks credentials), environment (custom)
-  keyVaultAuth: 
+  keyVaultAuth:
 
   serviceAccount:
     # -- Create service account for controller
@@ -63,6 +63,11 @@ controller:
     # -- The name of the ServiceAccount to use.
     # If not set and create is true, a name is generated using the fullname template
     name:
+
+  securityContext:
+    # -- Must be `true` if using aks identity
+    allowPrivilegeEscalation: true
+    #   runAsUser: 65534
 
   service:
     type: ClusterIP
@@ -81,7 +86,7 @@ controller:
       # -- (string) Override global.metrics.serviceMonitor.interval
       interval: # e.g. 30s
       # -- (object) Override global.metrics.serviceMonitor.additionalLabels
-      additionalLabels: 
+      additionalLabels:
 
   # -- Controller envs
   env: {}
@@ -123,7 +128,7 @@ env_injector:
   name: env-injector
 
   # -- Override global - azureCloudConfig (aks credentials) or environment (custom)
-  keyVaultAuth: 
+  keyVaultAuth:
 
   # -- Set to false to provide azure key vault credentials locally (through e.g. env vars) in each pod
   authService: true
@@ -182,7 +187,7 @@ env_injector:
     label:
       # -- Webhook will only trigger i namespaces with this label
       name: azure-key-vault-env-injection
-      # -- Whether the namespace selector is enabled 
+      # -- Whether the namespace selector is enabled
       value: enabled
 
   dockerImageInspection:
@@ -214,7 +219,7 @@ env_injector:
       # -- (string) Override global.metrics.serviceMonitor.interval
       interval: # e.g. 30s
       # -- (object) Override global.metrics.serviceMonitor.additionalLabels
-      additionalLabels: 
+      additionalLabels:
 
   serviceAccount:
     # -- Create service account for env-injector
@@ -251,7 +256,7 @@ env_injector:
 
   # https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-namespaceselector
   namespaceSelector:
-    # Ignore namespaces 
+    # Ignore namespaces
     matchExpressions:
     # -- Ignore kube-system namespace
     - key: name
@@ -261,11 +266,11 @@ env_injector:
 
   # -- Resources for env injector
   resources: {}
-  # -- Node selector 
+  # -- Node selector
   nodeSelector: {}
-  # -- Tolerations 
+  # -- Tolerations
   tolerations: []
-  # -- Affinities 
+  # -- Affinities
   affinity: {}
 
   # -- Additional volumeMounts to the env-injector main container

@@ -2,7 +2,7 @@
 
 A Helm chart that deploys akv2k8s Controller and Env-Injector to Kubernetes
 
-![Version: 2.0.4](https://img.shields.io/badge/Version-2.0.4-informational?style=flat-square) ![AppVersion: 1.2.2](https://img.shields.io/badge/AppVersion-1.2.2-informational?style=flat-square)
+![Version: 2.0.6](https://img.shields.io/badge/Version-2.0.6-informational?style=flat-square) ![AppVersion: 1.2.2](https://img.shields.io/badge/AppVersion-1.2.2-informational?style=flat-square)
 
 This chart will install:
   * a Controller for syncing AKV secrets to Kubernetes secrets
@@ -31,7 +31,7 @@ For the latest version:
 
 ```bash
 helm repo add spv-charts http://charts.spvapi.no
-helm install akv2k8s spv-charts/akv2k8s --version 2.0.4
+helm install akv2k8s spv-charts/akv2k8s --version 2.0.6
 ```
 
 ## The AzureKeyVaultSecret CRD
@@ -71,6 +71,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | controller.keyVaultAuth | string | `nil` | Override global - azureCloudConfig (aks credentials), environment (custom) |
 | controller.serviceAccount.create | bool | `true` | Create service account for controller |
 | controller.serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
+| controller.securityContext.allowPrivilegeEscalation | bool | `true` | Must be `true` if using aks identity |
 | controller.service.type | string | `"ClusterIP"` |  |
 | controller.service.externalHttpPort | int | `9000` | External metrics port |
 | controller.service.internalHttpPort | int | `9000` | Internal metrics port (set to larger than 1024 when running without privileges) |
@@ -107,7 +108,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | env_injector.certificate.custom.ca.crt | string | `nil` | Custom CA certificate, required when `env_injector.certificate.custom.enabled=true` |
 | env_injector.securityContext.allowPrivilegeEscalation | bool | `true` | Must be `true` if using aks identity |
 | env_injector.namespaceLabelSelector.label.name | string | `"azure-key-vault-env-injection"` | Webhook will only trigger i namespaces with this label |
-| env_injector.namespaceLabelSelector.label.value | string | `"enabled"` | Whether the namespace selector is enabled  |
+| env_injector.namespaceLabelSelector.label.value | string | `"enabled"` | Whether the namespace selector is enabled |
 | env_injector.dockerImageInspection.timeout | int | `20` | Timeout in seconds |
 | env_injector.service.type | string | `"ClusterIP"` |  |
 | env_injector.service.externalTlsPort | int | `443` | External webhook and health tls port |
@@ -131,8 +132,8 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | env_injector.failurePolicy | string | `"Fail"` | What will happen if the webhook fails? Ignore (continue) or Fail (prevent Pod from starting)? |
 | env_injector.namespaceSelector.matchExpressions[0] | object | `{"key":"name","operator":"NotIn","values":["kube-system"]}` | Ignore kube-system namespace |
 | env_injector.resources | object | `{}` | Resources for env injector |
-| env_injector.nodeSelector | object | `{}` | Node selector  |
-| env_injector.tolerations | list | `[]` | Tolerations  |
-| env_injector.affinity | object | `{}` | Affinities  |
+| env_injector.nodeSelector | object | `{}` | Node selector |
+| env_injector.tolerations | list | `[]` | Tolerations |
+| env_injector.affinity | object | `{}` | Affinities |
 | env_injector.extraVolumeMounts | list | `[]` | Additional volumeMounts to the env-injector main container |
 | env_injector.extraVolumes | list | `[]` | Additional volumes to the env-injector pod |

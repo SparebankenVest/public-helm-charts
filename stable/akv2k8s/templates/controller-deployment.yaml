@@ -60,6 +60,10 @@ spec:
         ports:
           - name: http
             containerPort: {{ .Values.controller.service.internalHttpPort }}
+        {{- if .Values.controller.securityContext }}
+        securityContext:
+          {{ toYaml .Values.controller.securityContext | nindent 10 }}
+        {{- end }}
         {{- if .Values.controller.resources }}
         resources:
           {{ toYaml .Values.controller.resources | nindent 10 }}
