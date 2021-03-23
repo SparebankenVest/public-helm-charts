@@ -2,7 +2,7 @@
 
 A Helm chart that deploys akv2k8s Controller and Env-Injector to Kubernetes
 
-![Version: 2.0.7](https://img.shields.io/badge/Version-2.0.7-informational?style=flat-square) ![AppVersion: 1.2.3](https://img.shields.io/badge/AppVersion-1.2.3-informational?style=flat-square)
+![Version: 2.0.8](https://img.shields.io/badge/Version-2.0.8-informational?style=flat-square) ![AppVersion: 1.2.3](https://img.shields.io/badge/AppVersion-1.2.3-informational?style=flat-square)
 
 This chart will install:
   * a Controller for syncing AKV secrets to Kubernetes secrets
@@ -13,10 +13,10 @@ For more information and installation instructions see the official documentatio
 ## Helm Chart and akv2k8s Versions
 
 | Helm Chart | Controller | Env Injector | CA Bundle Controller | Env Injector Sidecar |
-|-----|------|---------|-------| -------------|
-| `2.0.2` | `1.2.0` | `1.2.2` | `removed` | `1.2.1` |
-| `2.0.0` | `1.2.0` | `1.2.0` | `removed` | `1.2.0` |
-| `1.1.28` | `1.1.0` | `1.1.0` | `1.1.0` | `1.1.1` |
+| ---------- | ---------- | ------------ | -------------------- | -------------------- |
+| `2.0.8`    | `1.2.2`    | `1.2.3`      | `removed`            | `1.2.2`              |
+| `2.0.0`    | `1.2.0`    | `1.2.0`      | `removed`            | `1.2.0`              |
+| `1.1.28`   | `1.1.0`    | `1.1.0`      | `1.1.0`              | `1.1.1`              |
 
 ## Installation
 
@@ -31,7 +31,7 @@ For the latest version:
 
 ```bash
 helm repo add spv-charts http://charts.spvapi.no
-helm install akv2k8s spv-charts/akv2k8s --version 2.0.7
+helm install akv2k8s spv-charts/akv2k8s --version 2.0.8
 ```
 
 ## The AzureKeyVaultSecret CRD
@@ -64,7 +64,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | controller.name | string | `"controller"` | Name |
 | controller.enabled | bool | `true` | Whether to install the controller |
 | controller.image.repository | string | `"spvest/azure-keyvault-controller"` | Image repository that contains the controller image |
-| controller.image.tag | string | `"1.2.1"` | Image tag |
+| controller.image.tag | string | `"1.2.2"` | Image tag |
 | controller.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for controller |
 | controller.logLevel | string | `nil` | Override global log level info=2, debug=4, trace=6 |
 | controller.logFormat | string | `nil` | Override global log format text or json |

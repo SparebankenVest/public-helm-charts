@@ -44,7 +44,7 @@ controller:
     # -- Image repository that contains the controller image
     repository: spvest/azure-keyvault-controller
     # -- Image tag
-    tag: 1.2.1
+    tag: 1.2.2
     # -- Image pull policy for controller
     pullPolicy: IfNotPresent
 
