@@ -3,7 +3,7 @@ apiVersion: "aadpodidentity.k8s.io/v1"
 kind: AzurePodIdentityException
 metadata:
   name: akv2k8s-controller-exception
-  namespace: akv2k8s # change if akv2k8s is installed in a different ns
+  namespace: {{ .Release.Namespace }}
 spec:
   podLabels:
     {{- include "akv2k8s.selectors" . | nindent 4 }}
