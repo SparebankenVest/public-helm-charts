@@ -40,6 +40,17 @@ spec:
             - "--versionenvimage={{ .Values.env_injector.envImage.tag }}"
             - "--v={{ template "envinjector.logLevel" . }}"
             - "--logging-format={{ template "envinjector.logFormat" . }}"
+          {{- if or .Values.global.envFromSecret .Values.env_injector.envFromSecret }}
+          envFrom:
+            {{- range $secretRef := .Values.env_injector.envFromSecret}}
+            - secretRef:
+                name: {{ $secretRef.name }}
+            {{- end }}
+            {{- range $secretRef := .Values.global.envFromSecret}}
+            - secretRef:
+                name: {{ $secretRef.name }}
+            {{- end }}
+          {{- end }}
           env:
           - name: HTTP_PORT
             value: {{ .Values.env_injector.service.internalHttpPort | quote }}

@@ -4,6 +4,13 @@ name: akv2k8s
 global:
   # -- Env vars to be used with all enabled pods, eg. for akv credentials
   env: {}
+  # -- Reference to secret containing variables to be used with all enabled pods, eg. for akv credentials
+  # -- Expected format:
+  # --
+  # -- envFromSecret:
+  # -- - name: secret-name-1
+  # -- - name: secret-name-2
+  envFromSecret: []
   # -- Sets klog log level info=2, debug=4, trace=6
   logLevel: info
   # -- Sets klog log format text or json
@@ -94,6 +101,14 @@ controller:
   #   AZURE_TENANT_ID: <tenantId>
   #   AZURE_CLIENT_ID: <clientId>
   #   AZURE_CLIENT_SECRET: <clientSecret>
+
+  # -- Reference to secret containing variables to be used with all enabled pods, eg. for akv credentials
+  # -- Expected format:
+  # --
+  # -- envFromSecret:
+  # -- - name: secret-name-1
+  # -- - name: secret-name-2
+  envFromSecret: []
 
   # -- Controller labels
   labels: {}
@@ -234,6 +249,14 @@ env_injector:
   #   AZURE_TENANT_ID: <tenantId>
   #   AZURE_CLIENT_ID: <clientId>
   #   AZURE_CLIENT_SECRET: <clientSecret>
+
+  # -- Reference to secret containing variables to be used with all enabled pods, eg. for akv credentials
+  # -- Expected format:
+  # --
+  # -- envFromSecret:
+  # -- - name: secret-name-1
+  # -- - name: secret-name-2
+  envFromSecret: []
 
   # -- Additional labels
   labels: {}
