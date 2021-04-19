@@ -2,7 +2,7 @@
 
 A Helm chart that deploys akv2k8s Controller and Env-Injector to Kubernetes
 
-![Version: 2.0.10](https://img.shields.io/badge/Version-2.0.10-informational?style=flat-square) ![AppVersion: 1.2.3](https://img.shields.io/badge/AppVersion-1.2.3-informational?style=flat-square)
+![Version: 2.0.10](https://img.shields.io/badge/Version-2.0.10-informational?style=flat-square) ![AppVersion: 1.2.3](https://img.shields.io/badge/AppVersion-1.2.3-informational?style=flat-square) 
 
 This chart will install:
   * a Controller for syncing AKV secrets to Kubernetes secrets
@@ -50,6 +50,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 |-----|------|---------|-------------|
 | name | string | `"akv2k8s"` | Name of Helm installation |
 | global.env | object | `{}` | Env vars to be used with all enabled pods, eg. for akv credentials |
+| global.envFromSecret | list | `[]` | Reference to secret containing variables to be used with all enabled pods, eg. for akv credentials -- Expected format: -- -- envFromSecret: -- - name: secret-name-1 -- - name: secret-name-2 |
 | global.logLevel | string | `"info"` | Sets klog log level info=2, debug=4, trace=6 |
 | global.logFormat | string | `"text"` | Sets klog log format text or json |
 | global.keyVaultAuth | string | `"azureCloudConfig"` | azureCloudConfig (aks credentials) or environment (custom) |
@@ -80,6 +81,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | controller.metrics.serviceMonitor.interval | string | `nil` | Override global.metrics.serviceMonitor.interval |
 | controller.metrics.serviceMonitor.additionalLabels | object | `nil` | Override global.metrics.serviceMonitor.additionalLabels |
 | controller.env | object | `{}` | Controller envs |
+| controller.envFromSecret | list | `[]` | Reference to secret containing variables to be used with all enabled pods, eg. for akv credentials -- Expected format: -- -- envFromSecret: -- - name: secret-name-1 -- - name: secret-name-2 |
 | controller.labels | object | `{}` | Controller labels |
 | controller.podLabels | object | `{}` | Controller pod labels |
 | controller.resources | object | `{}` | Controller resources |
@@ -124,6 +126,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | env_injector.serviceAccount.create | bool | `true` | Create service account for env-injector |
 | env_injector.serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
 | env_injector.env | object | `{}` | Additional env vars to send to env-injector pods |
+| env_injector.envFromSecret | list | `[]` | Reference to secret containing variables to be used with all enabled pods, eg. for akv credentials -- Expected format: -- -- envFromSecret: -- - name: secret-name-1 -- - name: secret-name-2 |
 | env_injector.labels | object | `{}` | Additional labels |
 | env_injector.podLabels | object | `{}` | Additional pods labels |
 | env_injector.podDisruptionBudget.enabled | bool | `true` | Enable pod disruption budget |
