@@ -31,6 +31,17 @@ spec:
       - name: {{ .Values.controller.name }}
         image: "{{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag }}"
         imagePullPolicy: {{ .Values.controller.image.pullPolicy }}
+        {{- if or .Values.global.envFromSecret .Values.controller.envFromSecret }}
+        envFrom:
+          {{- range $secretRef := .Values.controller.envFromSecret}}
+          - secretRef:
+              name: {{ $secretRef.name }}
+          {{- end }}
+          {{- range $secretRef := .Values.global.envFromSecret}}
+          - secretRef:
+              name: {{ $secretRef.name }}
+          {{- end }}
+        {{- end }}
         env:
         - name: AUTH_TYPE
           value: {{ $keyVaultAuth }}
