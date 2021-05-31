@@ -41,6 +41,9 @@ addAzurePodIdentityException: false
 # -- Path to cloud config on node (host path)
 cloudConfig: /etc/kubernetes/azure.json
 
+# -- Watch all namespaces, set to false to run in release namespace only
+watchAllNamespaces: true
+
 controller:
   # -- Name
   name: controller
@@ -51,7 +54,7 @@ controller:
     # -- Image repository that contains the controller image
     repository: spvest/azure-keyvault-controller
     # -- Image tag
-    tag: 1.2.3
+    tag: 1.3.0-beta.2
     # -- Image pull policy for controller
     pullPolicy: IfNotPresent
 

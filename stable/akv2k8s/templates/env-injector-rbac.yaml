@@ -1,7 +1,12 @@
+{{- $roleType := "ClusterRole" -}}
+{{- $roleBindingType := "ClusterRoleBinding" -}}
+{{- if not .Values.watchAllNamespaces }}
+{{- $roleType := "Role" -}}
+{{- $roleBindingType := "RoleBinding" -}}
+{{- end -}}
 {{- if and .Values.env_injector.enabled .Values.rbac.create -}}
-# Create a akv2k8s cluster role
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+kind: {{ $roleType }}
 metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}
   labels:
@@ -33,13 +38,13 @@ rules:
 - apiGroups:
   - ""
   resources:
-  - serviceaccounts # in order to read 
+  - serviceaccounts # in order to read
   verbs:
   - get
 ---
 # Create a akv2k8s reader cluster role
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+kind: {{ $roleType }}
 metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}-reader
   labels:
@@ -55,7 +60,7 @@ rules:
   - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
+kind: {{ $roleBindingType }}
 metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}-sa
   labels:
@@ -65,13 +70,13 @@ subjects:
   namespace: {{ .Release.Namespace }}
   name: {{ template "envinjector.serviceAccountName" . }}
 roleRef:
-  kind: ClusterRole
+  kind: {{ $roleType }}
   apiGroup: rbac.authorization.k8s.io
   name: {{ template "akv2k8s.envinjector.fullname" . }}
 ---
 # Give all service accounts read access to akvs
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
+kind: {{ $roleBindingType }}
 metadata:
   name: {{ template "akv2k8s.envinjector.fullname" . }}-reader
   labels:
@@ -81,7 +86,7 @@ subjects:
   name: system:serviceaccounts
   apiGroup: rbac.authorization.k8s.io
 roleRef:
-  kind: ClusterRole
+  kind: {{ $roleType }}
   name: {{ template "akv2k8s.envinjector.fullname" . }}-reader
   apiGroup: rbac.authorization.k8s.io
 {{- end}}

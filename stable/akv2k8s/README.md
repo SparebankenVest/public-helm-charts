@@ -2,7 +2,7 @@
 
 A Helm chart that deploys akv2k8s Controller and Env-Injector to Kubernetes
 
-![Version: 2.0.11](https://img.shields.io/badge/Version-2.0.11-informational?style=flat-square) ![AppVersion: 1.2.3](https://img.shields.io/badge/AppVersion-1.2.3-informational?style=flat-square)
+![Version: 2.1.0-beta.1](https://img.shields.io/badge/Version-2.1.0--beta.1-informational?style=flat-square) ![AppVersion: 1.3.0-beta.2](https://img.shields.io/badge/AppVersion-1.3.0--beta.2-informational?style=flat-square)
 
 This chart will install:
   * a Controller for syncing AKV secrets to Kubernetes secrets
@@ -14,7 +14,7 @@ For more information and installation instructions see the official documentatio
 
 | Helm Chart                         | Controller | Env Injector | CA Bundle Controller | Env Injector Sidecar |
 | ---------------------------------- | ---------- | ------------ | -------------------- | -------------------- |
-| `2.0.11` | `1.2.3`    | `1.2.3`      | `removed`            | `1.2.2`              |
+| `2.1.0-beta.1` | `1.2.3`    | `1.2.3`      | `removed`            | `1.2.2`              |
 | `2.0.0`                            | `1.2.0`    | `1.2.0`      | `removed`            | `1.2.0`              |
 | `1.1.28`                           | `1.1.0`    | `1.1.0`      | `1.1.0`              | `1.1.1`              |
 
@@ -31,7 +31,7 @@ For the latest version:
 
 ```bash
 helm repo add spv-charts http://charts.spvapi.no
-helm install akv2k8s spv-charts/akv2k8s --version 2.0.11
+helm install akv2k8s spv-charts/akv2k8s --version 2.1.0-beta.1
 ```
 
 ## The AzureKeyVaultSecret CRD
@@ -62,10 +62,11 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | rbac.podSecurityPolicies | object | `{}` |  |
 | addAzurePodIdentityException | bool | `false` | See https://github.com/Azure/aad-pod-identity/blob/master/docs/readmes/README.app-exception.md |
 | cloudConfig | string | `"/etc/kubernetes/azure.json"` | Path to cloud config on node (host path) |
+| watchAllNamespaces | bool | `true` | Watch all namespaces, set to false to run in release namespace only |
 | controller.name | string | `"controller"` | Name |
 | controller.enabled | bool | `true` | Whether to install the controller |
 | controller.image.repository | string | `"spvest/azure-keyvault-controller"` | Image repository that contains the controller image |
-| controller.image.tag | string | `"1.2.3"` | Image tag |
+| controller.image.tag | string | `"1.3.0-beta.2"` | Image tag |
 | controller.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for controller |
 | controller.logLevel | string | `nil` | Override global log level info=2, debug=4, trace=6 |
 | controller.logFormat | string | `nil` | Override global log format text or json |

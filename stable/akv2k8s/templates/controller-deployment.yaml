@@ -49,6 +49,10 @@ spec:
           value: {{ default .Values.global.metrics.enabled .Values.controller.metrics.enabled | quote }}
         - name: METRICS_PORT
           value: {{ .Values.controller.service.internalHttpPort | quote }}
+        - name: RUNTIME_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
         {{- range $key, $value := .Values.global.env }}
         - name: {{ $key }}
           valueFrom:
@@ -68,6 +72,7 @@ spec:
           - "--version={{ .Values.controller.image.tag }}"
           - "--v={{ template "controller.logLevel" . }}"
           - "--logging-format={{ template "controller.logFormat" . }}"
+          - "--watch-all-namespaces={{ .Values.watchAllNamespaces }}"
         ports:
           - name: http
             containerPort: {{ .Values.controller.service.internalHttpPort }}

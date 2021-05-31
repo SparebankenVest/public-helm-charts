@@ -1,6 +1,12 @@
+{{- $roleType := "ClusterRole" -}}
+{{- $roleBindingType := "ClusterRoleBinding" -}}
+{{- if not .Values.watchAllNamespaces }}
+{{- $roleType = "Role" -}}
+{{- $roleBindingType = "RoleBinding" -}}
+{{- end -}}
 {{- if and .Values.controller.enabled .Values.rbac.create -}}
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+kind: {{ $roleType }}
 metadata:
   name: {{ template "akv2k8s.controller.fullname" . }}
   labels:
@@ -45,7 +51,7 @@ rules:
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+kind: {{ $roleType }}
 metadata:
   name: {{ template "akv2k8s.controller.fullname" . }}-reader
   labels:
@@ -61,7 +67,7 @@ rules:
   - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
+kind: {{ $roleBindingType }}
 metadata:
   name: {{ template "akv2k8s.controller.fullname" . }}
   labels:
@@ -71,12 +77,12 @@ subjects:
   name: {{ template "akv2k8s.controller.fullname" . }}
   namespace: {{ .Release.Namespace }}
 roleRef:
-  kind: ClusterRole
+  kind: {{ $roleType }}
   name: {{ template "akv2k8s.controller.fullname" . }}
   apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
+kind: {{ $roleBindingType }}
 metadata:
   name: {{ template "akv2k8s.controller.fullname" . }}-reader
   labels:
@@ -86,7 +92,7 @@ subjects:
   name: system:serviceaccounts
   apiGroup: rbac.authorization.k8s.io
 roleRef:
-  kind: ClusterRole
+  kind: {{ $roleType }}
   name: {{ template "akv2k8s.controller.fullname" . }}-reader
   apiGroup: rbac.authorization.k8s.io
 {{- end}}
