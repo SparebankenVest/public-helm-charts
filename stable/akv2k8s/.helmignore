@@ -19,3 +19,7 @@
 .project
 .idea/
 *.tmproj
+Makefile
+CONTRIBUTING.md
+.gitignore
+README.md.gotmpl
