@@ -66,8 +66,6 @@ spec:
             value: {{ .Values.env_injector.service.externalMtlsPort | quote }}
           - name: MTLS_PORT
             value: {{ .Values.env_injector.service.internalMtlsPort | quote }}
-          - name: RUNNING_INSIDE_AZURE_AKS
-            value: {{ .Values.runningInsideAzureAks | quote }}
           - name: TLS_CERT_DIR
             value: /var/serving-cert
           - name: CA_CERT_DIR
