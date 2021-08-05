@@ -74,6 +74,9 @@ controller:
     # If not set and create is true, a name is generated using the fullname template
     name:
 
+  # -- Security context set on a pod level
+  podSecurityContext:
+
   securityContext:
     # -- Must be `true` if using aks identity
     allowPrivilegeEscalation: true
@@ -195,7 +198,9 @@ env_injector:
       ca:
         # -- Custom CA certificate, required when `env_injector.certificate.custom.enabled=true`
         crt:
-
+  # -- Security context set on a pod level
+  podSecurityContext:
+ 
   securityContext:
     # -- Must be `true` if using aks identity
     allowPrivilegeEscalation: true

@@ -73,6 +73,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | controller.keyVaultAuth | string | `nil` | Override global - azureCloudConfig (aks credentials), environment (custom) |
 | controller.serviceAccount.create | bool | `true` | Create service account for controller |
 | controller.serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
+| controller.podSecurityContext | string | `nil` | Security context set on a pod level |
 | controller.securityContext.allowPrivilegeEscalation | bool | `true` | Must be `true` if using aks identity |
 | controller.service.type | string | `"ClusterIP"` |  |
 | controller.service.externalHttpPort | int | `9000` | External metrics port |
@@ -109,6 +110,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | env_injector.certificate.custom.server.tls.crt | string | `nil` | Custom TLS certificate, required when `env_injector.certificate.custom.enabled=true` |
 | env_injector.certificate.custom.server.tls.key | string | `nil` | Custom TLS key, required when `env_injector.certificate.custom.enabled=true` |
 | env_injector.certificate.custom.ca.crt | string | `nil` | Custom CA certificate, required when `env_injector.certificate.custom.enabled=true` |
+| env_injector.podSecurityContext | string | `nil` | Security context set on a pod level |
 | env_injector.securityContext.allowPrivilegeEscalation | bool | `true` | Must be `true` if using aks identity |
 | env_injector.namespaceLabelSelector.label.name | string | `"azure-key-vault-env-injection"` | Webhook will only trigger i namespaces with this label |
 | env_injector.namespaceLabelSelector.label.value | string | `"enabled"` | Whether the namespace selector is enabled |

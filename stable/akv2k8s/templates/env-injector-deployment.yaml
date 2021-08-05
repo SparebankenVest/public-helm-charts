@@ -29,6 +29,10 @@ spec:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/env-injector-apiservice.yaml") . | sha256sum }}
     spec:
+      {{- if .Values.env_injector.podSecurityContext }}
+      securityContext:
+        {{ toYaml .Values.env_injector.podSecurityContext | nindent 8 }}
+      {{- end }}
       serviceAccountName: {{ template "envinjector.serviceAccountName" . }}
       containers:
         - name: webhook
