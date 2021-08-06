@@ -86,6 +86,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | controller.envFromSecret | list | `[]` | Reference to secret containing variables to be used with all enabled pods, eg. for akv credentials -- Expected format: -- -- envFromSecret: -- - name: secret-name-1 -- - name: secret-name-2 |
 | controller.labels | object | `{}` | Controller labels |
 | controller.podLabels | object | `{}` | Controller pod labels |
+| controller.podAnnotations | object | `{}` | Controller pod annotations |
 | controller.resources | object | `{}` | Controller resources |
 | controller.nodeSelector | object | `{}` | Node selector for controller |
 | controller.tolerations | list | `[]` | Tolerations for controller |
