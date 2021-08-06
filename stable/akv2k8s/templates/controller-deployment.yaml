@@ -30,6 +30,10 @@ spec:
         {{ toYaml .Values.controller.podLabels | nindent 8 }}
         {{- end }}
     spec:
+      {{- if .Values.controller.podSecurityContext }}
+      securityContext:
+        {{ toYaml .Values.controller.podSecurityContext | nindent 8 }}
+      {{- end }}
       serviceAccountName: {{ template "controller.serviceAccountName" . }}
       containers:
       - name: {{ .Values.controller.name }}
