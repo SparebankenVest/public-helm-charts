@@ -117,6 +117,8 @@ controller:
   labels: {}
   # -- Controller pod labels
   podLabels: {}
+  # -- Controller pod annotations
+  podAnnotations: {}
 
   # -- Controller resources
   resources: {}

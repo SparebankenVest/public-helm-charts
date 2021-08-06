@@ -19,6 +19,10 @@ spec:
       {{- include "akv2k8s.components.controller" . | nindent 6 }}
   template:
     metadata:
+      {{- if .Values.controller.podAnnotations }}
+      annotations:
+      {{ toYaml .Values.controller.podAnnotations | nindent 8 }}
+      {{- end }}
       labels:
         {{- include "akv2k8s.selectors" . | nindent 8 }}
         {{- include "akv2k8s.components.controller" . | nindent 8 }}
