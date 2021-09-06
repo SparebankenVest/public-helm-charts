@@ -1,0 +1,3 @@
+@Library("everesst-jenkins-library@master") _
+
+SprintVerHelmChartPipeline { }
