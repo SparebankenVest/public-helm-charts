@@ -1,8 +1,8 @@
 {{- $roleType := "ClusterRole" -}}
 {{- $roleBindingType := "ClusterRoleBinding" -}}
 {{- if not .Values.watchAllNamespaces }}
-{{- $roleType := "Role" -}}
-{{- $roleBindingType := "RoleBinding" -}}
+{{- $roleType = "Role" -}}
+{{- $roleBindingType = "RoleBinding" -}}
 {{- end -}}
 {{- if and .Values.env_injector.enabled .Values.rbac.create -}}
 apiVersion: rbac.authorization.k8s.io/v1
