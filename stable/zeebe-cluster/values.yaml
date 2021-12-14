@@ -37,8 +37,7 @@ gateway:
 elasticsearch:
   enabled: true
   imageTag: 6.8.5
-  esJavaOpts:
-    -Dlog4j2.formatMsgNoLookups=true
+  esJavaOpts: "-Dlog4j2.formatMsgNoLookups=true"
 
 prometheus:
   servicemonitor:
