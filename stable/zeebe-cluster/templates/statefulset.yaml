@@ -109,6 +109,15 @@ spec:
           mountPath: /usr/local/zeebe/data
         - name: exporters
           mountPath: /exporters
+        - name: log4j-api
+          mountPath: /usr/local/zeebe/lib/log4j-api-2.14.0.jar
+          subPath: log4j-api-2.16.0.jar
+        - name: log4j-core
+          mountPath: /usr/local/zeebe/lib/log4j-core-2.14.0.jar
+          subPath: log4j-core-2.16.0.jar
+        - name: log4j-slf4j
+          mountPath: /usr/local/zeebe/lib/log4j-slf4j-impl-2.14.0.jar
+          subPath: log4j-slf4j-impl-2.16.0.jar           
         {{- if .Values.log4j2 }}
         - name: config
           mountPath: /usr/local/zeebe/config/log4j2.xml
