@@ -9,7 +9,7 @@ global:
   zeebe: "{{ .Release.Name }}-zeebe"
 
 image:
-  repository: camunda/zeebe
+  repository: dokken.azurecr.io/zeebe-log4j-patched
   tag: 0.26.2
   pullPolicy: IfNotPresent
 

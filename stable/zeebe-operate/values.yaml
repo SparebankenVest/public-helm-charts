@@ -14,8 +14,8 @@ service:
   type: ClusterIP
   port: 80
 image:
-  repository: camunda/operate
-  tag: 0.26.0
+  repository: dokken.azurecr.io/zeebe-log4j-patched
+  tag: 0.26.2
 
 resources:
   requests:
