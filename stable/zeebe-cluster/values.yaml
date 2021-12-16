@@ -36,7 +36,7 @@ gateway:
 
 elasticsearch:
   enabled: true
-  imageTag: 6.8.5
+  imageTag: 6.8.21
   esJavaOpts: "-Xmx1g -Xms1g -Dlog4j2.formatMsgNoLookups=true"
 
 prometheus:
