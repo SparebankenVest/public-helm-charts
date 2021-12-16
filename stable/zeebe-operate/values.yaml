@@ -14,7 +14,7 @@ service:
   type: ClusterIP
   port: 80
 image:
-  repository: dokken.azurecr.io/zeebe-log4j-patched
+  repository: dokken.azurecr.io/zeebe-operate-log4j-patched
   tag: 0.26.2
 
 resources:
