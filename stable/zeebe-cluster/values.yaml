@@ -10,7 +10,7 @@ global:
 
 image:
   repository: dokken.azurecr.io/zeebe-log4j-patched
-  tag: 0.26.2
+  tag: 0.26.3
   pullPolicy: IfNotPresent
 
 clusterSize: "3"
