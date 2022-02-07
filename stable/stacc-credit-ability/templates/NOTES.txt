@@ -1,0 +1,17 @@
+{{- if .Values.database.enabled }}
+Database is configured to:
+  URL:      {{ .Values.database.domain }}.mysql.database.azure.com
+  User:     {{ .Values.database.user }}@{{ .Values.database.domain }}
+  Database: {{ .Values.database.name }}
+
+  jdbc:mysql:\/\/{{ .Values.database.domain }}:{{ .Values.database.port }}\/{{ .Values.database.name }}\?\&amp\;useSSL=true\&amp\;requireSSL=false
+
+  Get the password by running:
+  kubectl get secret --namespace {{ .Release.Namespace }} {{ .Values.database.domain }} -o jsonpath="{.data.password}" | base64 --decode ; echo
+{{- end }}
+
+The {{ .Release.Name }} application can be accessed via port {{ .Values.containerPort }} on the following DNS name from within your cluster:
+  {{ template "common.name" . }}.{{ .Release.Namespace }}.svc.cluster.local
+
+From outside the cluster, the server URL(s) are:
+  https://{{ .Values.domain }}/{{ include "common.name" . | replace "-" "_"}}

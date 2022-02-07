@@ -1,0 +1,31 @@
+{{- if and .Values.ingress.enabled (eq .Values.istio.enabled false) }}
+{{- $name := include "common.name" . -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ $name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+  annotations:
+    {{- range $key, $val := .Values.ingress.annotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  rules:
+  - host: {{ .Values.domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: {{ $name }}
+          servicePort: {{ .Values.containerPort }}
+        {{- if .Values.ingress.path }}
+        path: {{ .Values.ingress.path }}
+        {{- else }}
+        path: "/{{ $name | replace "-" "_"}}"
+        {{- end }}
+  tls:
+  - hosts:
+    - {{ .Values.domain }}
+    secretName: {{ .Values.ingress.tlsSecretName }}
+{{- end }}

@@ -1,0 +1,16 @@
+{{- if .Values.openapi.enabled -}}
+{{- $name := include "common.name" . -}}
+apiVersion: developer.stacc.dev/v1
+kind: OpenApi
+metadata:
+  name: {{ $name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+spec:
+  path: {{ .Values.openapi.path }}
+  pathPrefix: {{ .Values.openapi.pathPrefix }}
+  port: 80
+  selector:
+    app: {{ $name }}
+{{- end }}

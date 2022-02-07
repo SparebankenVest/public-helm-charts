@@ -1,0 +1,26 @@
+{{- if .Values.serviceMonitor.enabled -}}
+{{- $name := include "common.name" . -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ $name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+spec:
+  jobLabel: {{ $name }}
+  selector:
+    matchLabels:
+      app: {{ $name }}
+  namespaceSelector:
+    matchNames:
+    - {{ .Release.Namespace }}
+  endpoints:
+  - interval: 15s
+    {{- if .Values.serviceMonitor.useDefault }}
+    path: "/{{ $name | replace "-" "_"}}/metrics"
+    {{- else }}
+    path: {{ .Values.serviceMonitor.path }}
+    {{- end }}
+    port: http
+{{- end }}

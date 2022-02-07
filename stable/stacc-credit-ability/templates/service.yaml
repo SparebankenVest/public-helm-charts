@@ -1,0 +1,16 @@
+{{- $name := include "common.name" . -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+spec:
+  ports:
+    - port: 80
+      name: http
+      protocol: TCP
+      targetPort: {{ .Values.containerPort }}
+  selector:
+    app: {{ $name }}

@@ -1,0 +1,12 @@
+apiVersion: v1
+appVersion: "1.0"
+description: Stacc Insight Base Chart
+name: si-base
+home: https://stacc.com
+icon: https://stacc.com/android-icon-192x192.png
+sources:
+  - https://bitbucket.org/delfidata/si_kubernetes
+maintainers:
+  - name: Enabling team
+    email: enabling.insight@stacc.com
+version: 1.4.65

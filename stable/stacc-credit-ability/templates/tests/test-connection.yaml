@@ -1,0 +1,21 @@
+{{- $name := include "common.name" . -}}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ $name }}-test-connection
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ $name }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      {{- if .Values.readinessProbe.useDefault }}
+      args:  ['{{ $name }}/{{ $name | replace "-" "_"}}/rest/readyz']
+      {{- else }}
+      args:  ['{{ $name }}/{{ .Values.readinessProbe.path }}']
+      {{- end }}
+  restartPolicy: Never
