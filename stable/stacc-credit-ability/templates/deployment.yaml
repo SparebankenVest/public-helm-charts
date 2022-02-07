@@ -1,0 +1,148 @@
+{{- $name := include "common.name" . -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicas }}
+  {{- end }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: {{ $name }}
+  template:
+    metadata:
+      labels:
+        {{- include "common.labels" . | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
+        checksum/config-enc: {{ include (print $.Template.BasePath "/sealed-secrets.yaml") . | sha256sum }}
+    spec:
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+      - name: {{ .Values.imagePullSecrets }}
+      {{- end }}
+      {{- if .Values.database.liquibase }}
+      initContainers:
+        - name: {{ $name }}-init
+          image: "{{ .Values.image.repository }}-init:{{ .Values.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: LIQUIBASE_USERNAME
+              value: {{ .Values.database.username }}
+            - name: LIQUIBASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.secretName }}
+                  key: {{ .Values.database.secretKey }}
+            - name: LIQUIBASE_URL
+              value: {{ .Values.database.jdbcUrl | replace "\\" "" | replace "&amp;" "&" }}
+      {{- end }}
+      containers:
+        - name: {{ $name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.imagePullPolicy }}
+          ports:
+          - name: http
+            containerPort: {{ .Values.containerPort }}
+            protocol: TCP
+          env:
+          {{- if .Values.database.enabled }}
+            - name: DELFI_DB_USER
+              value: {{ .Values.database.username }}
+            - name: DELFI_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.secretName }}
+                  key: {{ .Values.database.secretKey }}
+            - name: DELFI_DB_URL
+              value: {{ .Values.database.jdbcUrl }}
+            - name: DELFI_DB_CLASS
+              value: {{ .Values.database.class }}
+          {{- end }}
+            - name: JAVA_OPTS
+              value: '{{ include "common.utils.joinwithspace" .Values.defaultJavaOpts }} {{ include "common.utils.joinwithspace" .Values.javaOpts }}'
+          {{- if .Values.extraEnv }}
+            {{- toYaml .Values.extraEnv | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- if or .Values.secrets .Values.secretsEnc }}
+          volumeMounts:
+          {{- range .Values.secrets }}
+            - name: {{ $name }}-{{ .name }}
+              mountPath: {{ .mountPath }}
+              subPath: {{ .fileName }}
+          {{- end }}
+          {{- range .Values.secretsEnc }}
+            - name: {{ $name }}-{{ .name }}
+              mountPath: {{ .mountPath }}
+              subPath: {{ .fileName }}
+          {{- end }}
+          {{- end }}
+          {{- if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              {{- if .Values.livenessProbe.useDefault }}
+              path: "/{{ $name | replace "-" "_"}}/healthz"
+              {{- else }}
+              path: {{ .Values.livenessProbe.path }}
+              {{- end }}
+              port: {{ .Values.containerPort }}
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              {{- if .Values.readinessProbe.useDefault }}
+              path: "/{{ $name | replace "-" "_"}}/rest/readyz"
+              {{- else }}
+              path: {{ .Values.readinessProbe.path }}
+              {{- end }}
+              port: {{ .Values.containerPort }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          {{- end }}
+    {{- if or .Values.secrets .Values.secretsEnc }}
+      volumes:
+      {{- range .Values.secrets }}
+        - name: {{ $name }}-{{ .name }}
+          secret:
+            {{- if .secretName }}
+            secretName: {{ .secretName }}
+            {{- else }}
+            secretName: {{ $name }}-{{ .name }}
+            {{- end }}
+      {{- end }}
+      {{- range .Values.secretsEnc }}
+        - name: {{ $name }}-{{ .name }}
+          secret:
+            {{- if .secretName }}
+            secretName: {{ .secretName }}
+            {{- else }}
+            secretName: {{ $name }}-{{ .name }}
+            {{- end }}
+      {{- end }}
+    {{- end }}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

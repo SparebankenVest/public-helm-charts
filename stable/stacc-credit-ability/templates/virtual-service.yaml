@@ -1,0 +1,45 @@
+{{- if .Values.istio.enabled }}
+{{- $name := include "common.name" . -}}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ $name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+spec:
+  {{- if .Values.istio.virtualService.gatewayEnabled }}
+  hosts:
+  - {{ .Values.domain }}
+  gateways:
+  - {{ .Release.Namespace }}-gateway
+  {{- else }}
+  hosts:
+  - {{ $name }}
+  {{- end }}
+  http:
+  - match:
+    {{- if .Values.istio.virtualService.path.external }}
+    - uri:
+        prefix: {{ .Values.istio.virtualService.path.external }}
+    rewrite:
+      uri: {{ .Values.istio.virtualService.path.internal }}
+    {{- else }}
+    - uri:
+        prefix: "/{{ $name | replace "-" "_"}}"
+    {{- end }}
+    route:
+    - destination:
+        host: {{ $name }}
+      {{- if .Values.istio.virtualService.gatewayEnabled }}
+      headers:
+        request:
+          set:
+            ddCorrelationID: "%REQ(x-b3-traceid)%"
+      {{- else }}
+      headers:
+        request:
+          set:
+            x-b3-traceid: "%REQ(ddCorrelationID)%"
+      {{- end }}
+{{- end -}}

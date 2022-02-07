@@ -1,0 +1,11 @@
+*.retry
+*.tgz
+temp/
+!charts/istio/charts/*.tgz
+identity
+sealed-secrets-key.yaml
+sealed-secrets-key.*
+certs
+*.iml
+
+.DS_Store

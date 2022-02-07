@@ -1,0 +1,115 @@
+containerPort: 8088
+
+replicas: 1
+
+minAvailable: 1
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 85
+  targetMemoryUtilizationPercentage: 85
+
+imagePullSecrets:
+
+image:
+  repository: staccinsight.azurecr.io/dd-server-location
+  tag: latest
+  imagePullPolicy: IfNotPresent
+
+resources: {}
+  # requests:
+  #   memory: "64Mi"
+  #   cpu: "250m"
+  # limits:
+  #   memory: "128Mi"
+  #   cpu: "500m"
+
+domain: insight.stacc.dev
+
+istio:
+  enabled: false
+  virtualService:
+    gatewayEnabled: false
+    path:
+      external:
+      internal:
+
+ingress:
+  enabled: false
+  path:
+  tlsSecretName: rpm-test-gateway-tls
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header l5d-dst-override $service_name.$namespace.svc.cluster.local:$service_port;
+      grpc_set_header l5d-dst-override $service_name.$namespace.svc.cluster.local:$service_port;
+
+serviceMonitor:
+  enabled: true
+  useDefault: true
+
+database:
+  enabled: false
+  liquibase: false
+  jdbcUrl: jdbc:mysql://mysql:3306/test?serverTimezone=UTC&useSSL=true&requireSSL=false
+  class: com.mysql.cj.jdbc.Driver
+  secretName: mysql-secret
+  secretKey: login_password
+
+secretsEnc: {}
+
+secrets: {}
+  # - name: configuration
+  #   mountPath: /usr/local/tomcat/webapps/dd_server_location/WEB-INF/classes/config/application.json
+  #   fileName: application.json
+  #   data: |
+  #     {
+  #       "configuration": [
+  #         {
+  #          ....
+  #         }
+  #       ]
+  #     }
+  # - name: cert
+  #   mountPath: /usr/local/tomcat/webapps/dd_server_location/WEB-INF/classes/cert/cert.pfx
+  #   fileName: cert.pfx
+  #   secretName: something
+
+defaultJavaOpts:
+  - -DLoadBalancer=http://dd-server-proxy/dd_server_proxy
+  - -DddConfigService=http://dd-server-config/dd_server_config
+  - -Dddoauth2server=http://dd-server-oauth2/dd_server_oauth2
+  - -Dliquibase.should.run=false
+  - -DliquibaseShouldRun=false
+  - -Dliquibase.liquibase.should.run=false
+
+javaOpts:
+  - -XX:MaxRAMPercentage=75.0
+
+livenessProbe:
+  enabled: true
+  useDefault: true
+  initialDelaySeconds: 30
+
+readinessProbe:
+  enabled: true
+  useDefault: true
+  initialDelaySeconds: 30
+
+extraEnv:
+  - name: LOG_FORMAT
+    value: json
+
+openapi:
+  enabled: false
+  path:
+  pathPrefix:
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
