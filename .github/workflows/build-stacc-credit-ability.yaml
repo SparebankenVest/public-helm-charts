@@ -1,0 +1,38 @@
+name: build and publish
+
+on:
+  push:
+    branches:
+    - master
+    paths:
+    - '.github/workflows/build-stacc-credit-ability.yaml'
+    - 'stable/stacc-credit-ability/**'
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-18.04
+    steps:
+    - name: checkout master
+      uses: actions/checkout@v2
+      with:
+        path: master
+
+    - name: checkout gh-pages
+      uses: actions/checkout@v2
+      with:
+        repository: sparebankenvest/helm-charts
+        ref: gh-pages
+        path: publish
+
+    - name: Install Helm
+      uses: ./master/.github/actions/install-helm
+
+    - name: Build Helm Charts
+      uses: ./master/.github/actions/build
+      with:
+        chart-name: stacc-credit-ability
+
+    - name: Release Helm Charts
+      uses: ./master/.github/actions/release
+      with:
+        publish-token: ${{ secrets.GH_PAGES_TOKEN }}
