@@ -34,7 +34,7 @@ spec:
       initContainers:
         - name: {{ $name }}-init
           image: "{{ .Values.image.repository }}-init:{{ .Values.image.tag }}"
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: {{ .Values.image.imagePullPolicy }}
           env:
             - name: LIQUIBASE_USERNAME
               value: {{ .Values.database.username }}
