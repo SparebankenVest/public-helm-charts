@@ -19,14 +19,14 @@ image:
   imagePullPolicy: IfNotPresent
 
 resources: {}
-  # requests:
-  #   memory: "64Mi"
-  #   cpu: "250m"
-  # limits:
-  #   memory: "128Mi"
-  #   cpu: "500m"
+   requests:
+      memory: "250Mi"
+      cpu: "250m"
+   limits:
+      memory: "250Mi"
+      cpu: "250m"
 
-domain: insight.stacc.dev
+domain: credit-ability-internal.spvdevapi.no
 
 istio:
   enabled: false
