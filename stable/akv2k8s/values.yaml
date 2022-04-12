@@ -16,6 +16,7 @@ global:
   # -- Sets klog log format text or json
   logFormat: text
  
+  # -- azureCloudConfig (aks credentials) or environment (custom)
   keyVaultAuth: azureCloudConfig
 
   # -- To run as non-root, enable and define a custom MSI with access to AKV (keyVaultAuth must be set to 'azureCloudConfig')
