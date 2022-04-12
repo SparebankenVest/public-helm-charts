@@ -15,9 +15,16 @@ global:
   logLevel: info
   # -- Sets klog log format text or json
   logFormat: text
-
-  # -- azureCloudConfig (aks credentials) or environment (custom)
+ 
   keyVaultAuth: azureCloudConfig
+
+  # -- To run as non-root, enable and define a custom MSI with access to AKV (keyVaultAuth must be set to 'azureCloudConfig')
+  userDefinedMSI:
+    enabled: false
+    # -- msi: AZURE-MSI-ID
+    # -- subscriptionId: Azure-Subscription-Id
+    # -- tenantId: Azure-Tenant-Id
+    # -- azureCloudType: AzurePublicCloud
 
   metrics:
     # -- (bool) Enable prometheus metrics
@@ -38,7 +45,7 @@ rbac:
 # -- See https://github.com/Azure/aad-pod-identity/blob/master/docs/readmes/README.app-exception.md
 addAzurePodIdentityException: false
 
-# -- Path to cloud config on node (host path)
+# -- Path to cloud config on node (host path) or mounted configmap in pod
 cloudConfig: /etc/kubernetes/azure.json
 
 # -- Watch all namespaces, set to false to run in release namespace only
@@ -78,7 +85,7 @@ controller:
   podSecurityContext:
 
   securityContext:
-    # -- Must be `true` if using aks identity
+    # -- Must be `true` if using aks identity - can be set to false if userDefinedMSI is enabled
     allowPrivilegeEscalation: true
     #   runAsUser: 65534
 
@@ -204,7 +211,7 @@ env_injector:
   podSecurityContext:
 
   securityContext:
-    # -- Must be `true` if using aks identity
+    # -- Must be `true` if using aks identity - can be set to false if userDefinedMSI is enabled
     allowPrivilegeEscalation: true
   #   runAsUser: 65534
 

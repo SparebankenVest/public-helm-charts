@@ -1,0 +1,19 @@
+{{- if .Values.global.userDefinedMSI.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "akv2k8s.name" . }}-azureconfig
+  labels:
+    {{- include "akv2k8s.labels" . | nindent 4 }}
+data:
+  azure.json: |
+    {
+        "cloud": "{{ .Values.global.userDefinedMSI.azureCloudType }}",
+        "tenantId": "{{ .Values.global.userDefinedMSI.tenantId }}",
+        "subscriptionId": "{{ .Values.global.userDefinedMSI.subscriptionId }}",
+        "aadClientId": "msi",
+        "aadClientSecret": "msi",
+        "useManagedIdentityExtension": true,
+        "userAssignedIdentityID": "{{ .Values.global.userDefinedMSI.msi }}",
+    }
+{{- end }}
