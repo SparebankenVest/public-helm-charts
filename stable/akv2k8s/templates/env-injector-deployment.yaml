@@ -68,8 +68,6 @@ spec:
             value: {{ .Values.env_injector.service.internalMtlsPort | quote }}
           - name: MTLS_PORT_EXTERNAL
             value: {{ .Values.env_injector.service.externalMtlsPort | quote }}
-          - name: MTLS_PORT
-            value: {{ .Values.env_injector.service.internalMtlsPort | quote }}
           - name: TLS_CERT_DIR
             value: /var/serving-cert
           - name: CA_CERT_DIR
