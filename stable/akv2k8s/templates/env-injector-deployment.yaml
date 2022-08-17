@@ -147,10 +147,20 @@ spec:
           secretName: {{ template "envinjector.rootCACertificate" . }}
       {{- end }}
       {{- if and $useCloudConfig .Values.env_injector.authService }}
+      {{- if .Values.global.userDefinedMSI.enabled }}
+      - name: azureconf
+        configMap:
+          defaultMode: 420
+          items:
+          - key: azure.json
+            path: azure.json
+          name: {{ template "akv2k8s.name" . }}-azureconfig
+      {{- else }}
       - name: azureconf
         hostPath:
           path: "{{ .Values.cloudConfig }}"
           type: File
+      {{- end }}
       {{- end }}
       {{- if .Values.env_injector.extraVolumes }}
       {{ toYaml .Values.env_injector.extraVolumes | nindent 6 }}

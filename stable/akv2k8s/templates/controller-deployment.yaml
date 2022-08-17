@@ -109,10 +109,20 @@ spec:
       {{- if or $useCloudConfig .Values.controller.extraVolumes }}
       volumes:
       {{- if $useCloudConfig }}
+      {{- if .Values.global.userDefinedMSI.enabled }}
+      - name: azure-config
+        configMap:
+          defaultMode: 420
+          items:
+          - key: azure.json
+            path: azure.json
+          name: {{ template "akv2k8s.name" . }}-azureconfig
+      {{- else }}
       - name: azure-config
         hostPath:
           path: "{{ .Values.cloudConfig }}"
           type: File
+      {{- end }}
       {{- end }}
       {{- if .Values.controller.extraVolumes }}
       {{ toYaml .Values.controller.extraVolumes | nindent 6 }}

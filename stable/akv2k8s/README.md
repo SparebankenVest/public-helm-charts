@@ -55,6 +55,11 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | global.logLevel | string | `"info"` | Sets klog log level info=2, debug=4, trace=6 |
 | global.logFormat | string | `"text"` | Sets klog log format text or json |
 | global.keyVaultAuth | string | `"azureCloudConfig"` | azureCloudConfig (aks credentials) or environment (custom) |
+| global.userDefinedMSI.enabled | bool | `false` | (bool) Enable usage of user-defined MSI for AKV authentication (for running pods as non-root) |
+| global.userDefinedMSI.msi | string | `nil` | User-defined MSI object ID for AKV Authentication |
+| global.userDefinedMSI.subscriptionId | string | `nil` | Azure subscription ID where the user-defined MSI for AKV Authentication resides |
+| global.userDefinedMSI.tenantId | string | `nil` | Azure tenant ID where the user-defined MSI for AKV Authentication resides |
+| global.userDefinedMSI.azureCloudType | string | `nil` | Azure cloud type (usually AzurePublicCloud) |
 | global.metrics.enabled | bool | `false` | (bool) Enable prometheus metrics |
 | global.metrics.serviceMonitor.enabled | bool | `false` | (bool) Enable service-monitor |
 | global.metrics.serviceMonitor.interval | string | `"30s"` | Scrape interval for service-monitor |
