@@ -155,6 +155,10 @@ spec:
       {{- if .Values.env_injector.extraVolumes }}
       {{ toYaml .Values.env_injector.extraVolumes | nindent 6 }}
       {{- end }}
+      {{- if .Values.env_injector.image.pullSecret }}
+      imagePullSecrets:
+      - name: "{{ .Values.env_injector.image.pullSecret }}"
+      {{- end }}
       {{- if .Values.env_injector.nodeSelector }}
       nodeSelector:
         {{ toYaml .Values.env_injector.nodeSelector | nindent 8 }}
