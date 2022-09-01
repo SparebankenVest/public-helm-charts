@@ -57,6 +57,7 @@ watchAllNamespaces: true
 
 # -- Resync periods for the controller in seconds
 azureKeyVaultResyncPeriod: 30
+# -- Resync periods for the controller in seconds
 kubeResyncPeriod: 30
 
 controller:
