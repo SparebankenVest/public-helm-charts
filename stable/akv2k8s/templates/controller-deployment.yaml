@@ -84,6 +84,8 @@ spec:
           - "--v={{ template "controller.logLevel" . }}"
           - "--logging-format={{ template "controller.logFormat" . }}"
           - "--watch-all-namespaces={{ .Values.watchAllNamespaces }}"
+          - "--kube-resync-period={{ .Values.kubeResyncPeriod }}"
+          - "--azure-resync-period={{ .Values.azureKeyVaultResyncPeriod }}"
         ports:
           - name: http
             containerPort: {{ .Values.controller.service.internalHttpPort }}

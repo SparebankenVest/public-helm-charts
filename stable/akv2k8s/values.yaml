@@ -55,6 +55,10 @@ cloudConfig: /etc/kubernetes/azure.json
 # -- Watch all namespaces, set to false to run in release namespace only
 watchAllNamespaces: true
 
+# -- Resync periods for the controller in seconds
+azureKeyVaultResyncPeriod: 30
+kubeResyncPeriod: 30
+
 controller:
   # -- Name
   name: controller
