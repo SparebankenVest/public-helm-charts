@@ -81,6 +81,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | controller.keyVaultAuth | string | `nil` | Override global - azureCloudConfig (aks credentials), environment (custom) |
 | controller.serviceAccount.create | bool | `true` | Create service account for controller |
 | controller.serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
+| controller.serviceAccount.annotations | object | `{}` | Additional service account annotations |
 | controller.podSecurityContext | string | `nil` | Security context set on a pod level |
 | controller.priorityClassName | string | `""` | Controller PriorityClass name |
 | controller.securityContext.allowPrivilegeEscalation | bool | `true` | Must be `true` if using aks identity - can be set to false if userDefinedMSI is enabled |
@@ -138,6 +139,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | env_injector.metrics.serviceMonitor.additionalLabels | object | `nil` | Override global.metrics.serviceMonitor.additionalLabels |
 | env_injector.serviceAccount.create | bool | `true` | Create service account for env-injector |
 | env_injector.serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
+| env_injector.serviceAccount.annotations | object | `{}` | Additional service account annotations |
 | env_injector.env | object | `{}` | Additional env vars to send to env-injector pods |
 | env_injector.envFromSecret | list | `[]` | Reference to secret containing variables to be used with all enabled pods, eg. for akv credentials |
 | env_injector.labels | object | `{}` | Additional labels |
