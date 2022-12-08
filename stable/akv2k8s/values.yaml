@@ -89,6 +89,8 @@ controller:
     # -- The name of the ServiceAccount to use.
     # If not set and create is true, a name is generated using the fullname template
     name:
+    # -- Controller service account annotations
+    annotations: {}
 
   # -- Security context set on a pod level
   podSecurityContext:
@@ -268,6 +270,8 @@ env_injector:
     # -- The name of the ServiceAccount to use.
     # If not set and create is true, a name is generated using the fullname template
     name:
+    # -- env-injector service account annotations
+    annotations: {}
 
   # -- Additional env vars to send to env-injector pods
   env: {}
