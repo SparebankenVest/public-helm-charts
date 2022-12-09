@@ -91,6 +91,8 @@ controller:
     name:
     # -- Controller service account annotations
     annotations: {}
+    # -- Controller service account labels
+    labels: {}
 
   # -- Security context set on a pod level
   podSecurityContext:
