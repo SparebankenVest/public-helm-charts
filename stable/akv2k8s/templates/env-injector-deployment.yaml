@@ -120,9 +120,15 @@ spec:
             name: ca-cert
           {{- end }}
           {{- if and $useCloudConfig .Values.env_injector.authService }}
+          {{- if .Values.global.userDefinedMSI.enabled }}
+          - mountPath: "{{ dir .Values.cloudConfig }}"
+            name: azureconf
+            readOnly: true
+          {{- else }}
           - mountPath: "{{ .Values.cloudConfig }}"
             name: azureconf
             readOnly: true
+          {{- end }}
           {{- end }}
           {{- if .Values.env_injector.extraVolumeMounts }}
           {{- toYaml .Values.env_injector.extraVolumeMounts | nindent 10 }}
