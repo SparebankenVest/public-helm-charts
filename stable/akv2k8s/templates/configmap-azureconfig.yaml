@@ -13,7 +13,11 @@ data:
         "subscriptionId": "{{ .Values.global.userDefinedMSI.subscriptionId }}",
         "aadClientId": "msi",
         "aadClientSecret": "msi",
+        {{- if .Values.global.userDefinedMSI.useWorkloadIdentityExtension }}
+        "useWorkloadIdentityExtension": true,
+        {{- else }}
         "useManagedIdentityExtension": true,
+        {{- end }}
         "userAssignedIdentityID": "{{ .Values.global.userDefinedMSI.msi }}",
     }
 {{- end }}
