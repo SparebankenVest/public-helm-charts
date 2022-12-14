@@ -123,6 +123,9 @@ spec:
           - mountPath: "{{ .Values.cloudConfig }}"
             name: azureconf
             readOnly: true
+            {{- if .Values.global.userDefinedMSI.enabled }}
+            subPath: azure.json
+            {{- end }}
           {{- end }}
           {{- if .Values.env_injector.extraVolumeMounts }}
           {{- toYaml .Values.env_injector.extraVolumeMounts | nindent 10 }}
