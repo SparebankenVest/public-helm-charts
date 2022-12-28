@@ -10,7 +10,7 @@ metadata:
   labels:
     {{- include "akv2k8s.labels" . | nindent 4 }}
     {{- if .Values.controller.labels }}
-    {{ toYaml .Values.controller.labels | indent 4 }}
+    {{ toYaml .Values.controller.labels | nindent 4 }}
     {{- end }}
 spec:
   selector:
