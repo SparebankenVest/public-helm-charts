@@ -82,6 +82,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | controller.serviceAccount.create | bool | `true` | Create service account for controller |
 | controller.serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
 | controller.serviceAccount.annotations | object | `{}` | Controller service account annotations |
+| controller.serviceAccount.labels | object | `{}` | Controller service account labels |
 | controller.podSecurityContext | string | `nil` | Security context set on a pod level |
 | controller.priorityClassName | string | `""` | Controller PriorityClass name |
 | controller.securityContext.allowPrivilegeEscalation | bool | `true` | Must be `true` if using aks identity - can be set to false if userDefinedMSI is enabled |
