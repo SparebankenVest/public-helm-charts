@@ -274,6 +274,8 @@ env_injector:
     name:
     # -- env-injector service account annotations
     annotations: {}
+    # -- env-injector service account labels
+    labels: {}
 
   # -- Additional env vars to send to env-injector pods
   env: {}
