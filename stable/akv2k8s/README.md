@@ -141,6 +141,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | env_injector.serviceAccount.create | bool | `true` | Create service account for env-injector |
 | env_injector.serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
 | env_injector.serviceAccount.annotations | object | `{}` | env-injector service account annotations |
+| env_injector.serviceAccount.labels | object | `{}` | env-injector service account labels |
 | env_injector.env | object | `{}` | Additional env vars to send to env-injector pods |
 | env_injector.envFromSecret | list | `[]` | Reference to secret containing variables to be used with all enabled pods, eg. for akv credentials |
 | env_injector.labels | object | `{}` | Additional labels |
