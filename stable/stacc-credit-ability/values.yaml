@@ -99,6 +99,10 @@ readinessProbe:
   useDefault: true
   initialDelaySeconds: 30
 
+startupProbe:
+  enabled: true
+  useDefault: true
+
 extraEnv:
   - name: LOG_FORMAT
     value: json
