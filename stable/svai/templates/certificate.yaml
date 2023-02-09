@@ -1,0 +1,25 @@
+{{- $dnsName := .Values.dnsName -}}
+{{- $fullName := include "svai.fullname" . -}}
+{{- $dnsName := .Values.dnsName -}}
+
+{{- $svcPort := .Values.service.port -}}
+{{- $url := print $dnsName ".security.svai.dev" -}}
+
+{{- if .Values.prod }}
+{{- $url = print $dnsName ".security.svai.io" -}}
+{{- end }}
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ $name := print $fullName "-tls" }}{{ $name }}
+spec:
+  dnsNames:
+  - {{ $url }}
+  issuerRef:
+    name: letsencrypt-svai
+    kind: ClusterIssuer
+    group: cert-manager.io
+  secretName: {{ $secretName := print $fullName "-tls-certificate" }}{{ $secretName }}
+  privateKey:
+    algorithm: ECDSA
