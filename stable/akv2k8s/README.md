@@ -85,7 +85,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | controller.serviceAccount.labels | object | `{}` | Controller service account labels |
 | controller.podSecurityContext | string | `nil` | Security context set on a pod level |
 | controller.priorityClassName | string | `""` | Controller PriorityClass name |
-| controller.securityContext.allowPrivilegeEscalation | bool | `true` | Must be `true` if using aks identity - can be set to false if userDefinedMSI is enabled |
+| controller.securityContext.allowPrivilegeEscalation | bool | `true` | Must be `true` if using aks identity - can be set to false if userDefinedMSI is enabled, or Azure AD Pod Identity is used |
 | controller.service.type | string | `"ClusterIP"` |  |
 | controller.service.externalHttpPort | int | `9000` | External metrics port |
 | controller.service.internalHttpPort | int | `9000` | Internal metrics port (set to larger than 1024 when running without privileges) |
@@ -123,7 +123,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | env_injector.certificate.custom.server.tls.key | string | `nil` | Custom TLS key, required when `env_injector.certificate.custom.enabled=true` |
 | env_injector.certificate.custom.ca.crt | string | `nil` | Custom CA certificate, required when `env_injector.certificate.custom.enabled=true` |
 | env_injector.podSecurityContext | string | `nil` | Security context set on a pod level |
-| env_injector.securityContext.allowPrivilegeEscalation | bool | `true` | Must be `true` if using aks identity - can be set to false if userDefinedMSI is enabled |
+| env_injector.securityContext.allowPrivilegeEscalation | bool | `true` | Must be `true` if using aks identity - can be set to false if userDefinedMSI is enabled, or Azure AD Pod Identity is used |
 | env_injector.namespaceLabelSelector.label.name | string | `"azure-key-vault-env-injection"` | Webhook will only trigger i namespaces with this label |
 | env_injector.namespaceLabelSelector.label.value | string | `"enabled"` | Whether the namespace selector is enabled |
 | env_injector.dockerImageInspection.timeout | int | `20` | Timeout in seconds |
