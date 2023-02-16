@@ -25,6 +25,7 @@ rules:
   - spv.no
   resources:
   - azurekeyvaultsecrets/status
+  - azurekeyvaultsecrets/finalizers
   verbs:
   - patch
   - update
