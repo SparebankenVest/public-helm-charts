@@ -145,7 +145,8 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | env_injector.env | object | `{}` | Additional env vars to send to env-injector pods |
 | env_injector.envFromSecret | list | `[]` | Reference to secret containing variables to be used with all enabled pods, eg. for akv credentials |
 | env_injector.labels | object | `{}` | Additional labels |
-| env_injector.podLabels | object | `{}` | Additional pods labels |
+| env_injector.podLabels | object | `{}` | Additional pod labels |
+| env_injector.podAnnotations | object | `{}` | Additional pod annotations |
 | env_injector.podDisruptionBudget.enabled | bool | `true` | Enable pod disruption budget |
 | env_injector.podDisruptionBudget.minAvailable | int | `1` | Min available pods at any time |
 | env_injector.podDisruptionBudget.maxUnavailable | string | `nil` | Max unavailable pods at any time |

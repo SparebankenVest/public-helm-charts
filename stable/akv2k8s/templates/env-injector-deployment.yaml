@@ -28,6 +28,9 @@ spec:
         {{- end }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/env-injector-apiservice.yaml") . | sha256sum }}
+        {{- if .Values.env_injector.podAnnotations }}
+        {{ toYaml .Values.env_injector.podAnnotations | nindent 8 }}
+        {{- end }}
     spec:
       {{- if .Values.env_injector.podSecurityContext }}
       securityContext:
