@@ -90,10 +90,10 @@ spec:
           - name: http
             containerPort: {{ .Values.controller.service.internalHttpPort }}
         readinessProbe:
-            httpGet:
-              scheme: HTTP
-              path: /healthz
-              port: {{ .Values.controller.service.internalHttpPort }}
+          httpGet:
+            scheme: HTTP
+            path: /healthz
+            port: {{ .Values.controller.service.internalHttpPort }}
         livenessProbe:
           httpGet:
             scheme: HTTP
