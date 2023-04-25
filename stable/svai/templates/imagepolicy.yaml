@@ -1,0 +1,12 @@
+{{- $name := include "svai.name" . -}}
+
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImagePolicy
+metadata:
+  name: {{ $name }}-imagepolicy-{{ .Values.env }}
+spec:
+  imageRepositoryRef:
+  name: {{ $name }}
+  policy:
+    semver:
+      range: '>=0.0.0'

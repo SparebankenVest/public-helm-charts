@@ -1,17 +1,15 @@
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "svai.fullname" . -}}
-{{- $dnsName := .Values.dnsName -}}
+{{- $name := include "svai.name" . -}}
+{{- $dns := include "svai.dns" . -}}
+
+
 
 {{- $svcPort := .Values.service.port -}}
-{{- $url := print $dnsName ".security.svai.dev" -}}
 
-{{- if .Values.prod }}
-{{- $url = print $dnsName ".security.svai.io" -}}
-{{- end }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
+  name: {{ $name }}-ingress
   labels:
     {{- include "svai.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
@@ -22,10 +20,10 @@ spec:
   ingressClassName: {{ .Values.ingress.className }}
   tls:
     - hosts:
-      - {{ $url | quote }}
-      secretName: {{ $secretName := print $fullName "-tls-certificate" }}{{ $secretName }}
+      - {{ $dns | quote }}
+      secretName: {{ $name }}-tls-certificate
   rules:
-    - host: {{ $url | quote }}
+    - host: {{ $dns | quote }}
       http:
         paths:
           {{- range .Values.ingress.paths }}
@@ -33,7 +31,7 @@ spec:
             pathType: {{ .pathType }}
             backend:
               service:
-                name: {{ $fullName }}
+                name: {{ $name }}
                 port:
                   number: {{ $svcPort }}
           {{- end }}
