@@ -27,9 +27,9 @@ Create dns name based on chart name and given environment-name
 {{- define "svai.dns" -}}
 {{- $name := include "svai.name" . -}}
     {{- if eq .Values.env "prod" }}
-    {{- printf "%s%s" $name ".svai.io" -}}
+    {{- printf "%s%s" $name ".spvdevapi.no" -}}
     {{- else }}
-    {{- printf "%s%s" $name ".svai.dev" -}}
+    {{- printf "%s%s" $name ".spvapi.no" -}}
     {{- end }}
 {{- end }}
 

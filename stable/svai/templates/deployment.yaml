@@ -25,11 +25,11 @@ spec:
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }} {{"# {\"$imagepolicy\":\""}}{{ $name }}-imagepolicy-{{ .Values.env }}"}
           env:
           {{- range .Values.environment.variables }}
-            name: {{ .name }}
+          - name: {{ .name }}
             value: {{ .value }}
           {{- end }}
           {{- range .Values.environment.secrets }}
-            name: {{ .nameOfEnvVar }}
+          - name: {{ .nameOfEnvVar }}
             value: {{ .nameInKeyVault }}@azurekeyvault
           {{- end }}
           ports:
@@ -40,7 +40,7 @@ spec:
             httpGet:
               path: /startup
               port: 80
-              scheme: http
+              scheme: HTTP
             initialDelaySeconds: 5
             periodSeconds: 15
             timeoutSeconds: 15
@@ -50,7 +50,7 @@ spec:
             httpGet:
               path: /ready
               port: 80
-              scheme: http
+              scheme: HTTP
             initialDelaySeconds: 3
             periodSeconds: 30
             timeoutSeconds: 20

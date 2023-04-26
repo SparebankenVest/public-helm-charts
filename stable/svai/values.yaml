@@ -12,23 +12,20 @@ autoscaling:
 env: dev #prod/dev
 
 image:
-  repository: dokken.azurecr.io/security-cluster-sandbox
-  tag: b3f2964-1668080705
+  repository: dokken.azurecr.io/customer-api
+  tag: b315c42-1682426459
   automated: true
 
-nameOverride: "security-cluster-sandbox"
+nameOverride: "sandbox"
 
 environment:
   variables:
     - name: ASPNETCORE_ENVIRONMENT
       value: produksjon
   secrets:
-    - nameInKeyVault: MySecret
+    - nameInKeyVault: my-secret
       nameOfEnvVar: My__Secret
-      vault: myKeyvault
-    - nameInKeyVault: MySecondSecret
-      nameOfEnvVar: My__Second__secret
-      vault: myKeyvault      
+      vault: my-keyvault
 
 
 ingress:
