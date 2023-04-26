@@ -1,7 +1,9 @@
+{{- $name := include "svai.name" . -}}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "svai.name" . }}
+  name: {{ $name }}
   labels:
     {{- include "svai.labels" . | nindent 4 }}
 spec:
@@ -17,30 +19,42 @@ spec:
       labels:
         {{- include "svai.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       serviceAccountName: {{ include "svai.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: {{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }} {{"# {\"$imagepolicy\":\""}}{{ $name }}-imagepolicy-{{ .Values.env }}"}
+          env:
+          {{- range .Values.environment.variables }}
+            name: {{ .name }}
+            value: {{ .value }}
+          {{- end }}
+          {{- range .Values.environment.secrets }}
+            name: {{ .nameOfEnvVar }}
+            value: {{ .nameInKeyVault }}@azurekeyvault
+          {{- end }}
           ports:
             - name: http
               containerPort: 80
               protocol: TCP
-          livenessProbe:
+          startupProbe:
             httpGet:
-              path: /
-              port: http
+              path: /startup
+              port: 80
+              scheme: http
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            timeoutSeconds: 15
+            successThreshold: 1
+            failureThreshold: 4
           readinessProbe:
             httpGet:
-              path: /
-              port: http
+              path: /ready
+              port: 80
+              scheme: http
+            initialDelaySeconds: 3
+            periodSeconds: 30
+            timeoutSeconds: 20
+            successThreshold: 1
+            failureThreshold: 3
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

@@ -3,9 +3,6 @@
 {{- $dns := include "svai.dns" . -}}
 
 
-
-{{- $svcPort := .Values.service.port -}}
-
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -33,6 +30,6 @@ spec:
               service:
                 name: {{ $name }}
                 port:
-                  number: {{ $svcPort }}
+                  number: 80
           {{- end }}
 {{- end }}

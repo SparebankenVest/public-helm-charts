@@ -6,7 +6,23 @@ metadata:
   name: {{ $name }}-imagepolicy-{{ .Values.env }}
 spec:
   imageRepositoryRef:
-  name: {{ $name }}
+    name: {{ $name }}
+{{- if and (eq (lower .Values.env) "prod") (.Values.image.automated) }}
   policy:
-    semver:
-      range: '>=0.0.0'
+  semver:
+    range: '>=0.0.0'
+{{- else if and (eq (lower .Values.env ) "prod") (not .Values.image.automated) }}
+  policy:
+  semver:
+    range: {{ .Values.image.tag }}
+{{- else if and (eq (lower .Values.env) "dev" ) (.Values.image.automated )}}
+  filterTags:
+    pattern: '^\w{7}-(?P<timestamp>\d*)$'
+    extract: '$timestamp'
+  policy:
+    numerical:
+      order: asc
+{{- else if and (eq (lower .Values.env) "dev" ) (not .Values.image.automated)}}
+  filterTags:
+    pattern: {{ .Values.image.tag }}
+{{- end }}  

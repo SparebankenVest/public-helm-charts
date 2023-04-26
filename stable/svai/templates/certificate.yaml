@@ -1,6 +1,5 @@
 {{- $name := include "svai.name" . -}}
 {{- $dns := include "svai.dns" . -}}
-{{- $svcPort := .Values.service.port -}}
 
 
 apiVersion: cert-manager.io/v1

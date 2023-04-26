@@ -9,29 +9,26 @@ autoscaling:
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
 
-env: dev #prod/stage/test
+env: dev #prod/dev
 
 image:
   repository: dokken.azurecr.io/security-cluster-sandbox
   tag: b3f2964-1668080705
-  automation:
-    enabled: true
-    fixedTag: "2.3.6"
+  automated: true
 
 nameOverride: "security-cluster-sandbox"
 
-
-
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: false
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
-
-
+environment:
+  variables:
+    - name: ASPNETCORE_ENVIRONMENT
+      value: produksjon
+  secrets:
+    - nameInKeyVault: MySecret
+      nameOfEnvVar: My__Secret
+      vault: myKeyvault
+    - nameInKeyVault: MySecondSecret
+      nameOfEnvVar: My__Second__secret
+      vault: myKeyvault      
 
 
 ingress:
@@ -48,17 +45,20 @@ ingress:
 #of the app, remember that if the app execeeds the limit it will be killed and restarted
 #for cpu you can set a request but no limit.
 resources:
-  limits:
-    memory: 128
   requests:
     memory: 128
     cpu: 100m
+  limits:
+    memory: 128
+
  
 
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
 
-
-  # targetMemoryUtilizationPercentage: 80
-
-service:
-  type: ClusterIP
-  port: 80
