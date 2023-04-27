@@ -12,11 +12,12 @@ autoscaling:
 env: dev #prod/dev
 
 image:
-  repository: dokken.azurecr.io/customer-api
-  tag: b315c42-1682426459
+  repository: registry.azurecr.io/registry-name
+  tag: b3543c41-1682426341
   automated: true
 
 nameOverride: "sandbox"
+containerPort: 8080
 
 environment:
   variables:
@@ -43,11 +44,17 @@ ingress:
 #for cpu you can set a request but no limit.
 resources:
   requests:
-    memory: 128
+    memory: 128Mi
     cpu: 100m
   limits:
-    memory: 128
-
+    memory: 128Mi
+containers:
+  startupProbe:
+    enabled: false
+  readinessProbe:
+    enabled: false
+  livenessProbe:
+    enabled: false
  
 
 serviceAccount:
