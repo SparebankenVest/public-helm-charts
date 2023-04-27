@@ -21,7 +21,7 @@ spec:
     spec:
       serviceAccountName: {{ include "svai.serviceAccountName" . }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ $name }}
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }} {{"# {\"$imagepolicy\":\""}}{{ $name }}-imagepolicy-{{ .Values.env }}"}
           env:
           {{- range .Values.environment.variables }}
@@ -34,27 +34,40 @@ spec:
           {{- end }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: {{ .Values.image.containerPort }}
               protocol: TCP
-          startupProbe:
+          {{- if .Values.containers.livenessProbe.enabled }}
+          livenessProbe:
             httpGet:
-              path: /startup
-              port: 80
-              scheme: HTTP
-            initialDelaySeconds: 5
-            periodSeconds: 15
-            timeoutSeconds: 15
-            successThreshold: 1
-            failureThreshold: 4
+              path: {{ .Values.containers.livenessProbe.path | default "/health" }}
+              port: {{ .Values.containers.livenessProbe.port | default "HTTP" }}
+            initialDelaySeconds: {{ .Values.containers.livenessProbe.initialDelaySeconds | default 2 }}
+            periodSeconds: {{ .Values.containers.livenessProbe.periodSeconds | default 15 }}
+            timeoutSeconds: {{ .Values.containers.livenessProbe.timeoutSeconds | default 10 }}
+            successThreshold: {{ .Values.containers.livenessProbe.successThreshold | default 1 }}
+            failureThreshold: {{ .Values.containers.livenessProbe.failureThreshold | default 3 }}
+          {{- end }}
+          {{- if .Values.containers.readinessProbe.enabled }}
           readinessProbe:
             httpGet:
-              path: /ready
-              port: 80
-              scheme: HTTP
-            initialDelaySeconds: 3
-            periodSeconds: 30
-            timeoutSeconds: 20
-            successThreshold: 1
-            failureThreshold: 3
+              path: {{ .Values.containers.readinessProbe.path | default "/health" }}
+              port: {{ .Values.containers.readinessProbe.port | default "HTTP" }}
+            initialDelaySeconds: {{ .Values.containers.readinessProbe.initialDelaySeconds | default 10 }}
+            periodSeconds: {{ .Values.containers.readinessProbe.periodSeconds | default 10 }}
+            timeoutSeconds: {{ .Values.containers.readinessProbe.timeoutSeconds | default 5 }}
+            successThreshold: {{ .Values.containers.readinessProbe.successThreshold | default 1 }}
+            failureThreshold: {{ .Values.containers.readinessProbe.failureThreshold | default 5 }}
+          {{- end }}
+          {{- if .Values.containers.startupProbe.enabled }}
+          startupProbe:
+            httpGet:
+              path: {{ .Values.containers.startupProbe.path | default "/health" }}
+              port: {{ .Values.containers.startupProbe.port | default "HTTP" }}
+            initialDelaySeconds: {{ .Values.containers.startupProbe.initialDelaySeconds | default 3 }}
+            periodSeconds: {{ .Values.containers.startupProbe.periodSeconds | default 10 }}
+            timeoutSeconds: {{ .Values.containers.startupProbe.timeoutSeconds | default 5 }}
+            successThreshold: {{ .Values.containers.startupProbe.successThreshold | default 1 }}
+            failureThreshold: {{ .Values.containers.startupProbe.failureThreshold | default 3 }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
