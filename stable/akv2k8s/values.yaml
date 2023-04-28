@@ -101,7 +101,7 @@ controller:
   priorityClassName: ""
 
   securityContext:
-    # -- Must be `true` if using aks identity - can be set to false if userDefinedMSI is enabled
+    # -- Must be `true` if using aks identity - can be set to false if userDefinedMSI is enabled, or Azure AD Pod Identity is used
     allowPrivilegeEscalation: true
     #   runAsUser: 65534
 
@@ -224,7 +224,7 @@ env_injector:
   podSecurityContext:
 
   securityContext:
-    # -- Must be `true` if using aks identity - can be set to false if userDefinedMSI is enabled
+    # -- Must be `true` if using aks identity - can be set to false if userDefinedMSI is enabled, or Azure AD Pod Identity is used
     allowPrivilegeEscalation: true
   #   runAsUser: 65534
 
@@ -291,9 +291,10 @@ env_injector:
 
   # -- Additional labels
   labels: {}
-
-  # -- Additional pods labels
+  # -- Additional pod labels
   podLabels: {}
+  # -- Additional pod annotations
+  podAnnotations: {}
 
   # See `kubectl explain poddisruptionbudget.spec` for more
   # ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
