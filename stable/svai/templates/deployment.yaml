@@ -34,7 +34,7 @@ spec:
           {{- end }}
           ports:
             - name: http
-              containerPort: {{ .Values.image.containerPort }}
+              containerPort: {{ .Values.image.containerPort | default 8080  }}
               protocol: TCP
           {{- if .Values.containers.livenessProbe.enabled }}
           livenessProbe:

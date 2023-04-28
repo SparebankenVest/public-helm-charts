@@ -10,14 +10,15 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
 
 env: dev #prod/dev
+domain: mydomain.no
 
 image:
   repository: registry.azurecr.io/registry-name
   tag: b3543c41-1682426341
   automated: true
+  containerPort: 8080
 
 nameOverride: "sandbox"
-containerPort: 8080
 
 environment:
   variables:
