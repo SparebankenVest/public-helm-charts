@@ -115,6 +115,11 @@ spec:
               scheme: HTTPS
               path: /healthz
               port: {{ .Values.env_injector.service.internalTlsPort }}
+          livenessProbe:
+            httpGet:
+              scheme: HTTPS
+              path: /healthz
+              port: {{ .Values.env_injector.service.internalTlsPort }}
           volumeMounts:
           - mountPath: /var/serving-cert
             name: serving-cert

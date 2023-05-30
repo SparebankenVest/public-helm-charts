@@ -89,6 +89,16 @@ spec:
         ports:
           - name: http
             containerPort: {{ .Values.controller.service.internalHttpPort }}
+        readinessProbe:
+          httpGet:
+            scheme: HTTP
+            path: /healthz
+            port: {{ .Values.controller.service.internalHttpPort }}
+        livenessProbe:
+          httpGet:
+            scheme: HTTP
+            path: /healthz
+            port: {{ .Values.controller.service.internalHttpPort }}
         {{- if .Values.controller.securityContext }}
         securityContext:
           {{ toYaml .Values.controller.securityContext | nindent 10 }}
