@@ -1,0 +1,69 @@
+# Default values for svai.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+
+env: dev #prod/dev
+domain: mydomain.no
+
+image:
+  repository: registry.azurecr.io/registry-name
+  tag: b3543c41-1682426341
+  automated: true
+  containerPort: 8080
+
+nameOverride: "sandbox"
+
+environment:
+  variables:
+    - name: ASPNETCORE_ENVIRONMENT
+      value: produksjon
+  secrets:
+    - nameInKeyVault: my-secret
+      nameOfEnvVar: My__Secret
+      vault: my-keyvault
+
+
+ingress:
+  enabled: true
+  className: ""
+  annotations:
+     kubernetes.io/ingress.class: nginx
+     kubernetes.io/tls-acme: "true"
+  paths:
+    - path: /
+      pathType: ImplementationSpecific
+
+#Resources: for memory you can set limit=request, the value can be 25% above the average consumption
+#of the app, remember that if the app execeeds the limit it will be killed and restarted
+#for cpu you can set a request but no limit.
+resources:
+  requests:
+    memory: 128Mi
+    cpu: 100m
+  limits:
+    memory: 128Mi
+containers:
+  startupProbe:
+    enabled: false
+  readinessProbe:
+    enabled: false
+  livenessProbe:
+    enabled: false
+ 
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+

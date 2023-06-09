@@ -1,6 +1,6 @@
 {{- if or (and .Values.autoscaling.enabled (gt (.Values.autoscaling.minReplicas | int) 1)) (gt (.Values.replicas | int) 1) -}}
 {{- $name := include "common.name" . -}}
-apiVersion: policy/v1beta1
+apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: {{ $name }}

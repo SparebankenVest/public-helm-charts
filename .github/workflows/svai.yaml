@@ -4,22 +4,21 @@ on:
   push:
     branches:
     - master
-    - '*-beta'
     paths:
-    - '.github/workflows/build-akv2k8s.yaml'
-    - 'stable/akv2k8s/**'
+    - '.github/workflows/svai.yaml'
+    - 'stable/svai/**'
 
 jobs:
   build-and-publish:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-20.04
     steps:
     - name: checkout master
-      uses: actions/checkout@v3
+      uses: actions/checkout@v2
       with:
         path: master
 
     - name: checkout gh-pages
-      uses: actions/checkout@v3
+      uses: actions/checkout@v2
       with:
         repository: sparebankenvest/helm-charts
         ref: gh-pages
@@ -31,7 +30,7 @@ jobs:
     - name: Build Helm Charts
       uses: ./master/.github/actions/build
       with:
-        chart-name: akv2k8s
+        chart-name: svai
 
     - name: Release Helm Charts
       uses: ./master/.github/actions/release

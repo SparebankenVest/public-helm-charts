@@ -2,7 +2,7 @@
 
 A Helm chart that deploys akv2k8s Controller and Env-Injector to Kubernetes
 
-![Version: 2.3.0](https://img.shields.io/badge/Version-2.3.0-informational?style=flat-square) ![AppVersion: 1.4.0](https://img.shields.io/badge/AppVersion-1.4.0-informational?style=flat-square)
+![Version: 2.3.5](https://img.shields.io/badge/Version-2.3.5-informational?style=flat-square) ![AppVersion: 1.4.0](https://img.shields.io/badge/AppVersion-1.4.0-informational?style=flat-square)
 
 This chart will install:
   * a Controller for syncing AKV secrets to Kubernetes secrets
@@ -14,7 +14,7 @@ For more information and installation instructions see the official documentatio
 
 | Helm Chart                         | Controller | Env Injector | CA Bundle Controller | Env Injector Sidecar |
 | ---------------------------------- | ---------- | ------------ | -------------------- | -------------------- |
-| `2.3.0` | `1.4.0`    | `1.4.0`      | `removed`            | `1.4.0`              |
+| `2.3.5` | `1.4.0`    | `1.4.0`      | `removed`            | `1.4.0`              |
 | `2.0.11`                           | `1.2.3`    | `1.2.3`      | `removed`            | `1.2.2`              |
 | `2.0.0`                            | `1.2.0`    | `1.2.0`      | `removed`            | `1.2.0`              |
 | `1.1.28`                           | `1.1.0`    | `1.1.0`      | `1.1.0`              | `1.1.1`              |
@@ -32,7 +32,7 @@ For the latest version:
 
 ```bash
 helm repo add spv-charts http://charts.spvapi.no
-helm install akv2k8s spv-charts/akv2k8s --version 2.3.0
+helm install akv2k8s spv-charts/akv2k8s --version 2.3.5
 ```
 
 ## The AzureKeyVaultSecret CRD
@@ -82,9 +82,10 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | controller.serviceAccount.create | bool | `true` | Create service account for controller |
 | controller.serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
 | controller.serviceAccount.annotations | object | `{}` | Controller service account annotations |
+| controller.serviceAccount.labels | object | `{}` | Controller service account labels |
 | controller.podSecurityContext | string | `nil` | Security context set on a pod level |
 | controller.priorityClassName | string | `""` | Controller PriorityClass name |
-| controller.securityContext.allowPrivilegeEscalation | bool | `true` | Must be `true` if using aks identity - can be set to false if userDefinedMSI is enabled |
+| controller.securityContext.allowPrivilegeEscalation | bool | `true` | Must be `true` if using aks identity - can be set to false if userDefinedMSI is enabled, or Azure AD Pod Identity is used |
 | controller.service.type | string | `"ClusterIP"` |  |
 | controller.service.externalHttpPort | int | `9000` | External metrics port |
 | controller.service.internalHttpPort | int | `9000` | Internal metrics port (set to larger than 1024 when running without privileges) |
@@ -122,7 +123,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | env_injector.certificate.custom.server.tls.key | string | `nil` | Custom TLS key, required when `env_injector.certificate.custom.enabled=true` |
 | env_injector.certificate.custom.ca.crt | string | `nil` | Custom CA certificate, required when `env_injector.certificate.custom.enabled=true` |
 | env_injector.podSecurityContext | string | `nil` | Security context set on a pod level |
-| env_injector.securityContext.allowPrivilegeEscalation | bool | `true` | Must be `true` if using aks identity - can be set to false if userDefinedMSI is enabled |
+| env_injector.securityContext.allowPrivilegeEscalation | bool | `true` | Must be `true` if using aks identity - can be set to false if userDefinedMSI is enabled, or Azure AD Pod Identity is used |
 | env_injector.namespaceLabelSelector.label.name | string | `"azure-key-vault-env-injection"` | Webhook will only trigger i namespaces with this label |
 | env_injector.namespaceLabelSelector.label.value | string | `"enabled"` | Whether the namespace selector is enabled |
 | env_injector.dockerImageInspection.timeout | int | `20` | Timeout in seconds |
@@ -140,10 +141,12 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | env_injector.serviceAccount.create | bool | `true` | Create service account for env-injector |
 | env_injector.serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
 | env_injector.serviceAccount.annotations | object | `{}` | env-injector service account annotations |
+| env_injector.serviceAccount.labels | object | `{}` | env-injector service account labels |
 | env_injector.env | object | `{}` | Additional env vars to send to env-injector pods |
 | env_injector.envFromSecret | list | `[]` | Reference to secret containing variables to be used with all enabled pods, eg. for akv credentials |
 | env_injector.labels | object | `{}` | Additional labels |
-| env_injector.podLabels | object | `{}` | Additional pods labels |
+| env_injector.podLabels | object | `{}` | Additional pod labels |
+| env_injector.podAnnotations | object | `{}` | Additional pod annotations |
 | env_injector.podDisruptionBudget.enabled | bool | `true` | Enable pod disruption budget |
 | env_injector.podDisruptionBudget.minAvailable | int | `1` | Min available pods at any time |
 | env_injector.podDisruptionBudget.maxUnavailable | string | `nil` | Max unavailable pods at any time |
