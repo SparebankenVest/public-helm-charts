@@ -340,7 +340,9 @@ env_injector:
     #     defaultMode: 420
     #     secretName: akv2k8s-certificate
 
+  # https://kubernetes.io/docs/reference/access-authn-authz/rbac/#referring-to-subjects
   rbacSubjects:
+    # -- Include Group or ServiceAccount
     - kind: Group
       name: system:serviceaccounts
       apiGroup: rbac.authorization.k8s.io
