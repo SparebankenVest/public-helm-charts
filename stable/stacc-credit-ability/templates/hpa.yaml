@@ -1,6 +1,6 @@
 {{- if .Values.autoscaling.enabled -}}
 {{- $name := include "common.name" . -}}
-apiVersion: autoscaling/v2beta2
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ $name }}

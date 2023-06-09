@@ -24,7 +24,6 @@ resources:
       cpu: "250m"
    limits:
       memory: "250Mi"
-      cpu: "250m"
 
 domain: credit-ability-internal.spvdevapi.no
 
@@ -98,6 +97,10 @@ readinessProbe:
   enabled: true
   useDefault: true
   initialDelaySeconds: 30
+
+startupProbe:
+  enabled: true
+  useDefault: true
 
 extraEnv:
   - name: LOG_FORMAT

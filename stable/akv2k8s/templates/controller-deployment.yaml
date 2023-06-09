@@ -10,7 +10,7 @@ metadata:
   labels:
     {{- include "akv2k8s.labels" . | nindent 4 }}
     {{- if .Values.controller.labels }}
-    {{ toYaml .Values.controller.labels | indent 4 }}
+    {{ toYaml .Values.controller.labels | nindent 4 }}
     {{- end }}
 spec:
   selector:
@@ -89,6 +89,16 @@ spec:
         ports:
           - name: http
             containerPort: {{ .Values.controller.service.internalHttpPort }}
+        readinessProbe:
+          httpGet:
+            scheme: HTTP
+            path: /healthz
+            port: {{ .Values.controller.service.internalHttpPort }}
+        livenessProbe:
+          httpGet:
+            scheme: HTTP
+            path: /healthz
+            port: {{ .Values.controller.service.internalHttpPort }}
         {{- if .Values.controller.securityContext }}
         securityContext:
           {{ toYaml .Values.controller.securityContext | nindent 10 }}

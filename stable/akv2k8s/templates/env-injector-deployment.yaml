@@ -28,6 +28,9 @@ spec:
         {{- end }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/env-injector-apiservice.yaml") . | sha256sum }}
+        {{- if .Values.env_injector.podAnnotations }}
+        {{ toYaml .Values.env_injector.podAnnotations | nindent 8 }}
+        {{- end }}
     spec:
       {{- if .Values.env_injector.podSecurityContext }}
       securityContext:
@@ -108,6 +111,11 @@ spec:
           - name: auth-tls
             containerPort: {{ .Values.env_injector.service.internalMtlsPort }}
           readinessProbe:
+            httpGet:
+              scheme: HTTPS
+              path: /healthz
+              port: {{ .Values.env_injector.service.internalTlsPort }}
+          livenessProbe:
             httpGet:
               scheme: HTTPS
               path: /healthz
