@@ -82,9 +82,7 @@ metadata:
   labels:
     {{- include "akv2k8s.labels" . | nindent 4 }}
 subjects:
-- kind: Group
-  name: system:serviceaccounts
-  apiGroup: rbac.authorization.k8s.io
+{{- toYaml .Values.env_injector.rbacSubjects | nindent 0 }}
 roleRef:
   kind: {{ $roleType }}
   name: {{ template "akv2k8s.envinjector.fullname" . }}-reader

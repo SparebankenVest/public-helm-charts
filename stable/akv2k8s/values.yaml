@@ -339,3 +339,8 @@ env_injector:
     #   secret:
     #     defaultMode: 420
     #     secretName: akv2k8s-certificate
+
+  rbacSubjects:
+    - kind: Group
+      name: system:serviceaccounts
+      apiGroup: rbac.authorization.k8s.io
