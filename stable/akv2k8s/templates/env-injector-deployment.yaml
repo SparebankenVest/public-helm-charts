@@ -128,9 +128,15 @@ spec:
             name: ca-cert
           {{- end }}
           {{- if and $useCloudConfig .Values.env_injector.authService }}
+          {{- if .Values.global.userDefinedMSI.enabled }}
+          - mountPath: "{{ dir .Values.cloudConfig }}"
+            name: azureconf
+            readOnly: true
+          {{- else }}
           - mountPath: "{{ .Values.cloudConfig }}"
             name: azureconf
             readOnly: true
+          {{- end }}
           {{- end }}
           {{- if .Values.env_injector.extraVolumeMounts }}
           {{- toYaml .Values.env_injector.extraVolumeMounts | nindent 10 }}
@@ -161,7 +167,7 @@ spec:
           defaultMode: 420
           items:
           - key: azure.json
-            path: azure.json
+            path: "{{ base .Values.cloudConfig }}"
           name: {{ template "akv2k8s.name" . }}-azureconfig
       {{- else }}
       - name: azureconf
