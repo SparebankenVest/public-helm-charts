@@ -98,6 +98,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | controller.labels | object | `{}` | Controller labels |
 | controller.podLabels | object | `{}` | Controller pod labels |
 | controller.podAnnotations | object | `{}` | Controller pod annotations |
+| controller.strategy.rollingUpdate | object | `{"maxSurge":"25%","maxUnavailable":"25%"}` | Controller rolling update strategy settings |
 | controller.resources | object | `{}` | Controller resources |
 | controller.nodeSelector | object | `{}` | Node selector for controller |
 | controller.tolerations | list | `[]` | Tolerations for controller |
@@ -150,6 +151,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | env_injector.podDisruptionBudget.enabled | bool | `true` | Enable pod disruption budget |
 | env_injector.podDisruptionBudget.minAvailable | int | `1` | Min available pods at any time |
 | env_injector.podDisruptionBudget.maxUnavailable | string | `nil` | Max unavailable pods at any time |
+| env_injector.strategy.rollingUpdate | object | `{"maxSurge":"25%","maxUnavailable":"25%"}` | Environment Injector rolling update strategy settings |
 | env_injector.failurePolicy | string | `"Fail"` | What will happen if the webhook fails? Ignore (continue) or Fail (prevent Pod from starting)? |
 | env_injector.namespaceSelector.matchExpressions[0] | object | `{"key":"name","operator":"NotIn","values":["kube-system"]}` | Ignore kube-system namespace |
 | env_injector.resources | object | `{}` | Resources for env injector |
