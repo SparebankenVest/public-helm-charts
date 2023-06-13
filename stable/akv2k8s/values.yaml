@@ -143,6 +143,14 @@ controller:
   # -- Controller pod annotations
   podAnnotations: {}
 
+  # See `kubectl explain Deployment.spec.strategy` for more
+  # ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+  strategy:
+    # -- Controller rolling update strategy settings
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+
   # -- Controller resources
   resources: {}
   # -- Node selector for controller
@@ -305,6 +313,14 @@ env_injector:
     minAvailable: 1
     # -- Max unavailable pods at any time
     maxUnavailable:
+
+  # See `kubectl explain Deployment.spec.strategy` for more
+  # ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+  strategy:
+    # -- Environment Injector rolling update strategy settings
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
 
   # -- What will happen if the webhook fails? Ignore (continue) or Fail (prevent Pod from starting)?
   failurePolicy: Fail
