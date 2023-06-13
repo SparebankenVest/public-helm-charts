@@ -18,6 +18,15 @@ spec:
     matchLabels:
       {{- include "akv2k8s.selectors" . | nindent 6 }}
       {{- include "akv2k8s.components.webhook" . | nindent 6 }}
+  {{- if .Values.env_injector.strategy }}
+  strategy:
+    {{- if eq .Values.env_injector.strategy.type "Recreate" }}
+      type: "Recreate"
+    {{- else if .Values.env_injector.strategy.rollingUpdate }}
+    rollingUpdate:
+    {{- toYaml .Values.env_injector.strategy.rollingUpdate | nindent 6 }}
+    {{- end }}
+  {{- end }}
   template:
     metadata:
       labels:
