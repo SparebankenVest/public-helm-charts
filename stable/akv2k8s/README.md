@@ -64,8 +64,8 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | global.metrics.serviceMonitor.enabled | bool | `false` | Enable service-monitor |
 | global.metrics.serviceMonitor.interval | string | `"30s"` | Scrape interval for service-monitor |
 | global.metrics.serviceMonitor.additionalLabels | object | `{}` | Additional labels for service-monitor |
-| rbac.create | bool | `true` | Specifies whether RBAC resources should be created |
-| rbac.podSecurityPolicies | object | `{}` |  |
+| global.rbac.create | bool | `true` | Specifies whether RBAC resources should be created |
+| global.rbac.podSecurityPolicies | object | `{}` |  |
 | addAzurePodIdentityException | bool | `false` | See https://github.com/Azure/aad-pod-identity/blob/master/docs/readmes/README.app-exception.md |
 | cloudConfig | string | `"/etc/kubernetes/azure.json"` | Path to cloud config on node (host path) or mounted configmap in pod |
 | watchAllNamespaces | bool | `true` | Watch all namespaces, set to false to run in release namespace only |
@@ -82,6 +82,8 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | controller.serviceAccount.create | bool | `true` | Create service account for controller |
 | controller.serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
 | controller.serviceAccount.annotations | object | `{}` | Controller service account annotations |
+| controller.rbac | object | `{"create":null}` | Override global.rbac to create the controller rbac only |
+| controller.rbac.create | bool | `nil` | Override global.rbac.create |
 | controller.podSecurityContext | string | `nil` | Security context set on a pod level |
 | controller.priorityClassName | string | `""` | Controller PriorityClass name |
 | controller.securityContext.allowPrivilegeEscalation | bool | `true` | Must be `true` if using aks identity - can be set to false if userDefinedMSI is enabled |
@@ -140,6 +142,8 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | env_injector.serviceAccount.create | bool | `true` | Create service account for env-injector |
 | env_injector.serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
 | env_injector.serviceAccount.annotations | object | `{}` | env-injector service account annotations |
+| env_injector.rbac | object | `{"create":null}` | Override global.rbac to create the env_injector rbac only |
+| env_injector.rbac.create | bool | `nil` | Override global.rbac.create |
 | env_injector.env | object | `{}` | Additional env vars to send to env-injector pods |
 | env_injector.envFromSecret | list | `[]` | Reference to secret containing variables to be used with all enabled pods, eg. for akv credentials |
 | env_injector.labels | object | `{}` | Additional labels |
