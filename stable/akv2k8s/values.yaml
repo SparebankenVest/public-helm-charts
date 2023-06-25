@@ -44,7 +44,6 @@ global:
 rbac:
   # -- Specifies whether RBAC resources should be created
   create: true
-  podSecurityPolicies: {}
 
 # -- See https://github.com/Azure/aad-pod-identity/blob/master/docs/readmes/README.app-exception.md
 addAzurePodIdentityException: false

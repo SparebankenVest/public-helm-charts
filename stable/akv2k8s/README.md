@@ -65,7 +65,6 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | global.metrics.serviceMonitor.interval | string | `"30s"` | Scrape interval for service-monitor |
 | global.metrics.serviceMonitor.additionalLabels | object | `{}` | Additional labels for service-monitor |
 | rbac.create | bool | `true` | Specifies whether RBAC resources should be created |
-| rbac.podSecurityPolicies | object | `{}` |  |
 | addAzurePodIdentityException | bool | `false` | See https://github.com/Azure/aad-pod-identity/blob/master/docs/readmes/README.app-exception.md |
 | cloudConfig | string | `"/etc/kubernetes/azure.json"` | Path to cloud config on node (host path) or mounted configmap in pod |
 | watchAllNamespaces | bool | `true` | Watch all namespaces, set to false to run in release namespace only |
