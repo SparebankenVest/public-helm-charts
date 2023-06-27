@@ -41,10 +41,10 @@ global:
       # -- Additional labels for service-monitor
       additionalLabels: {}
 
-rbac:
-  # -- Specifies whether RBAC resources should be created
-  create: true
-  podSecurityPolicies: {}
+  rbac:
+    # -- Specifies whether RBAC resources should be created
+    create: true
+    podSecurityPolicies: {}
 
 # -- See https://github.com/Azure/aad-pod-identity/blob/master/docs/readmes/README.app-exception.md
 addAzurePodIdentityException: false
@@ -93,6 +93,11 @@ controller:
     annotations: {}
     # -- Controller service account labels
     labels: {}
+
+  # -- Override global.rbac to create the controller rbac only
+  rbac:
+    # -- (bool) Override global.rbac.create
+    create: # true/false
 
   # -- Security context set on a pod level
   podSecurityContext:
@@ -284,6 +289,11 @@ env_injector:
     annotations: {}
     # -- env-injector service account labels
     labels: {}
+
+  # -- Override global.rbac to create the env_injector rbac only
+  rbac:
+    # -- (bool) Override global.rbac.create
+    create: # true/false
 
   # -- Additional env vars to send to env-injector pods
   env: {}
