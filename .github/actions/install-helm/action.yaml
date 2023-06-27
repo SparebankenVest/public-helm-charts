@@ -1,16 +1,16 @@
 name: 'Install Helm'
 description: 'Install Helm'
 inputs:
-  helm-version:  
+  helm-version:
     description: 'Version of helm to install'
     required: false
-    default: 'v3.3.4'
-  
+    default: 'v3.12.1'
+
 runs:
   using: "composite"
-  steps: 
+  steps:
     - name: Install Helm
-      shell: bash  
+      shell: bash
       run: |
         mkdir -p /tmp/helm/bin
         mkdir -p /tmp/helm/publish
