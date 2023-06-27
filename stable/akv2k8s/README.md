@@ -158,3 +158,4 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | env_injector.affinity | object | `{}` | Affinities |
 | env_injector.extraVolumeMounts | list | `[]` | Additional volumeMounts to the env-injector main container |
 | env_injector.extraVolumes | list | `[]` | Additional volumes to the env-injector pod |
+| env_injector.rbacSubjects[0] | object | `{"apiGroup":"rbac.authorization.k8s.io","kind":"Group","name":"system:serviceaccounts"}` | Include Group or ServiceAccount |
