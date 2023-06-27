@@ -119,9 +119,15 @@ spec:
         {{- if or $useCloudConfig .Values.controller.extraVolumeMounts }}
         volumeMounts:
           {{- if $useCloudConfig }}
+          {{- if .Values.global.userDefinedMSI.enabled }}
+          - name: azure-config
+            mountPath: "{{ dir .Values.cloudConfig }}"
+            readOnly: true
+          {{- else }}
           - name: azure-config
             mountPath: "{{ .Values.cloudConfig }}"
             readOnly: true
+          {{- end }}
           {{- end }}
           {{- if .Values.controller.extraVolumeMounts }}
           {{- toYaml .Values.controller.extraVolumeMounts | nindent 10 }}
@@ -136,7 +142,7 @@ spec:
           defaultMode: 420
           items:
           - key: azure.json
-            path: azure.json
+            path: "{{ base .Values.cloudConfig }}"
           name: {{ template "akv2k8s.name" . }}-azureconfig
       {{- else }}
       - name: azure-config
