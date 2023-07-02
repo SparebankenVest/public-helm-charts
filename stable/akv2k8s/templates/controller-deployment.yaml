@@ -67,7 +67,7 @@ spec:
           value: {{ $keyVaultAuth }}
         - name: METRICS_ENABLED
           value: {{ default .Values.global.metrics.enabled .Values.controller.metrics.enabled | quote }}
-        - name: METRICS_PORT
+        - name: HTTP_PORT
           value: {{ .Values.controller.service.internalHttpPort | quote }}
         - name: RUNTIME_NAMESPACE
           valueFrom:
