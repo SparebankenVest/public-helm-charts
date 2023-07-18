@@ -199,6 +199,8 @@ spec:
       {{- if .Values.env_injector.tolerations }}
       tolerations:
         {{ toYaml .Values.env_injector.tolerations | nindent 8 }}
+      {{- else }}
+      tolerations: []
       {{- end }}
       {{- if .Values.env_injector.affinity }}
       affinity:
