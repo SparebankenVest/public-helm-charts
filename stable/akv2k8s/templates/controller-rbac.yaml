@@ -1,6 +1,6 @@
 {{- $roleType := "ClusterRole" -}}
 {{- $roleBindingType := "ClusterRoleBinding" -}}
-{{- if not .Values.watchAllNamespaces }}
+{{- if not .Values.watchAllNamespaces -}}
 {{- $roleType = "Role" -}}
 {{- $roleBindingType = "RoleBinding" -}}
 {{- end -}}
@@ -49,23 +49,6 @@ rules:
   - create
   - update
   - patch
-
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: {{ $roleType }}
-metadata:
-  name: {{ template "akv2k8s.controller.fullname" . }}-reader
-  labels:
-    {{- include "akv2k8s.labels" . | nindent 4 }}
-rules:
-- apiGroups:
-  - spv.no
-  resources:
-  - azurekeyvaultsecrets
-  verbs:
-  - get
-  - list
-  - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: {{ $roleBindingType }}
@@ -81,19 +64,4 @@ roleRef:
   kind: {{ $roleType }}
   name: {{ template "akv2k8s.controller.fullname" . }}
   apiGroup: rbac.authorization.k8s.io
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: {{ $roleBindingType }}
-metadata:
-  name: {{ template "akv2k8s.controller.fullname" . }}-reader
-  labels:
-    {{- include "akv2k8s.labels" . | nindent 4 }}
-subjects:
-- kind: Group
-  name: system:serviceaccounts
-  apiGroup: rbac.authorization.k8s.io
-roleRef:
-  kind: {{ $roleType }}
-  name: {{ template "akv2k8s.controller.fullname" . }}-reader
-  apiGroup: rbac.authorization.k8s.io
-{{- end}}
+{{- end -}}
