@@ -6,6 +6,7 @@ metadata:
   name: {{ $name }}
   labels:
     {{- include "svai.labels" . | nindent 4 }}
+    app: {{ $name }}
 spec:
   selector:
     matchLabels:
