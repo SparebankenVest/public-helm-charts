@@ -105,6 +105,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | controller.nodeSelector | object | `{}` | Node selector for controller |
 | controller.tolerations | list | `[]` | Tolerations for controller |
 | controller.affinity | object | `{}` | Affinities for controller |
+| controller.topologySpreadConstraints | object | `{}` | Topology Spread Constraints |
 | controller.extraVolumeMounts | list | `[]` | Additional volumeMounts to the controller main container |
 | controller.extraVolumes | list | `[]` | Additional volumes to the controller pod |
 | env_injector.enabled | bool | `true` | Whether to install the env-injector |
@@ -162,6 +163,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | env_injector.nodeSelector | object | `{}` | Node selector |
 | env_injector.tolerations | list | `[]` | Tolerations |
 | env_injector.affinity | object | `{}` | Affinities |
+| env_injector.topologySpreadConstraints | object | `{}` | Topology Spread Constraints |
 | env_injector.extraVolumeMounts | list | `[]` | Additional volumeMounts to the env-injector main container |
 | env_injector.extraVolumes | list | `[]` | Additional volumes to the env-injector pod |
 | env_injector.rbacSubjects[0] | object | `{"apiGroup":"rbac.authorization.k8s.io","kind":"Group","name":"system:serviceaccounts"}` | Include Group or ServiceAccount |
