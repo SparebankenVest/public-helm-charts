@@ -18,7 +18,6 @@ spec:
       {{- end }}
       labels:
         {{- include "svai.selectorLabels" . | nindent 8 }}
-        {{- toYaml .Values.selectorLabels | nindent 8 }}
     spec:
       serviceAccountName: {{ include "svai.serviceAccountName" . }}
       containers:
