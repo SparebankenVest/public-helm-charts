@@ -11,7 +11,8 @@ autoscaling:
 
 env: dev #prod/dev
 domain: mydomain.no
-
+selectorLabes:
+  app: svai
 image:
   repository: registry.azurecr.io/registry-name
   tag: b3543c41-1682426341
