@@ -54,6 +54,7 @@ Selector labels
 {{- define "svai.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "svai.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+app: {{ include "svai.name" . }}
 {{- end }}
 
 {{/*

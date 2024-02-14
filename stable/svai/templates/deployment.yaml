@@ -6,7 +6,6 @@ metadata:
   name: {{ $name }}
   labels:
     {{- include "svai.labels" . | nindent 4 }}
-    app: {{ $name }}
 spec:
   selector:
     matchLabels:
@@ -18,7 +17,6 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        app: {{ $name }}
         {{- include "svai.selectorLabels" . | nindent 8 }}
         {{- toYaml .Values.selectorLabels | nindent 8 }}
     spec:
