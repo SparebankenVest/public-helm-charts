@@ -21,8 +21,11 @@ image:
   containerPort: 8080
 gitOps:
   repoName: "banking-services-gitops"
+environment:
+  variables:
+  secrets:
+  valuesFrom:
 
-nameOverride: "sandbox"
 
 service:
   port: 80

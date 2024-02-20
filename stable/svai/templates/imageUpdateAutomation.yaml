@@ -15,7 +15,7 @@ spec:
         email: fluxcdbot@users.noreply.github.com
         name: fluxcdbot
       messageTemplate: |
-        Automated image update
+       {{` Automated image update
         [ci skip]
         Automation name: {{ .AutomationObject }}
         Files:
@@ -29,7 +29,7 @@ spec:
         Images:
         {{ range .Updated.Images -}}
         - {{.}}
-        {{ end -}}
+        {{ end -}}`}}
     push:
       branch: main
   interval: 1m0s
