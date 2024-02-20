@@ -26,3 +26,7 @@ spec:
   filterTags:
     pattern: {{ .Values.image.tag }}
 {{- end }}  
+
+# TODO Add support for stage and test environments
+# TODO Legge til støtte for image-update automation
+# TODO Legge til støtte for image-repository 
