@@ -18,7 +18,7 @@ spec:
   tls:
     - hosts:
       - {{ $dns | quote }}
-      secretName: {{ $name }}-tls-certificate
+      secretName: {{ $name  | replace "." "-" }}-tls-certificate
   rules:
     - host: {{ $dns | quote }}
       http:
@@ -33,3 +33,5 @@ spec:
                   number: 80
           {{- end }}
 {{- end }}
+
+

@@ -1,0 +1,10 @@
+{{- $name := include "svai.name" . -}}
+
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: {{ $name }}
+spec:
+  image: {{ .Values.image.repository }}
+  interval: 1m0s
+  provider: azure

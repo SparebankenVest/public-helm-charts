@@ -32,6 +32,12 @@ spec:
           - name: {{ .nameOfEnvVar }}
             value: {{ .nameInKeyVault }}@azurekeyvault
           {{- end }}
+          {{- range .Values.environment.valuesFrom }}
+          - name: {{ .nameOfEnvVar }}
+            valueFrom:
+              fieldRef:
+                fieldPath: {{ .fieldPath }}
+          {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.image.containerPort | default 8080  }}
