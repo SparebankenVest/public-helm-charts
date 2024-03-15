@@ -85,6 +85,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | controller.serviceAccount.labels | object | `{}` | Controller service account labels |
 | controller.rbac | object | `{"create":null}` | Override global.rbac to create the controller rbac only |
 | controller.rbac.create | bool | `nil` | Override global.rbac.create |
+| controller.replicas | int | `1` | Controller replicas |
 | controller.podSecurityContext | string | `nil` | Security context set on a pod level |
 | controller.priorityClassName | string | `""` | Controller PriorityClass name |
 | controller.securityContext.allowPrivilegeEscalation | bool | `true` | Must be `true` if using aks identity - can be set to false if userDefinedMSI is enabled, or Azure AD Pod Identity is used |

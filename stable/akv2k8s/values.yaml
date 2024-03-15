@@ -99,6 +99,9 @@ controller:
     # -- (bool) Override global.rbac.create
     create: # true/false
 
+  # -- Controller replicas
+  replicas: 1
+
   # -- Security context set on a pod level
   podSecurityContext:
 
