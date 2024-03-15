@@ -76,6 +76,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | controller.image.repository | string | `"spvest/azure-keyvault-controller"` | Image repository that contains the controller image |
 | controller.image.tag | string | `"1.6.0"` | Image tag |
 | controller.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for controller |
+| controller.replicaCount | int | `1` | Number of controller replicas |
 | controller.logLevel | string | `nil` | Override global log level info=2, debug=4, trace=6 |
 | controller.logFormat | string | `nil` | Override global log format text or json |
 | controller.keyVaultAuth | string | `nil` | Override global - azureCloudConfig (aks credentials), environment (custom) |
@@ -85,7 +86,6 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | controller.serviceAccount.labels | object | `{}` | Controller service account labels |
 | controller.rbac | object | `{"create":null}` | Override global.rbac to create the controller rbac only |
 | controller.rbac.create | bool | `nil` | Override global.rbac.create |
-| controller.replicas | int | `1` | Controller replicas |
 | controller.podSecurityContext | string | `nil` | Security context set on a pod level |
 | controller.priorityClassName | string | `""` | Controller PriorityClass name |
 | controller.securityContext.allowPrivilegeEscalation | bool | `true` | Must be `true` if using aks identity - can be set to false if userDefinedMSI is enabled, or Azure AD Pod Identity is used |

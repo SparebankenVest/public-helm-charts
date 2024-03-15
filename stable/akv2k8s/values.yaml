@@ -74,6 +74,9 @@ controller:
     # -- Image pull policy for controller
     pullPolicy: IfNotPresent
 
+  # -- Number of controller replicas
+  replicaCount: 1
+
   # -- Override global log level info=2, debug=4, trace=6
   logLevel: # info, debug, trace
 
@@ -98,9 +101,6 @@ controller:
   rbac:
     # -- (bool) Override global.rbac.create
     create: # true/false
-
-  # -- Controller replicas
-  replicas: 1
 
   # -- Security context set on a pod level
   podSecurityContext:
