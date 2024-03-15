@@ -13,6 +13,7 @@ metadata:
     {{ toYaml .Values.controller.labels | nindent 4 }}
     {{- end }}
 spec:
+  replicas: {{ default 1 .Values.controller.replicas }}
   selector:
     matchLabels:
       {{- include "akv2k8s.selectors" . | nindent 6 }}
