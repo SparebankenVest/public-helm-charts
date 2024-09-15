@@ -99,6 +99,9 @@ controller:
     # -- (bool) Override global.rbac.create
     create: # true/false
 
+  # -- If set to `false`, must manually mount Kubernetes API credentials
+  automountServiceAccountToken: true
+
   # -- Security context set on a pod level
   podSecurityContext:
 
@@ -233,6 +236,10 @@ env_injector:
       ca:
         # -- Custom CA certificate, required when `env_injector.certificate.custom.enabled=true`
         crt:
+
+  # -- If set to `false`, must manually mount Kubernetes API credentials
+  automountServiceAccountToken: true
+
   # -- Security context set on a pod level
   podSecurityContext:
 

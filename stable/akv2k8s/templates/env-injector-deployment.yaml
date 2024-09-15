@@ -41,6 +41,7 @@ spec:
         {{ toYaml .Values.env_injector.podAnnotations | nindent 8 }}
         {{- end }}
     spec:
+      automountServiceAccountToken: {{ .Values.env_injector.automountServiceAccountToken }}
       {{- if .Values.env_injector.podSecurityContext }}
       securityContext:
         {{ toYaml .Values.env_injector.podSecurityContext | nindent 8 }}
