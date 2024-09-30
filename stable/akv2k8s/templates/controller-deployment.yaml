@@ -42,6 +42,7 @@ spec:
       {{- if .Values.controller.priorityClassName }}
       priorityClassName: {{ .Values.controller.priorityClassName | indent 4}}
       {{- end }}
+      automountServiceAccountToken: {{ .Values.controller.automountServiceAccountToken }}
       {{- if .Values.controller.podSecurityContext }}
       securityContext:
         {{ toYaml .Values.controller.podSecurityContext | nindent 8 }}
