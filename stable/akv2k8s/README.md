@@ -36,7 +36,7 @@ For the latest version:
 
 ```bash
 helm repo add spv-charts http://charts.spvapi.no
-helm install akv2k8s spv-charts/akv2k8s --version 2.7.2
+helm install akv2k8s spv-charts/akv2k8s --version 2.7.3
 ```
 
 ## The AzureKeyVaultSecret CRD
