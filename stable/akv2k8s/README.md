@@ -2,7 +2,7 @@
 
 A Helm chart that deploys akv2k8s Controller and Env-Injector to Kubernetes
 
-![Version: 2.7.2](https://img.shields.io/badge/Version-2.7.2-informational?style=flat-square) ![AppVersion: 1.7.3](https://img.shields.io/badge/AppVersion-1.7.3-informational?style=flat-square)
+![Version: 2.7.3](https://img.shields.io/badge/Version-2.7.3-informational?style=flat-square) ![AppVersion: 1.7.4](https://img.shields.io/badge/AppVersion-1.7.4-informational?style=flat-square)
 
 This chart will install:
   * a Controller for syncing AKV secrets to Kubernetes secrets
@@ -14,6 +14,7 @@ For more information and installation instructions see the official documentatio
 
 | Helm Chart                         | Controller | Env Injector | CA Bundle Controller | Env Injector Sidecar |
 | ---------------------------------- | ---------- | ------------ | -------------------- | -------------------- |
+| `2.7.3` | `1.7.4`    | `1.7.4`      | `removed`            | `1.7.4`              |
 | `2.7.2` | `1.7.3`    | `1.7.3`      | `removed`            | `1.7.3`              |
 | `2.7.1` | `1.7.1`    | `1.7.1`      | `removed`            | `1.7.1`              |
 | `2.7.0` | `1.7.0`    | `1.7.0`      | `removed`            | `1.7.0`              |
@@ -35,7 +36,7 @@ For the latest version:
 
 ```bash
 helm repo add spv-charts http://charts.spvapi.no
-helm install akv2k8s spv-charts/akv2k8s --version 2.7.2
+helm install akv2k8s spv-charts/akv2k8s --version 2.7.3
 ```
 
 ## The AzureKeyVaultSecret CRD
