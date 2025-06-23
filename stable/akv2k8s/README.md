@@ -80,6 +80,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | controller.image.repository | string | `"spvest/azure-keyvault-controller"` | Image repository that contains the controller image |
 | controller.image.tag | string | `"1.7.3"` | Image tag |
 | controller.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for controller |
+| controller.replicaCount | int | `1` | Number of controller replicas |
 | controller.logLevel | string | `nil` | Override global log level info=2, debug=4, trace=6 |
 | controller.logFormat | string | `nil` | Override global log format text or json |
 | controller.keyVaultAuth | string | `nil` | Override global - azureCloudConfig (aks credentials), environment (custom) |
