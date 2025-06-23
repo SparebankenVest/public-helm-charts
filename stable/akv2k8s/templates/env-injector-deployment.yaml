@@ -10,7 +10,7 @@ metadata:
   labels:
     {{- include "akv2k8s.labels" . | nindent 4 }}
     {{- if .Values.env_injector.labels }}
-    {{ toYaml .Values.env_injector.labels | nindent 4 }}
+    {{- toYaml .Values.env_injector.labels | nindent 4 }}
     {{- end }}
 spec:
   replicas: {{ .Values.env_injector.replicaCount }}
@@ -33,7 +33,7 @@ spec:
         {{- include "akv2k8s.selectors" . | nindent 8 }}
         {{- include "akv2k8s.components.webhook" . | nindent 8 }}
         {{- if .Values.env_injector.podLabels }}
-        {{ toYaml .Values.env_injector.podLabels | nindent 8 }}
+        {{- toYaml .Values.env_injector.podLabels | nindent 8 }}
         {{- end }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/env-injector-apiservice.yaml") . | sha256sum }}
@@ -44,7 +44,7 @@ spec:
       automountServiceAccountToken: {{ .Values.env_injector.automountServiceAccountToken }}
       {{- if .Values.env_injector.podSecurityContext }}
       securityContext:
-        {{ toYaml .Values.env_injector.podSecurityContext | nindent 8 }}
+        {{- toYaml .Values.env_injector.podSecurityContext | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ template "envinjector.serviceAccountName" . }}
       containers:
@@ -153,11 +153,11 @@ spec:
           {{- end }}
           {{- if .Values.env_injector.securityContext }}
           securityContext:
-            {{ toYaml .Values.env_injector.securityContext | nindent 12 }}
+            {{- toYaml .Values.env_injector.securityContext | nindent 12 }}
           {{- end }}
           {{- if .Values.env_injector.resources }}
           resources:
-            {{ toYaml .Values.env_injector.resources | nindent 12 }}
+            {{- toYaml .Values.env_injector.resources | nindent 12 }}
           {{- end }}
       volumes:
       - name: serving-cert
@@ -187,7 +187,7 @@ spec:
       {{- end }}
       {{- end }}
       {{- if .Values.env_injector.extraVolumes }}
-      {{ toYaml .Values.env_injector.extraVolumes | nindent 6 }}
+      {{- toYaml .Values.env_injector.extraVolumes | nindent 6 }}
       {{- end }}
       {{- if .Values.env_injector.image.pullSecret }}
       imagePullSecrets:
@@ -195,14 +195,14 @@ spec:
       {{- end }}
       {{- if .Values.env_injector.nodeSelector }}
       nodeSelector:
-        {{ toYaml .Values.env_injector.nodeSelector | nindent 8 }}
+        {{- toYaml .Values.env_injector.nodeSelector | nindent 8 }}
       {{- end }}
       {{- if .Values.env_injector.tolerations }}
       tolerations:
-        {{ toYaml .Values.env_injector.tolerations | nindent 8 }}
+        {{- toYaml .Values.env_injector.tolerations | nindent 8 }}
       {{- end }}
       {{- if .Values.env_injector.affinity }}
       affinity:
-        {{ toYaml .Values.env_injector.affinity | nindent 8 }}
+        {{- toYaml .Values.env_injector.affinity | nindent 8 }}
       {{- end }}
 {{- end }}
