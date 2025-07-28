@@ -72,7 +72,9 @@ webhooks:
       name: {{ template "akv2k8s.envinjector.fullname" . }}
       path: /pods
       port: {{ .Values.env_injector.service.externalTlsPort }}
+{{- if not .Values.env_injector.certificate.useCertManager }}
     caBundle: {{ $caCrt }}
+{{- end }}
   rules:
   - operations:
     - CREATE
