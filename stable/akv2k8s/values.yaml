@@ -243,6 +243,9 @@ env_injector:
   # -- Security context set on a pod level
   podSecurityContext:
 
+  # -- Env-injector PriorityClass name
+  priorityClassName: ""
+
   securityContext:
     # -- Must be `true` if using aks identity - can be set to false if userDefinedMSI is enabled, or Azure AD Pod Identity is used
     allowPrivilegeEscalation: true
