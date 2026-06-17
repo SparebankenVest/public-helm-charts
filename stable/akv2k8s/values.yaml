@@ -167,6 +167,8 @@ controller:
   tolerations: []
   # -- Affinities for controller
   affinity: {}
+  # -- Topology Spread Constraints
+  topologySpreadConstraints: {}
 
   # -- Additional volumeMounts to the controller main container
   extraVolumeMounts: []
@@ -360,6 +362,8 @@ env_injector:
   tolerations: []
   # -- Affinities
   affinity: {}
+  # -- Topology Spread Constraints
+  topologySpreadConstraints: {}
 
   # -- Additional volumeMounts to the env-injector main container
   extraVolumeMounts: []
