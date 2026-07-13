@@ -205,4 +205,8 @@ spec:
       affinity:
         {{ toYaml .Values.env_injector.affinity | nindent 8 }}
       {{- end }}
+      {{- if .Values.env_injector.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml .Values.env_injector.topologySpreadConstraints | nindent 8 }}
+      {{- end }}
 {{- end }}
