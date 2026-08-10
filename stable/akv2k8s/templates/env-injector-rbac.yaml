@@ -41,6 +41,12 @@ rules:
   - serviceaccounts # in order to read
   verbs:
   - get
+- apiGroups:
+  - ""
+  resources:
+  - configmaps # resolve envFrom.configMapRef and valueFrom.configMapKeyRef at admission time
+  verbs:
+  - get
 ---
 # Create a akv2k8s reader cluster role
 apiVersion: rbac.authorization.k8s.io/v1
