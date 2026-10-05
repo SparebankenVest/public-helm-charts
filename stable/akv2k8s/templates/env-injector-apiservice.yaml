@@ -92,7 +92,7 @@ webhooks:
     {{- if .Values.env_injector.namespaceSelector.matchExpressions }}
       {{ toYaml .Values.env_injector.namespaceSelector.matchExpressions | nindent 4 }}
     {{- end }}
-    - key: name
+    - key: kubernetes.io/metadata.name
       operator: NotIn
       values:
       - {{ .Release.Namespace }}
