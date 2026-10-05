@@ -75,10 +75,10 @@ controller:
     pullPolicy: IfNotPresent
 
   # -- Override global log level info=2, debug=4, trace=6
-  logLevel: # info, debug, trace
+  logLevel:  # info, debug, trace
 
   # -- Override global log format text or json
-  logFormat: # text or json
+  logFormat:  # text or json
 
   # -- Override global - azureCloudConfig (aks credentials), environment (custom)
   keyVaultAuth:
@@ -97,7 +97,7 @@ controller:
   # -- Override global.rbac to create the controller rbac only
   rbac:
     # -- (bool) Override global.rbac.create
-    create: # true/false
+    create:  # true/false
 
   # -- If set to `false`, must manually mount Kubernetes API credentials
   automountServiceAccountToken: true
@@ -123,12 +123,12 @@ controller:
   # Override metrics settings from global.metrics
   metrics:
     # -- (bool) Override global.metrics.enabled
-    enabled: # true/false
+    enabled:  # true/false
     serviceMonitor:
       # -- (bool) Override global.metrics.serviceMonitor.enabled
-      enabled: # true/false
+      enabled:  # true/false
       # -- (string) Override global.metrics.serviceMonitor.interval
-      interval: # e.g. 30s
+      interval:  # e.g. 30s
       # -- (object) Override global.metrics.serviceMonitor.additionalLabels
       additionalLabels:
 
@@ -170,15 +170,15 @@ controller:
 
   # -- Additional volumeMounts to the controller main container
   extraVolumeMounts: []
-    # - name: akv2k8s-certificate
-    #   mountPath: /etc/azure
+  # - name: akv2k8s-certificate
+  #   mountPath: /etc/azure
 
   # -- Additional volumes to the controller pod
   extraVolumes: []
-    # - name: akv2k8s-certificate
-    #   secret:
-    #     defaultMode: 420
-    #     secretName: akv2k8s-certificate
+  # - name: akv2k8s-certificate
+  #   secret:
+  #     defaultMode: 420
+  #     secretName: akv2k8s-certificate
 
 env_injector:
   # -- Whether to install the env-injector
@@ -212,10 +212,10 @@ env_injector:
     pullPolicy: IfNotPresent
 
   # -- Override global log level info=2, debug=4, trace=6
-  logLevel: # info, debug, trace
+  logLevel:  # info, debug, trace
 
   # -- Override global log format text or json
-  logFormat: # text or json
+  logFormat:  # text or json
 
   certificate:
     # -- Use cert-manager to handle webhook certificates,
@@ -277,12 +277,12 @@ env_injector:
   # Override metrics settings from global.metrics
   metrics:
     # -- (bool) Override global.metrics.enabled
-    enabled: # true/false
+    enabled:  # true/false
     serviceMonitor:
       # -- (bool) Override global.metrics.serviceMonitor.enabled
-      enabled: # true/false
+      enabled:  # true/false
       # -- (string) Override global.metrics.serviceMonitor.interval
-      interval: # e.g. 30s
+      interval:  # e.g. 30s
       # -- (object) Override global.metrics.serviceMonitor.additionalLabels
       additionalLabels:
 
@@ -300,7 +300,7 @@ env_injector:
   # -- Override global.rbac to create the env_injector rbac only
   rbac:
     # -- (bool) Override global.rbac.create
-    create: # true/false
+    create:  # true/false
 
   # -- Additional env vars to send to env-injector pods
   env: {}
@@ -346,11 +346,11 @@ env_injector:
   namespaceSelector:
     # Ignore namespaces
     matchExpressions:
-    # -- Ignore kube-system namespace
-    - key: name
-      operator: NotIn
-      values:
-      - kube-system
+      # -- Ignore kube-system namespace
+      - key: kubernetes.io/metadata.name
+        operator: NotIn
+        values:
+          - kube-system
 
   # -- Resources for env injector
   resources: {}
@@ -363,15 +363,15 @@ env_injector:
 
   # -- Additional volumeMounts to the env-injector main container
   extraVolumeMounts: []
-    # - name: akv2k8s-certificate
-    #   mountPath: /etc/azure
+  # - name: akv2k8s-certificate
+  #   mountPath: /etc/azure
 
   # -- Additional volumes to the env-injector pod
   extraVolumes: []
-    # - name: akv2k8s-certificate
-    #   secret:
-    #     defaultMode: 420
-    #     secretName: akv2k8s-certificate
+  # - name: akv2k8s-certificate
+  #   secret:
+  #     defaultMode: 420
+  #     secretName: akv2k8s-certificate
 
   # https://kubernetes.io/docs/reference/access-authn-authz/rbac/#referring-to-subjects
   rbacSubjects:

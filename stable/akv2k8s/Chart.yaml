@@ -2,11 +2,11 @@ apiVersion: v2
 appVersion: 1.8.4
 description: A Helm chart that deploys akv2k8s Controller and Env-Injector to Kubernetes
 name: akv2k8s
-version: 2.8.4
+version: 2.8.5
 
 maintainers:
-- name: Jon Arild Tørresdal
-  email: jon@torresdal.net
-  url: https://mrdevops.io
+  - name: Jon Arild Tørresdal
+    email: jon@torresdal.net
+    url: https://mrdevops.io
 
 icon: https://raw.githubusercontent.com/SparebankenVest/azure-key-vault-to-kubernetes/master/akv2k8s_small.png

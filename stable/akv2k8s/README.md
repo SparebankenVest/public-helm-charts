@@ -2,7 +2,7 @@
 
 A Helm chart that deploys akv2k8s Controller and Env-Injector to Kubernetes
 
-![Version: 2.8.4](https://img.shields.io/badge/Version-2.8.4-informational?style=flat-square) ![AppVersion: 1.8.4](https://img.shields.io/badge/AppVersion-1.8.4-informational?style=flat-square)
+![Version: 2.8.5](https://img.shields.io/badge/Version-2.8.5-informational?style=flat-square) ![AppVersion: 1.8.4](https://img.shields.io/badge/AppVersion-1.8.4-informational?style=flat-square)
 
 This chart will install:
   * a Controller for syncing AKV secrets to Kubernetes secrets
@@ -14,6 +14,7 @@ For more information and installation instructions see the official documentatio
 
 | Helm Chart                         | Controller | Env Injector | CA Bundle Controller | Env Injector Sidecar |
 | ---------------------------------- | ---------- | ------------ | -------------------- | -------------------- |
+| `2.8.5` | `1.8.4`    | `1.8.4`      | `removed`            | `1.8.4`              |
 | `2.8.4` | `1.8.4`    | `1.8.4`      | `removed`            | `1.8.4`              |
 | `2.8.3` | `1.8.3`    | `1.8.3`      | `removed`            | `1.8.3`              |
 | `2.8.2` | `1.8.2`    | `1.8.2`      | `removed`            | `1.8.2`              |
@@ -166,7 +167,7 @@ kubectl apply -f https://raw.githubusercontent.com/SparebankenVest/azure-key-vau
 | env_injector.podDisruptionBudget.maxUnavailable | string | `nil` | Max unavailable pods at any time |
 | env_injector.strategy.rollingUpdate | object | `{"maxSurge":"25%","maxUnavailable":"25%"}` | Environment Injector rolling update strategy settings |
 | env_injector.failurePolicy | string | `"Fail"` | What will happen if the webhook fails? Ignore (continue) or Fail (prevent Pod from starting)? |
-| env_injector.namespaceSelector.matchExpressions[0] | object | `{"key":"name","operator":"NotIn","values":["kube-system"]}` | Ignore kube-system namespace |
+| env_injector.namespaceSelector.matchExpressions[0] | object | `{"key":"kubernetes.io/metadata.name","operator":"NotIn","values":["kube-system"]}` | Ignore kube-system namespace |
 | env_injector.resources | object | `{}` | Resources for env injector |
 | env_injector.nodeSelector | object | `{}` | Node selector |
 | env_injector.tolerations | list | `[]` | Tolerations |
