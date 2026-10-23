@@ -21,6 +21,13 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 {{- end -}}
 
+{{/*
+Create the name of the service account to use.
+*/}}
+{{- define "common.serviceAccountName" -}}
+{{- default (include "common.name" .) .Values.serviceAccount.name -}}
+{{- end -}}
+
 {{- define "common.utils.joinwithspace" -}}
 {{- $space := " " }}
 {{- $local := dict "first" true -}}

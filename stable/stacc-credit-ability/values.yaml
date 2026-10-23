@@ -13,17 +13,23 @@ autoscaling:
 
 imagePullSecrets:
 
+serviceAccount:
+  # Specifies whether a ServiceAccount should be created.
+  create: true
+  # The ServiceAccount name to use. When empty, the Deployment name is used.
+  name: ""
+
 image:
   repository: staccinsight.azurecr.io/dd-server-location
   tag: latest
   imagePullPolicy: IfNotPresent
 
 resources:
-   requests:
-      memory: "250Mi"
-      cpu: "250m"
-   limits:
-      memory: "250Mi"
+  requests:
+    memory: "250Mi"
+    cpu: "250m"
+  limits:
+    memory: "250Mi"
 
 domain: credit-ability-internal.spvdevapi.no
 
@@ -61,21 +67,21 @@ database:
 secretsEnc: {}
 
 secrets: {}
-  # - name: configuration
-  #   mountPath: /usr/local/tomcat/webapps/dd_server_location/WEB-INF/classes/config/application.json
-  #   fileName: application.json
-  #   data: |
-  #     {
-  #       "configuration": [
-  #         {
-  #          ....
-  #         }
-  #       ]
-  #     }
-  # - name: cert
-  #   mountPath: /usr/local/tomcat/webapps/dd_server_location/WEB-INF/classes/cert/cert.pfx
-  #   fileName: cert.pfx
-  #   secretName: something
+# - name: configuration
+#   mountPath: /usr/local/tomcat/webapps/dd_server_location/WEB-INF/classes/config/application.json
+#   fileName: application.json
+#   data: |
+#     {
+#       "configuration": [
+#         {
+#          ....
+#         }
+#       ]
+#     }
+# - name: cert
+#   mountPath: /usr/local/tomcat/webapps/dd_server_location/WEB-INF/classes/cert/cert.pfx
+#   fileName: cert.pfx
+#   secretName: something
 
 defaultJavaOpts:
   - -DLoadBalancer=http://dd-server-proxy/dd_server_proxy
